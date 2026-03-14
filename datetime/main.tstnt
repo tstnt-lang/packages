@@ -1,0 +1,12 @@
+do now_sec() -> int {
+    return time.now() / 1000
+}
+do format_time(ts: int) -> str {
+    let h = (ts / 3600) % 24
+    let m = (ts / 60) % 60
+    let s = ts % 60
+    return str(h) + ":" + str(m) + ":" + str(s)
+}
+do sleep_sec(n: int) {
+    time.sleep(n * 1000)
+}

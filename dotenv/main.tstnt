@@ -1,0 +1,18 @@
+do load(path: str) {
+    let content = fs.read(path)
+    let ls = strings.split(content, "\n")
+    loop line in ls {
+        let t = strings.trim(line)
+        if len(t) > 0 {
+            let parts = strings.split(t, "=")
+            if len(parts) >= 2 {
+                env.set(parts[0], parts[1])
+            }
+        }
+    }
+}
+do get_or(key: str, default: str) -> str {
+    let v = env.get(key)
+    if v == "" { return default }
+    return v
+}

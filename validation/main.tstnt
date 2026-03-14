@@ -1,0 +1,19 @@
+do is_email(s: str) -> bool {
+    return strings.contains(s, "@") && strings.contains(s, ".")
+}
+do is_number(s: str) -> bool {
+    let n = int(s)
+    return str(n) == strings.trim(s)
+}
+do is_empty(s: str) -> bool {
+    return len(strings.trim(s)) == 0
+}
+do min_len(s: str, n: int) -> bool {
+    return len(s) >= n
+}
+do max_len(s: str, n: int) -> bool {
+    return len(s) <= n
+}
+do is_url(s: str) -> bool {
+    return strings.contains(s, "http://") || strings.contains(s, "https://")
+}

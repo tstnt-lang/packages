@@ -1,0 +1,9 @@
+do get(url: str) -> str {
+    return net.http.get(url)
+}
+do post(url: str, body: str) -> str {
+    return net.http.post(url, body)
+}
+do get_json(url: str) -> any {
+    return json.parse(net.http.get(url))
+}

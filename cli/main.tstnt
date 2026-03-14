@@ -1,0 +1,16 @@
+do args() -> [str] {
+    return env.args()
+}
+do arg(n: int) -> str {
+    let a = env.args()
+    if n >= len(a) { return "" }
+    return a[n]
+}
+do flag(name: str) -> bool {
+    let a = env.args()
+    return "--" + name in a || "-" + name in a
+}
+do usage(text: str) {
+    print(text)
+    process.exit(0)
+}

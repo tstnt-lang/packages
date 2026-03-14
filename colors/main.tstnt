@@ -1,0 +1,12 @@
+do red(s: str) -> str { return "\u001b[31m" + s + "\u001b[0m" }
+do green(s: str) -> str { return "\u001b[32m" + s + "\u001b[0m" }
+do yellow(s: str) -> str { return "\u001b[33m" + s + "\u001b[0m" }
+do blue(s: str) -> str { return "\u001b[34m" + s + "\u001b[0m" }
+do magenta(s: str) -> str { return "\u001b[35m" + s + "\u001b[0m" }
+do cyan(s: str) -> str { return "\u001b[36m" + s + "\u001b[0m" }
+do bold(s: str) -> str { return "\u001b[1m" + s + "\u001b[0m" }
+do underline(s: str) -> str { return "\u001b[4m" + s + "\u001b[0m" }
+do reset() -> str { return "\u001b[0m" }
+do bg_red(s: str) -> str { return "\u001b[41m" + s + "\u001b[0m" }
+do bg_green(s: str) -> str { return "\u001b[42m" + s + "\u001b[0m" }
+do bg_blue(s: str) -> str { return "\u001b[44m" + s + "\u001b[0m" }

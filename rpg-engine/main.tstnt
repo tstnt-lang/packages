@@ -1,0 +1,40 @@
+struct Player {
+    name: str
+    hp: int
+    max_hp: int
+    mp: int
+    level: int
+    xp: int
+    gold: int
+    atk: int
+    def: int
+}
+struct Enemy {
+    name: str
+    hp: int
+    atk: int
+    xp: int
+    gold: int
+}
+do make_player(name: str) -> Player {
+    return Player { name: name, hp: 100, max_hp: 100, mp: 50, level: 1, xp: 0, gold: 100, atk: 10, def: 5 }
+}
+do make_enemy(name: str, hp: int, atk: int, xp: int, gold: int) -> Enemy {
+    return Enemy { name: name, hp: hp, atk: atk, xp: xp, gold: gold }
+}
+do calc_damage(atk: int, def: int) -> int {
+    let base = atk - def
+    if base < 1 { return 1 + rand.int(0, 3) }
+    return base + rand.int(0, atk / 2)
+}
+do xp_to_level(level: int) -> int {
+    return level * level * 100
+}
+do heal(hp: int, max_hp: int, amount: int) -> int {
+    let new_hp = hp + amount
+    if new_hp > max_hp { return max_hp }
+    return new_hp
+}
+do is_alive(hp: int) -> bool {
+    return hp > 0
+}

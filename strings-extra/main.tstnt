@@ -1,0 +1,22 @@
+do slugify(s: str) -> str {
+    return strings.lower(strings.replace(strings.trim(s), " ", "-"))
+}
+do repeat_str(s: str, n: int) -> str {
+    let mut r = ""
+    let mut i = 0
+    while i < n { r = r + s; i += 1 }
+    return r
+}
+do pad_right(s: str, n: int) -> str {
+    let mut r = s
+    while len(r) < n { r = r + " " }
+    return r
+}
+do pad_left(s: str, n: int) -> str {
+    let mut r = s
+    while len(r) < n { r = " " + r }
+    return r
+}
+do count_char(s: str, ch: str) -> int {
+    return len(strings.split(s, ch)) - 1
+}

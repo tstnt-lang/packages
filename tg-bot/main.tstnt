@@ -1,0 +1,28 @@
+use tg
+use thread
+
+do bot_start(token: str) {
+    tg.token(token)
+    tg.delete_webhook()
+}
+do bot_run(handler: any) {
+    let mut offset = 0
+    while true {
+        let updates = tg.get_updates(offset)
+        loop upd in updates {
+            let uid = upd.update_id
+            offset = uid + 1
+            apply(handler, upd)
+        }
+        thread.sleep(300)
+    }
+}
+do reply(upd: any, text: str) {
+    tg.send(upd.chat_id, text)
+}
+do reply_keyboard(upd: any, text: str, buttons: any) {
+    tg.send_keyboard(upd.chat_id, text, buttons)
+}
+do reply_inline(upd: any, text: str, buttons: any) {
+    tg.send_inline(upd.chat_id, text, buttons)
+}

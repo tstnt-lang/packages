@@ -1,0 +1,18 @@
+do count_val(arr: [any], val: any) -> int {
+    return reduce(arr, |acc x| acc + (x == val ? 1 : 0), 0)
+}
+do any_match(arr: [any], f: any) -> bool {
+    return len(filter(arr, f)) > 0
+}
+do all_match(arr: [any], f: any) -> bool {
+    return len(filter(arr, f)) == len(arr)
+}
+do none_match(arr: [any], f: any) -> bool {
+    return len(filter(arr, f)) == 0
+}
+do head(arr: [any]) -> any {
+    return arr[0]
+}
+do tail(arr: [any]) -> [any] {
+    return filter(arr, |x| x != arr[0])
+}
