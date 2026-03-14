@@ -29,7 +29,7 @@ do main {
 
 ---
 
-## All Packages (103)
+## All Packages (117)
 
 ### 🎨 Terminal & UI
 | Package | Files | Description |
@@ -202,7 +202,7 @@ do main {
 
 ---
 
-*Built for TSTNT v0.8.0+ — github.com/tstnt-lang*
+*Built for TSTNT v0.9.0+ — github.com/tstnt-lang*
 
 ### v9 New Packages
 | Package | Description |
