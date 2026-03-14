@@ -1,0 +1,16 @@
+do bold(s: str) -> str { return "\u001b[1m" + s + "\u001b[0m" }
+do dim(s: str) -> str { return "\u001b[2m" + s + "\u001b[0m" }
+do italic(s: str) -> str { return "\u001b[3m" + s + "\u001b[0m" }
+do underline(s: str) -> str { return "\u001b[4m" + s + "\u001b[0m" }
+do blink(s: str) -> str { return "\u001b[5m" + s + "\u001b[0m" }
+do strikethrough(s: str) -> str { return "\u001b[9m" + s + "\u001b[0m" }
+do invert(s: str) -> str { return "\u001b[7m" + s + "\u001b[0m" }
+do rainbow(text: str) -> str {
+    let codes = ["31","33","32","36","34","35"]
+    let chars = strings.split(text, "")
+    let mut result = ""
+    loop i, ch in chars {
+        result = result + "\u001b[" + codes[i % 6] + "m" + ch
+    }
+    return result + "\u001b[0m"
+}

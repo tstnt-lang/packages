@@ -1,0 +1,25 @@
+do read_lines(path: str) -> [str] {
+    let content = fs.read(path)
+    return strings.split(content, "\n")
+}
+do write_lines(path: str, lines: [str]) {
+    fs.write(path, strings.join(lines, "\n"))
+}
+do append_line(path: str, line: str) {
+    fs.append(path, line + "\n")
+}
+do line_count(path: str) -> int {
+    return len(read_lines(path))
+}
+do file_ext(path: str) -> str {
+    return path.ext()
+}
+do file_name(path: str) -> str {
+    return path.file()
+}
+do copy_file(src: str, dst: str) {
+    fs.copy(src, dst)
+}
+do file_size_kb(path: str) -> int {
+    return fs.size(path) / 1024
+}

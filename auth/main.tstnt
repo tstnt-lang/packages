@@ -1,0 +1,29 @@
+use db
+use crypto
+
+let _db = "tstnt_auth"
+
+do register(username: str, password: str) -> bool {
+    if db.has(_db, "user:" + username) { return false }
+    let hashed = crypto.sha256(password + username + "tstnt_salt")
+    db.set(_db, "user:" + username, hashed)
+    return true
+}
+do login(username: str, password: str) -> bool {
+    let stored = db.get(_db, "user:" + username)
+    if is_null(stored) { return false }
+    let hashed = crypto.sha256(password + username + "tstnt_salt")
+    return stored == hashed
+}
+do change_password(username: str, old_pwd: str, new_pwd: str) -> bool {
+    if !login(username, old_pwd) { return false }
+    let hashed = crypto.sha256(new_pwd + username + "tstnt_salt")
+    db.set(_db, "user:" + username, hashed)
+    return true
+}
+do delete_user(username: str) {
+    db.delete(_db, "user:" + username)
+}
+do user_exists(username: str) -> bool {
+    return db.has(_db, "user:" + username)
+}

@@ -1,0 +1,16 @@
+do response(status: int, body: str) -> str {
+    return str(status) + "|" + body
+}
+do ok(body: str) -> str { return response(200, body) }
+do not_found(body: str) -> str { return response(404, body) }
+do error(body: str) -> str { return response(500, body) }
+do redirect(url: str) -> str { return response(302, url) }
+do json_response(data: str) -> str { return response(200, data) }
+do get_status(resp: str) -> int {
+    return int(strings.split(resp, "|")[0])
+}
+do get_body(resp: str) -> str {
+    let parts = strings.split(resp, "|")
+    if len(parts) < 2 { return "" }
+    return parts[1]
+}

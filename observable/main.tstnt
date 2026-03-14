@@ -1,0 +1,24 @@
+use db
+
+let _db = "tstnt_obs"
+
+do create(name: str, initial: str) {
+    db.set(_db, name, initial)
+}
+do get(name: str) -> str {
+    return db.get(_db, name)
+}
+do set(name: str, val: str) {
+    let old = get(name)
+    db.set(_db, name, val)
+    let handler = db.get(_db, name + ":watch")
+    if !is_null(handler) && handler != "" {
+        print("[observable] " + name + " changed: " + old + " -> " + val)
+    }
+}
+do watch(name: str, handler: str) {
+    db.set(_db, name + ":watch", handler)
+}
+do unwatch(name: str) {
+    db.delete(_db, name + ":watch")
+}

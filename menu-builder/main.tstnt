@@ -1,0 +1,32 @@
+use term
+use input
+use "ansi"
+
+struct MenuItem { label: str, value: str, icon: str, hint: str }
+
+do item(label: str, value: str) -> MenuItem {
+    return MenuItem { label: label, value: value, icon: "•", hint: "" }
+}
+do item_with_icon(icon: str, label: str, value: str) -> MenuItem {
+    return MenuItem { label: label, value: value, icon: icon, hint: "" }
+}
+do item_with_hint(label: str, value: str, hint: str) -> MenuItem {
+    return MenuItem { label: label, value: value, icon: "•", hint: hint }
+}
+do show(title: str, items: [MenuItem]) -> str {
+    print("\n" + term.bold(title))
+    print(term.dim(strings.repeat("─", len(title) + 4)))
+    loop i, it in items {
+        let hint_str = it.hint != "" ? term.dim("  " + it.hint) : ""
+        print("  " + term.cyan(str(i + 1) + ".") + " " + it.icon + " " + it.label + hint_str)
+    }
+    print(term.dim(strings.repeat("─", len(title) + 4)))
+    let choice = input.read_int("→ ") - 1
+    let safe = choice < 0 ? 0 : (choice >= len(items) ? len(items) - 1 : choice)
+    return items[safe].value
+}
+do show_back(title: str, items: [MenuItem]) -> str {
+    let back = item_with_icon("←", "Back", "__back__")
+    let all_items = arr.push(items, back)
+    return show(title, all_items)
+}

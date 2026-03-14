@@ -1,0 +1,21 @@
+do apply(content: str, patches: [[str]]) -> str {
+    let mut result = content
+    loop patch in patches {
+        if len(patch) >= 2 {
+            result = strings.replace(result, patch[0], patch[1])
+        }
+    }
+    return result
+}
+do make_patch(old: str, new: str) -> [str] {
+    return [old, new]
+}
+do revert(content: str, patches: [[str]]) -> str {
+    let mut result = content
+    loop patch in patches {
+        if len(patch) >= 2 {
+            result = strings.replace(result, patch[1], patch[0])
+        }
+    }
+    return result
+}

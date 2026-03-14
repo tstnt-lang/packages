@@ -1,0 +1,18 @@
+use bench
+
+let mut _start = 0
+
+do start() {
+    _start = bench.now_ms()
+}
+do stop() -> int {
+    return bench.elapsed(_start)
+}
+do lap() -> int {
+    let t = bench.elapsed(_start)
+    _start = bench.now_ms()
+    return t
+}
+do print_elapsed(label: str) {
+    print(label + ": " + str(bench.elapsed(_start)) + "ms")
+}

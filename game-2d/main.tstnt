@@ -1,0 +1,27 @@
+use game
+
+struct Vec2 { x: int, y: int }
+struct Rect { x: int, y: int, w: int, h: int }
+
+do vec2(x: int, y: int) -> Vec2 { return Vec2 { x: x, y: y } }
+do vec_add(a: Vec2, b: Vec2) -> Vec2 { return Vec2 { x: a.x + b.x, y: a.y + b.y } }
+do vec_sub(a: Vec2, b: Vec2) -> Vec2 { return Vec2 { x: a.x - b.x, y: a.y - b.y } }
+do vec_scale(v: Vec2, s: int) -> Vec2 { return Vec2 { x: v.x * s, y: v.y * s } }
+do vec_dist(a: Vec2, b: Vec2) -> float {
+    let dx = float(a.x - b.x)
+    let dy = float(a.y - b.y)
+    return math.sqrt(dx*dx + dy*dy)
+}
+do rect(x: int, y: int, w: int, h: int) -> Rect { return Rect { x: x, y: y, w: w, h: h } }
+do rect_contains(r: Rect, p: Vec2) -> bool {
+    return p.x >= r.x && p.x < r.x + r.w && p.y >= r.y && p.y < r.y + r.h
+}
+do rect_intersects(a: Rect, b: Rect) -> bool {
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
+}
+do clamp_pos(pos: Vec2, bounds: Rect) -> Vec2 {
+    return Vec2 {
+        x: game.clamp(pos.x, bounds.x, bounds.x + bounds.w - 1),
+        y: game.clamp(pos.y, bounds.y, bounds.y + bounds.h - 1)
+    }
+}

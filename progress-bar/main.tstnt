@@ -1,0 +1,12 @@
+use term
+
+do render(cur: int, total: int, width: int) -> str {
+    let pct = cur * 100 / total
+    let filled = cur * width / total
+    let bar = strings.repeat("█", filled) + strings.repeat("░", width - filled)
+    return "[" + term.green(bar) + "] " + str(pct) + "%"
+}
+do print_bar(cur: int, total: int) {
+    print_no_ln("\r" + render(cur, total, 30))
+    if cur >= total { print("") }
+}

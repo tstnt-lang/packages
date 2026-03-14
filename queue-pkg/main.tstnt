@@ -1,0 +1,31 @@
+use db
+
+do new(name: str) {
+    db.set(name, "_head", "0")
+    db.set(name, "_tail", "0")
+}
+do push(name: str, val: str) {
+    let tail = int(db.get(name, "_tail"))
+    db.set(name, str(tail), val)
+    db.set(name, "_tail", str(tail + 1))
+}
+do pop(name: str) -> str {
+    let head = int(db.get(name, "_head"))
+    let tail = int(db.get(name, "_tail"))
+    if head >= tail { return "" }
+    let val = db.get(name, str(head))
+    db.set(name, "_head", str(head + 1))
+    return val
+}
+do peek(name: str) -> str {
+    let head = int(db.get(name, "_head"))
+    return db.get(name, str(head))
+}
+do size(name: str) -> int {
+    let head = int(db.get(name, "_head"))
+    let tail = int(db.get(name, "_tail"))
+    return tail - head
+}
+do is_empty(name: str) -> bool {
+    return size(name) == 0
+}

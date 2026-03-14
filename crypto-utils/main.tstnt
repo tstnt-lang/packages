@@ -1,0 +1,18 @@
+do hash_md5(s: str) -> str { return crypto.md5(s) }
+do hash_sha256(s: str) -> str { return crypto.sha256(s) }
+do to_base64(s: str) -> str { return crypto.base64_encode(s) }
+do from_base64(s: str) -> str { return crypto.base64_decode(s) }
+do to_hex(s: str) -> str { return crypto.hex_encode(s) }
+do random_token(n: int) -> str {
+    let chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+    let mut result = ""
+    let mut i = 0
+    while i < n {
+        result = result + chars[rand.int(0, len(chars) - 1)]
+        i += 1
+    }
+    return result
+}
+do hmac_simple(key: str, msg: str) -> str {
+    return crypto.sha256(key + msg + crypto.sha256(key))
+}

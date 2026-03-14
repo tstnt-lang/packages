@@ -1,0 +1,19 @@
+do scan(host: str, ports: [int]) -> [int] {
+    let mut open = []
+    loop port in ports {
+        let cmd = "nc -z -w 1 " + host + " " + str(port)
+        let status = process.run_status(cmd)
+        if status == 0 {
+            open = arr.push(open, port)
+            print("[open] " + host + ":" + str(port))
+        }
+    }
+    return open
+}
+do common_ports() -> [int] {
+    return [21, 22, 23, 25, 53, 80, 443, 3000, 3306, 5432, 6379, 8080, 8443, 27017]
+}
+do is_open(host: str, port: int) -> bool {
+    let cmd = "nc -z -w 2 " + host + " " + str(port)
+    return process.run_status(cmd) == 0
+}

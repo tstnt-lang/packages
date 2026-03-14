@@ -1,0 +1,24 @@
+do usd(n: float) -> str {
+    let whole = int(n)
+    let cents = int((n - float(whole)) * 100.0 + 0.5)
+    let c = cents < 10 ? "0" + str(cents) : str(cents)
+    return "$" + str(whole) + "." + c
+}
+do eur(n: float) -> str {
+    let whole = int(n)
+    let cents = int((n - float(whole)) * 100.0 + 0.5)
+    let c = cents < 10 ? "0" + str(cents) : str(cents)
+    return "€" + str(whole) + "." + c
+}
+do rub(n: float) -> str {
+    let whole = int(n)
+    let cents = int((n - float(whole)) * 100.0 + 0.5)
+    let c = cents < 10 ? "0" + str(cents) : str(cents)
+    return "₽" + str(whole) + "." + c
+}
+do with_symbol(n: float, symbol: str) -> str {
+    let whole = int(n)
+    let cents = int((n - float(whole)) * 100.0 + 0.5)
+    let c = cents < 10 ? "0" + str(cents) : str(cents)
+    return symbol + str(whole) + "." + c
+}

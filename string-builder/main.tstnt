@@ -1,0 +1,18 @@
+do new() -> str { return "" }
+do append(sb: str, s: str) -> str { return sb + s }
+do append_line(sb: str, s: str) -> str { return sb + s + "\n" }
+do prepend(sb: str, s: str) -> str { return s + sb }
+do insert(sb: str, pos: int, s: str) -> str {
+    let before = strings.split(sb, "")[0]
+    let after = strings.split(sb, "")[1]
+    return before + s + after
+}
+do to_str(sb: str) -> str { return sb }
+do length(sb: str) -> int { return len(sb) }
+do clear() -> str { return "" }
+do repeat_append(sb: str, s: str, n: int) -> str {
+    let mut result = sb
+    let mut i = 0
+    while i < n { result = result + s; i += 1 }
+    return result
+}

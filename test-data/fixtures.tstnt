@@ -1,0 +1,27 @@
+do users(n: int) -> [[str]] {
+    let first = ["Alice","Bob","Charlie","Diana","Eve","Frank","Grace","Henry","Iris","Jack"]
+    let domains = ["gmail.com","yahoo.com","outlook.com"]
+    let mut result = []
+    let mut i = 0
+    while i < n {
+        let name = first[i % len(first)]
+        let email = strings.lower(name) + str(i) + "@" + domains[i % len(domains)]
+        let age = str(18 + (i * 7) % 60)
+        result = arr.push(result, [name, email, age])
+        i += 1
+    }
+    return result
+}
+do products(n: int) -> [[str]] {
+    let names = ["Widget","Gadget","Doohickey","Thingamajig","Gizmo","Contraption","Device","Module"]
+    let mut result = []
+    let mut i = 0
+    while i < n {
+        let name = names[i % len(names)] + " v" + str(i + 1)
+        let price = str(9 + (i * 13) % 990) + ".99"
+        let stock = str((i * 17 + 3) % 200)
+        result = arr.push(result, [name, price, stock])
+        i += 1
+    }
+    return result
+}

@@ -1,0 +1,23 @@
+use term
+
+do info_banner(title: str, msg: str) {
+    print(term.blue("╔══════════════════════════════╗"))
+    print(term.blue("║") + " " + term.bold(title))
+    print(term.blue("║") + " " + msg)
+    print(term.blue("╚══════════════════════════════╝"))
+}
+do success_banner(msg: str) {
+    print(term.green("✅ " + msg))
+}
+do error_banner(msg: str) {
+    print(term.red("❌ " + msg))
+}
+do warn_banner(msg: str) {
+    print(term.yellow("⚠️  " + msg))
+}
+do tip(msg: str) {
+    print(term.cyan("💡 " + msg))
+}
+do divider(char: str, w: int) {
+    print(strings.repeat(char, w))
+}

@@ -1,0 +1,32 @@
+use input
+
+do text_field(label: str) -> str {
+    return input.read(label + ": ")
+}
+do number_field(label: str) -> int {
+    return input.read_int(label + " (number): ")
+}
+do confirm_field(label: str) -> bool {
+    return input.confirm(label + " (y/n): ")
+}
+do select_field(label: str, options: [str]) -> str {
+    let idx = input.menu(label, options)
+    return options[idx]
+}
+do required(val: str, field: str) -> bool {
+    if len(strings.trim(val)) == 0 {
+        print("[form] " + field + " is required")
+        return false
+    }
+    return true
+}
+do submit(fields: [str], values: [str]) -> bool {
+    let mut ok = true
+    loop i, field in fields {
+        if len(strings.trim(values[i])) == 0 {
+            print("[form] missing: " + field)
+            ok = false
+        }
+    }
+    return ok
+}

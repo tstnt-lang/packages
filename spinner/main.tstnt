@@ -1,0 +1,16 @@
+use thread
+use term
+
+let frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+let mut _idx = 0
+
+do tick(msg: str) {
+    print_no_ln("\r" + term.cyan(frames[_idx % 10]) + " " + msg + "  ")
+    _idx = _idx + 1
+}
+do done(msg: str) {
+    print("\r" + term.green("✓") + " " + msg + "       ")
+}
+do fail(msg: str) {
+    print("\r" + term.red("✗") + " " + msg + "       ")
+}

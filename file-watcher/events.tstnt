@@ -1,0 +1,26 @@
+use db
+
+let _db = "tstnt_fw_events"
+
+do log_event(path: str, event: str) {
+    let count = db.incr(_db, "count")
+    db.set(_db, "event:" + str(count), event + ":" + path)
+}
+do all_events() -> [str] {
+    let count = int(str(db.get(_db, "count")))
+    let mut result = []
+    let mut i = 1
+    while i <= count {
+        let v = db.get(_db, "event:" + str(i))
+        if !is_null(v) { result = arr.push(result, v) }
+        i += 1
+    }
+    return result
+}
+do clear_events() {
+    db.clear(_db)
+}
+do count_by_type(event_type: str) -> int {
+    let events = all_events()
+    return len(filter(events, |e| strings.contains(e, event_type + ":")))
+}

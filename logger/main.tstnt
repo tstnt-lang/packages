@@ -1,0 +1,26 @@
+use term
+use time
+
+do _ts() -> str {
+    return str(time.now() / 1000)
+}
+
+do info(msg: str) {
+    print(term.blue("[INFO]") + " " + _ts() + " " + msg)
+}
+do warn(msg: str) {
+    print(term.yellow("[WARN]") + " " + _ts() + " " + msg)
+}
+do error(msg: str) {
+    print(term.red("[ERROR]") + " " + _ts() + " " + msg)
+}
+do debug(msg: str) {
+    print(term.dim("[DEBUG]") + " " + _ts() + " " + msg)
+}
+do success(msg: str) {
+    print(term.green("[OK]") + " " + _ts() + " " + msg)
+}
+do fatal(msg: str) {
+    print(term.bg_red("[FATAL]") + " " + _ts() + " " + msg)
+    process.exit(1)
+}

@@ -1,0 +1,27 @@
+do big(text: str) -> str {
+    let chars = strings.split(strings.upper(text), "")
+    let mut lines = ["", "", "", ""]
+    loop ch in chars {
+        match ch {
+            "A" -> {
+                lines[0] = lines[0] + " /\\ "
+                lines[1] = lines[1] + "/--\\"
+                lines[2] = lines[2] + "/  \\"
+                lines[3] = lines[3] + "    "
+            }
+            "B" -> {
+                lines[0] = lines[0] + "|-- "
+                lines[1] = lines[1] + "|-->"
+                lines[2] = lines[2] + "|-- "
+                lines[3] = lines[3] + "    "
+            }
+            _ -> {
+                lines[0] = lines[0] + " " + ch + "  "
+                lines[1] = lines[1] + "--- "
+                lines[2] = lines[2] + "    "
+                lines[3] = lines[3] + "    "
+            }
+        }
+    }
+    return strings.join(lines, "\n")
+}

@@ -1,0 +1,29 @@
+do days_in_month(month: int, year: int) -> int {
+    if month == 2 {
+        let is_leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
+        return is_leap ? 29 : 28
+    }
+    let days30 = [4, 6, 9, 11]
+    if days30 in map(days30, |d| d == month) { return 30 }
+    return 31
+}
+do is_leap(year: int) -> bool {
+    return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
+}
+do day_of_year(day: int, month: int) -> int {
+    let months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    let mut total = day
+    let mut i = 0
+    while i < month - 1 {
+        total = total + months[i]
+        i += 1
+    }
+    return total
+}
+do weeks_in_year() -> int { return 52 }
+do quarter(month: int) -> int {
+    if month <= 3 { return 1 }
+    if month <= 6 { return 2 }
+    if month <= 9 { return 3 }
+    return 4
+}

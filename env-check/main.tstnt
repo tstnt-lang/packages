@@ -1,0 +1,20 @@
+do require(keys: [str]) -> bool {
+    let mut all_ok = true
+    loop key in keys {
+        let v = env.get(key)
+        if v == "" {
+            print("[env-check] MISSING: " + key)
+            all_ok = false
+        }
+    }
+    return all_ok
+}
+do print_all() {
+    let required = ["HOME", "PATH", "USER"]
+    loop key in required {
+        print(key + "=" + env.get(key))
+    }
+}
+do is_prod() -> bool { return env.get("ENV") == "production" }
+do is_dev() -> bool { return env.get("ENV") == "development" || env.get("ENV") == "" }
+do is_test() -> bool { return env.get("ENV") == "test" }

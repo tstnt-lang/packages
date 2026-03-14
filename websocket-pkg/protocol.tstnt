@@ -1,0 +1,19 @@
+do frame(type_: str, data: str) -> str {
+    return type_ + ":" + data
+}
+do parse_frame(raw: str) -> [str] {
+    return strings.split(raw, ":")
+}
+do frame_type(raw: str) -> str {
+    return strings.split(raw, ":")[0]
+}
+do frame_data(raw: str) -> str {
+    let parts = strings.split(raw, ":")
+    if len(parts) < 2 { return "" }
+    return parts[1]
+}
+do ping() -> str { return frame("ping", "heartbeat") }
+do pong() -> str { return frame("pong", "ok") }
+do text_frame(msg: str) -> str { return frame("text", msg) }
+do json_frame(data: str) -> str { return frame("json", data) }
+do close_frame() -> str { return frame("close", "bye") }

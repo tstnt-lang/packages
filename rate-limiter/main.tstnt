@@ -1,0 +1,22 @@
+use db
+use time
+
+let _db = "tstnt_ratelimit"
+
+do allow(key: str, max: int, window_sec: int) -> bool {
+    let now = time.now() / 1000
+    let window_key = key + ":" + str(now / window_sec)
+    let count = db.incr(_db, window_key)
+    return count <= max
+}
+do remaining(key: str, max: int, window_sec: int) -> int {
+    let now = time.now() / 1000
+    let window_key = key + ":" + str(now / window_sec)
+    let count_str = db.get(_db, window_key)
+    let count = is_null(count_str) ? 0 : int(count_str)
+    let rem = max - count
+    return rem < 0 ? 0 : rem
+}
+do reset(key: str) {
+    db.delete(_db, key)
+}

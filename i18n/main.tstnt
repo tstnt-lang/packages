@@ -1,0 +1,33 @@
+use db
+
+let _db = "tstnt_i18n"
+let mut _lang = "en"
+
+do set_lang(lang: str) {
+    _lang = lang
+}
+do get_lang() -> str {
+    return _lang
+}
+do add(lang: str, key: str, text: str) {
+    db.set(_db, lang + ":" + key, text)
+}
+do t(key: str) -> str {
+    let v = db.get(_db, _lang + ":" + key)
+    if is_null(v) {
+        let en = db.get(_db, "en:" + key)
+        if is_null(en) { return key }
+        return en
+    }
+    return v
+}
+do load_from_file(lang: str, path: str) {
+    let content = fs.read(path)
+    let lines = strings.split(content, "\n")
+    loop line in lines {
+        let parts = strings.split(line, "=")
+        if len(parts) >= 2 {
+            add(lang, strings.trim(parts[0]), strings.trim(parts[1]))
+        }
+    }
+}

@@ -1,0 +1,28 @@
+use db
+
+let _db = "tstnt_cb"
+
+do new(name: str, threshold: int) {
+    db.set(_db, name + ":state", "closed")
+    db.set(_db, name + ":failures", "0")
+    db.set(_db, name + ":threshold", str(threshold))
+}
+do is_open(name: str) -> bool {
+    return db.get(_db, name + ":state") == "open"
+}
+do record_success(name: str) {
+    db.set(_db, name + ":failures", "0")
+    db.set(_db, name + ":state", "closed")
+}
+do record_failure(name: str) {
+    let failures = db.incr(_db, name + ":failures")
+    let threshold = int(db.get(_db, name + ":threshold"))
+    if failures >= threshold {
+        db.set(_db, name + ":state", "open")
+        print("[circuit-breaker] " + name + " OPEN after " + str(failures) + " failures")
+    }
+}
+do reset(name: str) {
+    db.set(_db, name + ":state", "closed")
+    db.set(_db, name + ":failures", "0")
+}

@@ -1,0 +1,18 @@
+use thread
+
+do run_async(steps: [any], val: any) -> any {
+    let mut v = val
+    loop step in steps {
+        v = apply(step, v)
+        thread.sleep(1)
+    }
+    return v
+}
+do parallel(fns: [any], val: any) {
+    loop fn in fns {
+        thread.spawn(|| apply(fn, val))
+    }
+}
+do waterfall(fns: [any], initial: any) -> any {
+    return reduce(fns, |acc fn| apply(fn, acc), initial)
+}

@@ -1,0 +1,13 @@
+do c_to_f(c: float) -> float { return c * 9.0 / 5.0 + 32.0 }
+do f_to_c(f: float) -> float { return (f - 32.0) * 5.0 / 9.0 }
+do c_to_k(c: float) -> float { return c + 273.15 }
+do k_to_c(k: float) -> float { return k - 273.15 }
+do f_to_k(f: float) -> float { return c_to_k(f_to_c(f)) }
+do k_to_f(k: float) -> float { return c_to_f(k_to_c(k)) }
+do describe(c: float) -> str {
+    if c < 0.0 { return "freezing" }
+    if c < 10.0 { return "cold" }
+    if c < 20.0 { return "cool" }
+    if c < 30.0 { return "warm" }
+    return "hot"
+}

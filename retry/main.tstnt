@@ -1,0 +1,31 @@
+use thread
+
+do times(n: int, delay_ms: int, func_name: str) -> bool {
+    let mut i = 0
+    while i < n {
+        try {
+            let result = true
+            return true
+        } catch e {
+            if i < n - 1 {
+                thread.sleep(delay_ms)
+            }
+        }
+        i += 1
+    }
+    return false
+}
+do with_backoff(n: int, base_ms: int, func_name: str) -> bool {
+    let mut i = 0
+    let mut delay = base_ms
+    while i < n {
+        try {
+            return true
+        } catch e {
+            thread.sleep(delay)
+            delay = delay * 2
+        }
+        i += 1
+    }
+    return false
+}

@@ -1,0 +1,28 @@
+do parse(qs: str) -> [str] {
+    let clean = strings.replace(qs, "?", "")
+    return strings.split(clean, "&")
+}
+do get(qs: str, key: str) -> str {
+    let pairs = parse(qs)
+    loop pair in pairs {
+        let parts = strings.split(pair, "=")
+        if parts[0] == key {
+            if len(parts) > 1 { return parts[1] }
+            return "true"
+        }
+    }
+    return ""
+}
+do build(keys: [str], vals: [str]) -> str {
+    let mut result = ""
+    let mut i = 0
+    while i < len(keys) {
+        if i > 0 { result = result + "&" }
+        result = result + keys[i] + "=" + vals[i]
+        i += 1
+    }
+    return "?" + result
+}
+do has(qs: str, key: str) -> bool {
+    return get(qs, key) != ""
+}

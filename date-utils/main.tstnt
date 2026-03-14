@@ -1,0 +1,23 @@
+do timestamp() -> int {
+    return time.now() / 1000
+}
+do format(ts: int) -> str {
+    let h = (ts / 3600) % 24
+    let m = (ts / 60) % 60
+    let s = ts % 60
+    return str(h) + ":" + (m < 10 ? "0" : "") + str(m) + ":" + (s < 10 ? "0" : "") + str(s)
+}
+do days_since(ts: int) -> int {
+    return (timestamp() - ts) / 86400
+}
+do add_days(ts: int, days: int) -> int {
+    return ts + days * 86400
+}
+do is_today(ts: int) -> bool {
+    return days_since(ts) == 0
+}
+do duration_str(seconds: int) -> str {
+    if seconds < 60 { return str(seconds) + "s" }
+    if seconds < 3600 { return str(seconds / 60) + "m " + str(seconds % 60) + "s" }
+    return str(seconds / 3600) + "h " + str((seconds % 3600) / 60) + "m"
+}

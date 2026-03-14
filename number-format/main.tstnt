@@ -1,0 +1,49 @@
+do thousands(n: int) -> str {
+    let s = str(n)
+    let mut result = ""
+    let mut count = 0
+    let mut i = len(s) - 1
+    while i >= 0 {
+        if count > 0 && count % 3 == 0 { result = "," + result }
+        result = s[i] + result
+        count += 1
+        i -= 1
+    }
+    return result
+}
+do fixed(n: float, decimals: int) -> str {
+    let factor = math.pow(10, decimals)
+    let rounded = int(n * float(factor) + 0.5)
+    let whole = rounded / factor
+    let frac = rounded % factor
+    let frac_str = str(frac)
+    let padded = strings.repeat("0", decimals - len(frac_str)) + frac_str
+    return str(whole) + "." + padded
+}
+do ordinal(n: int) -> str {
+    let suffix = match n % 10 {
+        1 -> "st"  2 -> "nd"  3 -> "rd"  _ -> "th"
+    }
+    return str(n) + suffix
+}
+do bytes_human(n: int) -> str {
+    if n < 1024 { return str(n) + " B" }
+    if n < 1048576 { return fixed(float(n) / 1024.0, 1) + " KB" }
+    if n < 1073741824 { return fixed(float(n) / 1048576.0, 1) + " MB" }
+    return fixed(float(n) / 1073741824.0, 2) + " GB"
+}
+do percent(val: float, total: float) -> str {
+    return fixed(val / total * 100.0, 1) + "%"
+}
+do roman(n: int) -> str {
+    let vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1]
+    let syms = ["M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"]
+    let mut result = ""
+    let mut num = n
+    let mut i = 0
+    while i < len(vals) {
+        while num >= vals[i] { result = result + syms[i]; num -= vals[i] }
+        i += 1
+    }
+    return result
+}

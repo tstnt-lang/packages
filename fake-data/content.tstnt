@@ -1,0 +1,38 @@
+do word() -> str {
+    let words = ["lorem","ipsum","dolor","sit","amet","consectetur","adipiscing","elit","sed","do","eiusmod","tempor","incididunt","ut","labore","et","dolore","magna","aliqua","enim"]
+    return words[rand.int(0, len(words) - 1)]
+}
+do sentence(n: int) -> str {
+    let mut words = []
+    let mut i = 0
+    while i < n { words = arr.push(words, word()); i += 1 }
+    let s = strings.join(words, " ")
+    return strings.upper(s[0]) + strings.split(s, "")[1] + "."
+}
+do paragraph(sentences: int) -> str {
+    let mut result = []
+    let mut i = 0
+    while i < sentences {
+        result = arr.push(result, sentence(rand.int(6, 15)))
+        i += 1
+    }
+    return strings.join(result, " ")
+}
+do url() -> str {
+    let domains = ["example.com","test.io","demo.net","sample.org","fake.dev"]
+    let paths = ["about","blog","contact","products","services","api","docs"]
+    return "https://" + domains[rand.int(0, len(domains)-1)] + "/" + paths[rand.int(0, len(paths)-1)]
+}
+do color_hex() -> str {
+    let hex = "0123456789abcdef"
+    let mut result = "#"
+    let mut i = 0
+    while i < 6 {
+        result = result + hex[rand.int(0, 15)]
+        i += 1
+    }
+    return result
+}
+do ip() -> str {
+    return str(rand.int(1,254)) + "." + str(rand.int(0,255)) + "." + str(rand.int(0,255)) + "." + str(rand.int(1,254))
+}

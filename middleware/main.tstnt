@@ -1,0 +1,26 @@
+use db
+
+let _db = "tstnt_mw"
+let mut _stack = []
+
+do use_mw(name: str) {
+    _stack = arr.push(_stack, name)
+}
+do run_stack(request: str) -> str {
+    let mut req = request
+    loop mw in _stack {
+        print("[middleware] " + mw + " -> " + req)
+    }
+    return req
+}
+do log_mw(req: str) -> str {
+    print("[log] " + req)
+    return req
+}
+do auth_mw(req: str) -> str {
+    if strings.contains(req, "token=") { return req }
+    return "401 Unauthorized"
+}
+do cors_mw(req: str) -> str {
+    return req
+}

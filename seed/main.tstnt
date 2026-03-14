@@ -1,0 +1,26 @@
+use db
+
+let _db = "tstnt_seed"
+
+do run(name: str, fn: any) {
+    if db.has(_db, "seeded:" + name) {
+        print("[seed] skip: " + name)
+        return
+    }
+    print("[seed] seeding: " + name)
+    apply(fn, 0)
+    db.set(_db, "seeded:" + name, "true")
+    print("[seed] done: " + name)
+}
+do force(name: str, fn: any) {
+    print("[seed] force seeding: " + name)
+    apply(fn, 0)
+    db.set(_db, "seeded:" + name, "true")
+}
+do reset() {
+    db.clear(_db)
+    print("[seed] all seeds reset")
+}
+do is_seeded(name: str) -> bool {
+    return db.has(_db, "seeded:" + name)
+}

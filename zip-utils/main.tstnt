@@ -1,0 +1,32 @@
+use process
+use fs
+
+do compress(source: str, dest: str) -> bool {
+    let result = process.run_status("zip -r " + dest + " " + source)
+    if result == 0 { print("[zip] compressed: " + source + " -> " + dest) }
+    else { print("[zip] failed to compress: " + source) }
+    return result == 0
+}
+do extract(archive: str, dest: str) -> bool {
+    let result = process.run_status("unzip -o " + archive + " -d " + dest)
+    if result == 0 { print("[zip] extracted: " + archive + " -> " + dest) }
+    else { print("[zip] failed to extract: " + archive) }
+    return result == 0
+}
+do list_contents(archive: str) -> str {
+    return process.run("unzip -l " + archive)
+}
+do add_file(archive: str, file: str) -> bool {
+    let result = process.run_status("zip " + archive + " " + file)
+    return result == 0
+}
+do remove_file(archive: str, file: str) -> bool {
+    let result = process.run_status("zip -d " + archive + " " + file)
+    return result == 0
+}
+do is_valid(archive: str) -> bool {
+    return process.run_status("unzip -t " + archive) == 0
+}
+do size(archive: str) -> int {
+    return fs.size(archive)
+}

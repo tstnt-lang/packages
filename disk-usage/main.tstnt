@@ -1,0 +1,12 @@
+do info(path: str) -> str {
+    return process.run("df -h " + path)
+}
+do free_gb(path: str) -> str {
+    return process.run("df -h " + path + " | tail -1 | awk '{print $4}'")
+}
+do used_pct(path: str) -> str {
+    return process.run("df -h " + path + " | tail -1 | awk '{print $5}'")
+}
+do dir_size(path: str) -> str {
+    return process.run("du -sh " + path + " | awk '{print $1}'")
+}

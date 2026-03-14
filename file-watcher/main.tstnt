@@ -1,0 +1,42 @@
+use db
+use fs
+use thread
+
+let _db = "tstnt_filewatcher"
+
+do watch(path: str) {
+    let size = fs.size(path)
+    let exists = fs.exists(path)
+    db.set(_db, path + ":size", str(size))
+    db.set(_db, path + ":exists", exists ? "true" : "false")
+    print("[watcher] watching: " + path)
+}
+do check(path: str) -> str {
+    let old_exists = db.get(_db, path + ":exists")
+    let old_size = db.get(_db, path + ":size")
+    let new_exists = fs.exists(path)
+    if old_exists == "true" && !new_exists { return "deleted" }
+    if old_exists == "false" && new_exists { return "created" }
+    if new_exists {
+        let new_size = fs.size(path)
+        if str(new_size) != old_size { return "modified" }
+    }
+    return "unchanged"
+}
+do poll(path: str, interval_ms: int, handler: str) {
+    print("[watcher] polling " + path + " every " + str(interval_ms) + "ms")
+    watch(path)
+    while true {
+        let event = check(path)
+        if event != "unchanged" {
+            watch(path)
+            print("[watcher] " + event + ": " + path)
+        }
+        thread.sleep(interval_ms)
+    }
+}
+do unwatch(path: str) {
+    db.delete(_db, path + ":size")
+    db.delete(_db, path + ":exists")
+    print("[watcher] stopped watching: " + path)
+}

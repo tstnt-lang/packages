@@ -1,0 +1,22 @@
+use db
+
+let _db = "tstnt_notes"
+
+do save(title: str, content: str) {
+    db.set(_db, title, content)
+}
+do get(title: str) -> str {
+    let v = db.get(_db, title)
+    if is_null(v) { return "" }
+    return v
+}
+do list() -> [str] {
+    return db.keys(_db)
+}
+do delete(title: str) {
+    db.delete(_db, title)
+}
+do search(query: str) -> [str] {
+    let titles = db.keys(_db)
+    return filter(titles, |t| strings.contains(t, query))
+}

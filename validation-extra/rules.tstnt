@@ -1,0 +1,37 @@
+use db
+
+let _db = "tstnt_validation_rules"
+
+do add_rule(name: str, pattern: str, msg: str) {
+    db.set(_db, name + ":pattern", pattern)
+    db.set(_db, name + ":msg", msg)
+}
+do get_message(name: str) -> str {
+    let v = db.get(_db, name + ":msg")
+    if is_null(v) { return "Invalid value" }
+    return v
+}
+do validate_field(name: str, val: str, rule: str) -> bool {
+    match rule {
+        "required" -> {
+            if len(strings.trim(val)) == 0 {
+                print("[validate] " + name + ": " + get_message("required"))
+                return false
+            }
+        }
+        "min:3" -> {
+            if len(val) < 3 {
+                print("[validate] " + name + ": minimum 3 chars")
+                return false
+            }
+        }
+        "max:255" -> {
+            if len(val) > 255 {
+                print("[validate] " + name + ": maximum 255 chars")
+                return false
+            }
+        }
+        _ -> return true
+    }
+    return true
+}

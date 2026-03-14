@@ -1,0 +1,46 @@
+use bench
+
+struct BenchResult {
+    name: str
+    runs: int
+    total_ms: int
+    avg_ms: float
+    min_ms: int
+    max_ms: int
+}
+
+do run(name: str, fn: any, runs: int) -> BenchResult {
+    let mut total = 0
+    let mut min_t = 999999
+    let mut max_t = 0
+    let mut i = 0
+    while i < runs {
+        let start = bench.now_ms()
+        apply(fn, 0)
+        let elapsed = bench.elapsed(start)
+        total = total + elapsed
+        if elapsed < min_t { min_t = elapsed }
+        if elapsed > max_t { max_t = elapsed }
+        i += 1
+    }
+    let avg = float(total) / float(runs)
+    return BenchResult { name: name, runs: runs, total_ms: total, avg_ms: avg, min_ms: min_t, max_ms: max_t }
+}
+do print_result(r: BenchResult) {
+    print("=== " + r.name + " ===")
+    print("  runs:  " + str(r.runs))
+    print("  total: " + str(r.total_ms) + "ms")
+    print("  avg:   " + str(r.avg_ms) + "ms")
+    print("  min:   " + str(r.min_ms) + "ms")
+    print("  max:   " + str(r.max_ms) + "ms")
+}
+do compare(a: BenchResult, b: BenchResult) {
+    print("=== Compare: " + a.name + " vs " + b.name + " ===")
+    if a.avg_ms < b.avg_ms {
+        let ratio = b.avg_ms / a.avg_ms
+        print("  " + a.name + " is faster by " + str(ratio) + "x")
+    } else {
+        let ratio = a.avg_ms / b.avg_ms
+        print("  " + b.name + " is faster by " + str(ratio) + "x")
+    }
+}

@@ -1,0 +1,18 @@
+use thread
+use term
+
+do run(seconds: int, msg: str) {
+    let mut s = seconds
+    while s > 0 {
+        print_no_ln("\r" + term.yellow("⏱ ") + msg + " " + term.bold(str(s)) + "s   ")
+        thread.sleep(1000)
+        s -= 1
+    }
+    print("\r" + term.green("✓ ") + msg + " done!          ")
+}
+do format(seconds: int) -> str {
+    let h = seconds / 3600
+    let m = (seconds % 3600) / 60
+    let s = seconds % 60
+    return str(h) + ":" + str(m) + ":" + str(s)
+}

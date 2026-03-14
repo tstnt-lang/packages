@@ -1,0 +1,27 @@
+do run(val: any, steps: [any]) -> any {
+    let mut v = val
+    loop step in steps {
+        v = apply(step, v)
+    }
+    return v
+}
+do run_if(val: any, condition: bool, step: any) -> any {
+    if condition { return apply(step, val) }
+    return val
+}
+do tap(val: any, fn: any) -> any {
+    apply(fn, val)
+    return val
+}
+do branch(val: any, cond: any, if_true: any, if_false: any) -> any {
+    if apply(cond, val) { return apply(if_true, val) }
+    return apply(if_false, val)
+}
+do catch_pipeline(val: any, step: any, fallback: any) -> any {
+    try {
+        return apply(step, val)
+    } catch e {
+        return apply(fallback, val)
+    }
+    return val
+}

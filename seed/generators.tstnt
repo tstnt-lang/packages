@@ -1,0 +1,20 @@
+use db
+
+do insert_many(db_name: str, rows: [[str]], cols: [str]) {
+    let mut i = int(str(db.get(db_name, "_count")))
+    loop row in rows {
+        let id = i + 1
+        let mut j = 0
+        while j < len(cols) {
+            db.set(db_name, str(id) + ":" + cols[j], row[j])
+            j += 1
+        }
+        db.set(db_name, "_count", str(id))
+        i = id
+    }
+    print("[seed] inserted " + str(len(rows)) + " rows into " + db_name)
+}
+do truncate(db_name: str) {
+    db.clear(db_name)
+    print("[seed] truncated: " + db_name)
+}

@@ -1,0 +1,12 @@
+use sys
+
+do count() -> int { return sys.cpu_count() }
+do load() -> str {
+    return process.run("uptime | awk -F'load average:' '{print $2}'")
+}
+do usage_pct() -> str {
+    return process.run("top -bn1 | grep 'Cpu(s)' | awk '{print $2}'")
+}
+do info() -> str {
+    return process.run("cat /proc/cpuinfo | grep 'model name' | head -1")
+}

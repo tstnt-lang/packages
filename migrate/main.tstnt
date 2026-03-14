@@ -1,0 +1,39 @@
+use db
+
+let _db = "tstnt_migrations"
+
+do run(name: str, up_fn: any) {
+    if db.has(_db, "ran:" + name) {
+        print("[migrate] skip: " + name + " (already ran)")
+        return
+    }
+    print("[migrate] running: " + name)
+    try {
+        apply(up_fn, 0)
+        db.set(_db, "ran:" + name, str(time.now() / 1000))
+        print("[migrate] done: " + name)
+    } catch e {
+        print("[migrate] FAILED: " + name + " — " + e)
+    }
+}
+do rollback(name: str, down_fn: any) {
+    if !db.has(_db, "ran:" + name) {
+        print("[migrate] not ran: " + name)
+        return
+    }
+    print("[migrate] rolling back: " + name)
+    apply(down_fn, 0)
+    db.delete(_db, "ran:" + name)
+    print("[migrate] rolled back: " + name)
+}
+do status() {
+    let ran = db.keys(_db)
+    print("[migrate] ran migrations: " + str(len(ran)))
+    loop m in ran {
+        print("  ✓ " + m)
+    }
+}
+do reset() {
+    db.clear(_db)
+    print("[migrate] reset all migrations")
+}

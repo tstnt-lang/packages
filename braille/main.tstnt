@@ -1,0 +1,16 @@
+do to_braille(text: str) -> str {
+    let chars = strings.split(strings.lower(text), "")
+    let mut result = ""
+    loop ch in chars {
+        let b = match ch {
+            "a" -> "⠁" "b" -> "⠃" "c" -> "⠉" "d" -> "⠙" "e" -> "⠑"
+            "f" -> "⠋" "g" -> "⠛" "h" -> "⠓" "i" -> "⠊" "j" -> "⠚"
+            "k" -> "⠅" "l" -> "⠇" "m" -> "⠍" "n" -> "⠝" "o" -> "⠕"
+            "p" -> "⠏" "q" -> "⠟" "r" -> "⠗" "s" -> "⠎" "t" -> "⠞"
+            "u" -> "⠥" "v" -> "⠧" "w" -> "⠺" "x" -> "⠭" "y" -> "⠽"
+            "z" -> "⠵" " " -> " " _ -> ch
+        }
+        result = result + b
+    }
+    return result
+}

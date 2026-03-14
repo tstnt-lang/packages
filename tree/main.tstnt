@@ -1,0 +1,32 @@
+use db
+
+let _db = "tstnt_tree"
+
+do add_node(id: str, parent: str, data: str) {
+    db.set(_db, "data:" + id, data)
+    db.set(_db, "parent:" + id, parent)
+    let children = db.get(_db, "children:" + parent)
+    if is_null(children) || children == "" {
+        db.set(_db, "children:" + parent, id)
+    } else {
+        db.set(_db, "children:" + parent, children + "," + id)
+    }
+}
+do children(id: str) -> [str] {
+    let v = db.get(_db, "children:" + id)
+    if is_null(v) || v == "" { return [] }
+    return strings.split(v, ",")
+}
+do parent(id: str) -> str {
+    let v = db.get(_db, "parent:" + id)
+    if is_null(v) { return "" }
+    return v
+}
+do data(id: str) -> str {
+    let v = db.get(_db, "data:" + id)
+    if is_null(v) { return "" }
+    return v
+}
+do is_leaf(id: str) -> bool {
+    return len(children(id)) == 0
+}

@@ -1,0 +1,34 @@
+use term
+
+do print_table(headers: [str], rows: [[str]]) {
+    let col_w = map(headers, |h| len(h))
+    loop row in rows {
+        loop i, cell in row {
+            if i < len(col_w) {
+                if len(cell) > col_w[i] {
+                    col_w[i] = len(cell)
+                }
+            }
+        }
+    }
+    let sep = "+" + reduce(col_w, |acc w| acc + strings.repeat("-", w + 2) + "+", "")
+    print(sep)
+    let header_row = "|" + reduce(map(headers, |h| " " + h + " "), |acc h| acc + h + "|", "")
+    print(term.bold(header_row))
+    print(sep)
+    loop row in rows {
+        let mut line = "|"
+        loop i, cell in row {
+            let w = col_w[i]
+            let padded = cell + strings.repeat(" ", w - len(cell))
+            line = line + " " + padded + " |"
+        }
+        print(line)
+    }
+    print(sep)
+}
+do print_simple(rows: [[str]]) {
+    loop row in rows {
+        print(strings.join(row, "\t"))
+    }
+}

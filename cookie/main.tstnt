@@ -1,0 +1,26 @@
+use db
+
+let _db = "tstnt_cookies"
+
+do set(name: str, value: str) {
+    db.set(_db, name, value)
+}
+do get(name: str) -> str {
+    let v = db.get(_db, name)
+    if is_null(v) { return "" }
+    return v
+}
+do delete(name: str) {
+    db.delete(_db, name)
+}
+do has(name: str) -> bool {
+    return db.has(_db, name)
+}
+do all() -> [str] {
+    return db.keys(_db)
+}
+do to_header() -> str {
+    let keys = all()
+    let pairs = map(keys, |k| k + "=" + get(k))
+    return strings.join(pairs, "; ")
+}

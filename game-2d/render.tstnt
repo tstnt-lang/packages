@@ -1,0 +1,36 @@
+do ascii_canvas(w: int, h: int, fill: str) -> [[str]] {
+    let mut grid = []
+    let mut r = 0
+    while r < h {
+        let row = map(range(0, w), |_| fill)
+        grid = arr.push(grid, row)
+        r += 1
+    }
+    return grid
+}
+do canvas_set(grid: [[str]], x: int, y: int, ch: str) -> [[str]] {
+    let mut g = grid
+    if y >= 0 && y < len(g) && x >= 0 && x < len(g[0]) {
+        g[y][x] = ch
+    }
+    return g
+}
+do canvas_print(grid: [[str]]) {
+    loop row in grid {
+        print(strings.join(row, ""))
+    }
+}
+do draw_line(grid: [[str]], x1: int, y1: int, x2: int, y2: int, ch: str) -> [[str]] {
+    let mut g = grid
+    let dx = x2 - x1
+    let dy = y2 - y1
+    let steps = math.max(abs(dx), abs(dy))
+    let mut i = 0
+    while i <= steps {
+        let x = x1 + dx * i / (steps > 0 ? steps : 1)
+        let y = y1 + dy * i / (steps > 0 ? steps : 1)
+        g = canvas_set(g, x, y, ch)
+        i += 1
+    }
+    return g
+}

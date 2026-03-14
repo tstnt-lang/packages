@@ -1,0 +1,25 @@
+do strength(pwd: str) -> str {
+    let l = len(pwd)
+    let has_upper = strings.lower(pwd) != pwd
+    let has_digit = strings.contains("0123456789", pwd[0])
+    let score = l / 4 + (has_upper ? 2 : 0)
+    if score < 3 { return "weak" }
+    if score < 6 { return "medium" }
+    return "strong"
+}
+do generate(length: int) -> str {
+    let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%"
+    let mut result = ""
+    let mut i = 0
+    while i < length {
+        result = result + chars[rand.int(0, len(chars) - 1)]
+        i += 1
+    }
+    return result
+}
+do hash_pwd(pwd: str) -> str {
+    return crypto.sha256(pwd + "tstnt_salt_v1")
+}
+do verify(pwd: str, hashed: str) -> bool {
+    return hash_pwd(pwd) == hashed
+}

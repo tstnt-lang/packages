@@ -1,0 +1,29 @@
+use "ansi"
+use "ansi/effects"
+
+do box(x: int, y: int, w: int, h: int, title: str) {
+    ansi.move_to(y, x)
+    print_no_ln("┌" + strings.repeat("─", w - 2) + "┐")
+    let mut row = 1
+    while row < h - 1 {
+        ansi.move_to(y + row, x)
+        print_no_ln("│" + strings.repeat(" ", w - 2) + "│")
+        row += 1
+    }
+    ansi.move_to(y + h - 1, x)
+    print_no_ln("└" + strings.repeat("─", w - 2) + "┘")
+    if len(title) > 0 {
+        ansi.move_to(y, x + 2)
+        print_no_ln(" " + effects.bold(title) + " ")
+    }
+}
+do text_at(x: int, y: int, s: str) {
+    ansi.move_to(y, x)
+    print_no_ln(s)
+}
+do clear() {
+    ansi.clear_screen()
+}
+do refresh() {
+    ansi.move_to(1, 1)
+}

@@ -1,0 +1,23 @@
+use db
+
+let _db = "tstnt_sm"
+
+do new_machine(name: str, initial: str) {
+    db.set(_db, name + ":state", initial)
+}
+do state(name: str) -> str {
+    return db.get(_db, name + ":state")
+}
+do add_transition(name: str, from: str, event: str, to: str) {
+    db.set(_db, name + ":t:" + from + ":" + event, to)
+}
+do transition(name: str, event: str) -> bool {
+    let cur = state(name)
+    let next = db.get(_db, name + ":t:" + cur + ":" + event)
+    if is_null(next) || next == "" { return false }
+    db.set(_db, name + ":state", next)
+    return true
+}
+do is_state(name: str, s: str) -> bool {
+    return state(name) == s
+}

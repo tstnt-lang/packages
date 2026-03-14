@@ -1,0 +1,15 @@
+use sys
+
+do hostname() -> str { return sys.hostname() }
+do is_online() -> bool {
+    let result = process.run_status("ping -c 1 -W 2 8.8.8.8")
+    return result == 0
+}
+do local_ip() -> str {
+    let result = process.run("hostname -I")
+    return strings.trim(strings.split(result, " ")[0])
+}
+do check_port(host: str, port: int) -> bool {
+    let cmd = "nc -z -w 2 " + host + " " + str(port)
+    return process.run_status(cmd) == 0
+}

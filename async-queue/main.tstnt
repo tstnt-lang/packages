@@ -1,0 +1,28 @@
+use db
+use thread
+
+let _db = "tstnt_aq"
+
+do new(name: str) {
+    db.set(_db, name + ":head", "0")
+    db.set(_db, name + ":tail", "0")
+    db.set(_db, name + ":running", "false")
+}
+do enqueue(name: str, job: str) {
+    let tail = db.incr(_db, name + ":tail")
+    db.set(_db, name + ":job:" + str(tail), job)
+}
+do dequeue(name: str) -> str {
+    let head = int(db.get(_db, name + ":head"))
+    let tail = int(db.get(_db, name + ":tail"))
+    if head >= tail { return "" }
+    db.incr(_db, name + ":head")
+    let v = db.get(_db, name + ":job:" + str(head + 1))
+    if is_null(v) { return "" }
+    return v
+}
+do size(name: str) -> int {
+    let head = int(db.get(_db, name + ":head"))
+    let tail = int(db.get(_db, name + ":tail"))
+    return tail - head
+}

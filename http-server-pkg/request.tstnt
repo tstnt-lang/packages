@@ -1,0 +1,23 @@
+do parse_headers(raw: str) -> [str] {
+    return strings.split(raw, "\n")
+}
+do get_header(headers: [str], name: str) -> str {
+    loop h in headers {
+        let parts = strings.split(h, ":")
+        if strings.lower(strings.trim(parts[0])) == strings.lower(name) {
+            if len(parts) > 1 { return strings.trim(parts[1]) }
+        }
+    }
+    return ""
+}
+do parse_body(raw: str) -> str {
+    let parts = strings.split(raw, "\r\n\r\n")
+    if len(parts) > 1 { return parts[1] }
+    return ""
+}
+do method(raw: str) -> str {
+    return strings.split(strings.split(raw, "\n")[0], " ")[0]
+}
+do path(raw: str) -> str {
+    return strings.split(strings.split(raw, "\n")[0], " ")[1]
+}

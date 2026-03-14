@@ -1,0 +1,58 @@
+use tg
+use db
+use thread
+
+let _db = "tg_rpg"
+
+do init_player(chat_id: int, name: str) {
+    let id = str(chat_id)
+    db.set(_db, id + ":name", name)
+    db.set(_db, id + ":hp", "100")
+    db.set(_db, id + ":max_hp", "100")
+    db.set(_db, id + ":level", "1")
+    db.set(_db, id + ":xp", "0")
+    db.set(_db, id + ":gold", "50")
+    db.set(_db, id + ":atk", "10")
+}
+do get_stat(chat_id: int, stat: str) -> str {
+    let v = db.get(_db, str(chat_id) + ":" + stat)
+    if is_null(v) { return "0" }
+    return v
+}
+do set_stat(chat_id: int, stat: str, val: str) {
+    db.set(_db, str(chat_id) + ":" + stat, val)
+}
+do incr_stat(chat_id: int, stat: str, n: int) {
+    let cur = int(get_stat(chat_id, stat))
+    set_stat(chat_id, stat, str(cur + n))
+}
+do decr_stat(chat_id: int, stat: str, n: int) {
+    let cur = int(get_stat(chat_id, stat))
+    let new_val = cur - n
+    set_stat(chat_id, stat, str(new_val < 0 ? 0 : new_val))
+}
+do is_alive(chat_id: int) -> bool {
+    return int(get_stat(chat_id, "hp")) > 0
+}
+do status_text(chat_id: int) -> str {
+    let name = get_stat(chat_id, "name")
+    let hp = get_stat(chat_id, "hp")
+    let max_hp = get_stat(chat_id, "max_hp")
+    let level = get_stat(chat_id, "level")
+    let gold = get_stat(chat_id, "gold")
+    let xp = get_stat(chat_id, "xp")
+    return "👤 " + name + "\n❤️ HP: " + hp + "/" + max_hp + "\n⭐ Level: " + level + "\n✨ XP: " + xp + "\n💰 Gold: " + gold
+}
+do fight(chat_id: int, enemy_name: str, enemy_hp: int, enemy_atk: int, enemy_xp: int, enemy_gold: int) -> str {
+    let atk = int(get_stat(chat_id, "atk"))
+    let dmg = atk + rand.int(0, 5)
+    let edm = enemy_atk + rand.int(0, 3)
+    let result = dmg >= enemy_hp ? "win" : "fight"
+    if result == "win" {
+        incr_stat(chat_id, "xp", enemy_xp)
+        incr_stat(chat_id, "gold", enemy_gold)
+        return "⚔️ You defeated " + enemy_name + "!\n+" + str(enemy_xp) + " XP, +" + str(enemy_gold) + " gold!"
+    }
+    decr_stat(chat_id, "hp", edm)
+    return "⚔️ You hit " + enemy_name + " for " + str(dmg) + "\n" + enemy_name + " hits you for " + str(edm)
+}

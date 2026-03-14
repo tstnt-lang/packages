@@ -1,0 +1,33 @@
+use db
+
+let _db = "tstnt_todos"
+
+do add(text: str) -> int {
+    let count = int(str(db.get(_db, "_count"))) + 1
+    db.set(_db, str(count), text)
+    db.set(_db, "_count", str(count))
+    return count
+}
+do done(id: int) {
+    let text = db.get(_db, str(id))
+    db.set(_db, str(id), "[done] " + text)
+}
+do remove(id: int) {
+    db.delete(_db, str(id))
+}
+do list() -> [str] {
+    let count = int(str(db.get(_db, "_count")))
+    let mut result = []
+    let mut i = 1
+    while i <= count {
+        let t = db.get(_db, str(i))
+        if !is_null(t) {
+            result = arr.push(result, str(i) + ". " + t)
+        }
+        i += 1
+    }
+    return result
+}
+do clear() {
+    db.clear(_db)
+}

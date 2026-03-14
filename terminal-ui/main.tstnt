@@ -1,0 +1,38 @@
+use term
+use "ansi"
+
+do header(title: str, subtitle: str) {
+    let w = 50
+    print(term.bold(strings.repeat("═", w)))
+    print(term.bold("  " + title))
+    if subtitle != "" { print(term.dim("  " + subtitle)) }
+    print(term.bold(strings.repeat("═", w)))
+}
+do section(title: str) {
+    print("")
+    print(term.yellow("▸ " + term.bold(title)))
+    print(term.dim(strings.repeat("─", len(title) + 4)))
+}
+do key_value(key: str, val: str) {
+    print("  " + term.dim(key) + ": " + term.bold(val))
+}
+do key_value_list(pairs: [[str]]) {
+    loop pair in pairs {
+        if len(pair) >= 2 {
+            key_value(pair[0], pair[1])
+        }
+    }
+}
+do alert(level: str, msg: str) {
+    match level {
+        "info" -> print(term.blue("ℹ ") + msg)
+        "success" -> print(term.green("✓ ") + msg)
+        "warn" -> print(term.yellow("⚠ ") + msg)
+        "error" -> print(term.red("✗ ") + msg)
+        _ -> print("• " + msg)
+    }
+}
+do footer(text: str) {
+    print(term.dim(strings.repeat("─", 50)))
+    print(term.dim("  " + text))
+}

@@ -1,0 +1,26 @@
+use term
+
+struct Theme { primary: str, secondary: str, success: str, danger: str, warning: str, info: str, muted: str }
+
+do default_theme() -> Theme {
+    return Theme { primary: "blue", secondary: "dim", success: "green", danger: "red", warning: "yellow", info: "cyan", muted: "dim" }
+}
+do apply_color(color: str, text: str) -> str {
+    match color {
+        "red" -> return term.red(text)
+        "green" -> return term.green(text)
+        "yellow" -> return term.yellow(text)
+        "blue" -> return term.blue(text)
+        "cyan" -> return term.blue(text)
+        "dim" -> return term.dim(text)
+        "bold" -> return term.bold(text)
+        _ -> return text
+    }
+    return text
+}
+do primary(theme: Theme, text: str) -> str { return apply_color(theme.primary, text) }
+do success(theme: Theme, text: str) -> str { return apply_color(theme.success, text) }
+do danger(theme: Theme, text: str) -> str { return apply_color(theme.danger, text) }
+do warning(theme: Theme, text: str) -> str { return apply_color(theme.warning, text) }
+do info(theme: Theme, text: str) -> str { return apply_color(theme.info, text) }
+do muted(theme: Theme, text: str) -> str { return apply_color(theme.muted, text) }

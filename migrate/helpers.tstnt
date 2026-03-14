@@ -1,0 +1,24 @@
+use db
+
+do create_table(db_name: str, schema: [str]) {
+    db.set(db_name, "_schema", strings.join(schema, ","))
+    db.set(db_name, "_count", "0")
+    print("[migrate] created: " + db_name + " with fields: " + strings.join(schema, ", "))
+}
+do drop_table(db_name: str) {
+    db.clear(db_name)
+    print("[migrate] dropped: " + db_name)
+}
+do add_column(db_name: str, col: str) {
+    let schema = db.get(db_name, "_schema")
+    db.set(db_name, "_schema", schema + "," + col)
+    print("[migrate] added column: " + col + " to " + db_name)
+}
+do rename_table(old_name: str, new_name: str) {
+    let keys = db.keys(old_name)
+    loop k in keys {
+        db.set(new_name, k, db.get(old_name, k))
+    }
+    db.clear(old_name)
+    print("[migrate] renamed: " + old_name + " -> " + new_name)
+}

@@ -1,0 +1,31 @@
+use db
+
+let _db = "tstnt_pubsub"
+
+do subscribe(channel: str, subscriber: str) {
+    let existing = db.get(_db, "sub:" + channel)
+    if is_null(existing) || existing == "" {
+        db.set(_db, "sub:" + channel, subscriber)
+    } else {
+        db.set(_db, "sub:" + channel, existing + "," + subscriber)
+    }
+}
+do publish(channel: str, message: str) {
+    db.set(_db, "msg:" + channel, message)
+    db.incr(_db, "msg_count:" + channel)
+}
+do last_message(channel: str) -> str {
+    let v = db.get(_db, "msg:" + channel)
+    if is_null(v) { return "" }
+    return v
+}
+do subscribers(channel: str) -> [str] {
+    let v = db.get(_db, "sub:" + channel)
+    if is_null(v) || v == "" { return [] }
+    return strings.split(v, ",")
+}
+do unsubscribe(channel: str, subscriber: str) {
+    let subs = subscribers(channel)
+    let remaining = filter(subs, |s| s != subscriber)
+    db.set(_db, "sub:" + channel, strings.join(remaining, ","))
+}

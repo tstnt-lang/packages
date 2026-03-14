@@ -1,0 +1,36 @@
+do ascii_from_text(text: str, style: str) -> str {
+    let chars = strings.split(text, "")
+    let mut result = ""
+    let border = strings.repeat("*", len(text) * 2 + 6)
+    result = result + border + "\n"
+    result = result + "*  " + strings.join(chars, " ") + "  *\n"
+    result = result + border
+    return result
+}
+do box_text(text: str) -> str {
+    let w = len(text) + 4
+    let top = "+" + strings.repeat("-", w) + "+"
+    let mid = "|  " + text + "  |"
+    return top + "\n" + mid + "\n" + top
+}
+do speech_bubble(text: str) -> str {
+    let w = len(text) + 4
+    let top = " " + strings.repeat("_", w)
+    let mid = "( " + text + " )"
+    let bot = " " + strings.repeat("-", w)
+    return top + "\n" + mid + "\n" + bot + "\n  \\\n   O\n   |"
+}
+do thought_bubble(text: str) -> str {
+    let w = len(text) + 4
+    let top = "  " + strings.repeat(".", w)
+    let mid = "( " + text + " )"
+    return top + "\n" + mid + "\n  .\n .\n."
+}
+do shadow_text(text: str) -> str {
+    let shadow = strings.repeat("█", len(text))
+    return text + "\n " + shadow
+}
+do striped(text: str, char: str) -> str {
+    let stripe = strings.repeat(char, len(text) + 4)
+    return stripe + "\n  " + text + "\n" + stripe
+}

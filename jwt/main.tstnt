@@ -1,0 +1,22 @@
+use crypto
+
+do _b64(s: str) -> str {
+    return strings.replace(strings.replace(crypto.base64_encode(s), "+", "-"), "/", "_")
+}
+do create(payload: str, secret: str) -> str {
+    let header = _b64("{\"alg\":\"HS256\",\"typ\":\"JWT\"}")
+    let body = _b64(payload)
+    let sig = _b64(crypto.sha256(header + "." + body + secret))
+    return header + "." + body + "." + sig
+}
+do verify(token: str, secret: str) -> bool {
+    let parts = strings.split(token, ".")
+    if len(parts) != 3 { return false }
+    let expected_sig = _b64(crypto.sha256(parts[0] + "." + parts[1] + secret))
+    return parts[2] == expected_sig
+}
+do payload(token: str) -> str {
+    let parts = strings.split(token, ".")
+    if len(parts) < 2 { return "" }
+    return crypto.base64_decode(parts[1])
+}

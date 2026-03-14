@@ -1,0 +1,18 @@
+do move_to(row: int, col: int) { print_no_ln("\u001b[" + str(row) + ";" + str(col) + "H") }
+do move_up(n: int) { print_no_ln("\u001b[" + str(n) + "A") }
+do move_down(n: int) { print_no_ln("\u001b[" + str(n) + "B") }
+do move_right(n: int) { print_no_ln("\u001b[" + str(n) + "C") }
+do move_left(n: int) { print_no_ln("\u001b[" + str(n) + "D") }
+do save_pos() { print_no_ln("\u001b[s") }
+do restore_pos() { print_no_ln("\u001b[u") }
+do hide_cursor() { print_no_ln("\u001b[?25l") }
+do show_cursor() { print_no_ln("\u001b[?25h") }
+do clear_screen() { print_no_ln("\u001b[2J\u001b[H") }
+do clear_line() { print_no_ln("\u001b[2K\r") }
+do rgb(r: int, g: int, b: int, text: str) -> str {
+    return "\u001b[38;2;" + str(r) + ";" + str(g) + ";" + str(b) + "m" + text + "\u001b[0m"
+}
+do bg_rgb(r: int, g: int, b: int, text: str) -> str {
+    return "\u001b[48;2;" + str(r) + ";" + str(g) + ";" + str(b) + "m" + text + "\u001b[0m"
+}
+do reset() { print_no_ln("\u001b[0m") }

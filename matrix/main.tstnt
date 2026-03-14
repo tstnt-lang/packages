@@ -1,0 +1,44 @@
+do new(rows: int, cols: int, fill: int) -> [[int]] {
+    let mut m = []
+    let mut r = 0
+    while r < rows {
+        let mut row = []
+        let mut c = 0
+        while c < cols { row = arr.push(row, fill); c += 1 }
+        m = arr.push(m, row)
+        r += 1
+    }
+    return m
+}
+do get(m: [[int]], r: int, c: int) -> int {
+    return m[r][c]
+}
+do rows(m: [[int]]) -> int { return len(m) }
+do cols(m: [[int]]) -> int {
+    if len(m) == 0 { return 0 }
+    return len(m[0])
+}
+do identity(n: int) -> [[int]] {
+    let mut m = new(n, n, 0)
+    let mut i = 0
+    while i < n {
+        m[i][i] = 1
+        i += 1
+    }
+    return m
+}
+do transpose(m: [[int]]) -> [[int]] {
+    let r = rows(m)
+    let c = cols(m)
+    let mut result = new(c, r, 0)
+    let mut i = 0
+    while i < r {
+        let mut j = 0
+        while j < c {
+            result[j][i] = m[i][j]
+            j += 1
+        }
+        i += 1
+    }
+    return result
+}

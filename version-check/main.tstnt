@@ -1,0 +1,32 @@
+do parse(v: str) -> [int] {
+    let parts = strings.split(v, ".")
+    return map(parts, |p| int(p))
+}
+do compare(a: str, b: str) -> int {
+    let va = parse(a)
+    let vb = parse(b)
+    let mut i = 0
+    while i < 3 {
+        let ai = va[i]
+        let bi = vb[i]
+        if ai > bi { return 1 }
+        if ai < bi { return -1 }
+        i += 1
+    }
+    return 0
+}
+do is_newer(a: str, b: str) -> bool { return compare(a, b) > 0 }
+do is_older(a: str, b: str) -> bool { return compare(a, b) < 0 }
+do is_equal(a: str, b: str) -> bool { return compare(a, b) == 0 }
+do bump_patch(v: str) -> str {
+    let parts = parse(v)
+    return str(parts[0]) + "." + str(parts[1]) + "." + str(parts[2] + 1)
+}
+do bump_minor(v: str) -> str {
+    let parts = parse(v)
+    return str(parts[0]) + "." + str(parts[1] + 1) + ".0"
+}
+do bump_major(v: str) -> str {
+    let parts = parse(v)
+    return str(parts[0] + 1) + ".0.0"
+}

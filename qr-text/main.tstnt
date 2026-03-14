@@ -1,0 +1,22 @@
+do mini(text: str) -> str {
+    let hash = reduce(strings.split(text, ""), |acc c| acc + len(c), 0)
+    let size = 5
+    let mut result = ""
+    let mut r = 0
+    while r < size {
+        let mut row = ""
+        let mut c = 0
+        while c < size {
+            let bit = (hash + r * size + c) % 2
+            row = row + (bit == 0 ? "██" : "  ")
+            c += 1
+        }
+        result = result + row + "\n"
+        r += 1
+    }
+    return result
+}
+do border(content: str) -> str {
+    let top = "████████████"
+    return top + "\n" + content + top
+}

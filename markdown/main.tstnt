@@ -1,0 +1,21 @@
+do h1(text: str) -> str { return "# " + text }
+do h2(text: str) -> str { return "## " + text }
+do h3(text: str) -> str { return "### " + text }
+do bold(text: str) -> str { return "**" + text + "**" }
+do italic(text: str) -> str { return "_" + text + "_" }
+do code(text: str) -> str { return "`" + text + "`" }
+do code_block(text: str, lang: str) -> str {
+    return "```" + lang + "\n" + text + "\n```"
+}
+do link(text: str, url: str) -> str { return "[" + text + "](" + url + ")" }
+do image(alt: str, url: str) -> str { return "![" + alt + "](" + url + ")" }
+do list_item(text: str) -> str { return "- " + text }
+do numbered_item(n: int, text: str) -> str { return str(n) + ". " + text }
+do blockquote(text: str) -> str { return "> " + text }
+do hr() -> str { return "---" }
+do table_row(cells: [str]) -> str {
+    return "|" + strings.join(map(cells, |c| " " + c + " "), "|") + "|"
+}
+do table_sep(n: int) -> str {
+    return "|" + strings.repeat("---|", n)
+}

@@ -1,0 +1,15 @@
+do lines_added(old: str, new: str) -> [str] {
+    let old_lines = strings.split(old, "\n")
+    let new_lines = strings.split(new, "\n")
+    return filter(new_lines, |l| !(l in old_lines))
+}
+do lines_removed(old: str, new: str) -> [str] {
+    let old_lines = strings.split(old, "\n")
+    let new_lines = strings.split(new, "\n")
+    return filter(old_lines, |l| !(l in new_lines))
+}
+do summary(old: str, new: str) -> str {
+    let added = len(lines_added(old, new))
+    let removed = len(lines_removed(old, new))
+    return "+" + str(added) + " -" + str(removed)
+}

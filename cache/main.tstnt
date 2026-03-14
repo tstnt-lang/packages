@@ -1,0 +1,39 @@
+use db
+
+let _db = "tstnt_cache"
+let _ttl_db = "tstnt_cache_ttl"
+
+do set(key: str, val: str) {
+    db.set(_db, key, val)
+}
+do set_ttl(key: str, val: str, ttl_sec: int) {
+    db.set(_db, key, val)
+    let expires = int(str(time.now() / 1000)) + ttl_sec
+    db.set(_ttl_db, key, str(expires))
+}
+do get(key: str) -> str {
+    let expires_str = db.get(_ttl_db, key)
+    if !is_null(expires_str) {
+        let expires = int(expires_str)
+        if int(str(time.now() / 1000)) > expires {
+            db.delete(_db, key)
+            db.delete(_ttl_db, key)
+            return ""
+        }
+    }
+    let v = db.get(_db, key)
+    if is_null(v) { return "" }
+    return v
+}
+do has(key: str) -> bool {
+    let v = get(key)
+    return v != ""
+}
+do del(key: str) {
+    db.delete(_db, key)
+    db.delete(_ttl_db, key)
+}
+do flush() {
+    db.clear(_db)
+    db.clear(_ttl_db)
+}

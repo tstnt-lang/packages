@@ -1,0 +1,35 @@
+use term
+
+do render(headers: [str], rows: [[str]]) {
+    let mut widths = map(headers, |h| len(h))
+    loop row in rows {
+        loop i, cell in row {
+            if i < len(widths) && len(cell) > widths[i] {
+                widths[i] = len(cell)
+            }
+        }
+    }
+    let line_parts = map(widths, |w| strings.repeat("─", w + 2))
+    let top = "┌" + strings.join(line_parts, "┬") + "┐"
+    let mid = "├" + strings.join(line_parts, "┼") + "┤"
+    let bot = "└" + strings.join(line_parts, "┴") + "┘"
+    print(top)
+    let mut h_cells = []
+    loop i, h in headers {
+        let pad = strings.repeat(" ", widths[i] - len(h))
+        h_cells = arr.push(h_cells, " " + term.bold(h) + pad + " ")
+    }
+    print("│" + strings.join(h_cells, "│") + "│")
+    print(mid)
+    loop row in rows {
+        let mut cells = []
+        loop i, cell in row {
+            if i < len(widths) {
+                let pad = strings.repeat(" ", widths[i] - len(cell))
+                cells = arr.push(cells, " " + cell + pad + " ")
+            }
+        }
+        print("│" + strings.join(cells, "│") + "│")
+    }
+    print(bot)
+}

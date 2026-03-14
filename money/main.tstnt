@@ -1,0 +1,22 @@
+do format(amount: float, currency: str) -> str {
+    let parts = strings.split(str(amount), ".")
+    let whole = parts[0]
+    let cents = len(parts) > 1 ? parts[1] : "00"
+    let padded_cents = len(cents) == 1 ? cents + "0" : cents
+    return currency + whole + "." + padded_cents
+}
+do add_money(a: float, b: float) -> float {
+    return (int(a * 100) + int(b * 100)) / 100.0
+}
+do sub_money(a: float, b: float) -> float {
+    return (int(a * 100) - int(b * 100)) / 100.0
+}
+do percent(amount: float, pct: float) -> float {
+    return int(amount * pct) / 100.0
+}
+do tax(amount: float, rate: float) -> float {
+    return add_money(amount, percent(amount, rate))
+}
+do discount(amount: float, pct: float) -> float {
+    return sub_money(amount, percent(amount, pct))
+}

@@ -1,0 +1,16 @@
+do all() -> str {
+    return process.run("ps aux")
+}
+do find(name: str) -> str {
+    return process.run("ps aux | grep " + name)
+}
+do kill_by_name(name: str) {
+    process.run("pkill -f " + name)
+}
+do count(name: str) -> int {
+    let result = process.run("pgrep -c " + name)
+    return int(strings.trim(result))
+}
+do running(name: str) -> bool {
+    return count(name) > 0
+}

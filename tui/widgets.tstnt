@@ -1,0 +1,30 @@
+use term
+
+do progress(cur: int, total: int, w: int) -> str {
+    let filled = cur * w / total
+    let pct = cur * 100 / total
+    return "[" + term.green(strings.repeat("█", filled)) + strings.repeat("░", w - filled) + "] " + str(pct) + "%"
+}
+do badge(text: str, color: str) -> str {
+    match color {
+        "green" -> return term.bg_green(" " + text + " ")
+        "red" -> return term.bg_red(" " + text + " ")
+        "blue" -> return term.blue("[" + text + "]")
+        _ -> return "[" + text + "]"
+    }
+    return "[" + text + "]"
+}
+do separator(w: int) -> str {
+    return term.dim(strings.repeat("─", w))
+}
+do status_bar(items: [str], w: int) -> str {
+    let joined = strings.join(items, " │ ")
+    let padding = w - len(joined)
+    return joined + strings.repeat(" ", padding > 0 ? padding : 0)
+}
+do tag(text: str) -> str {
+    return term.cyan("‹" + text + "›")
+}
+do list_item(icon: str, text: str, hint: str) -> str {
+    return icon + " " + text + (hint != "" ? "  " + term.dim(hint) : "")
+}

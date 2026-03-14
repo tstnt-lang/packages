@@ -1,0 +1,35 @@
+do truncate(s: str, max: int, suffix: str) -> str {
+    if len(s) <= max { return s }
+    return strings.slice(s, 0, max - len(suffix)) + suffix
+}
+do wrap(s: str, width: int) -> str {
+    let words = strings.split(s, " ")
+    let mut line = ""
+    let mut result = ""
+    loop word in words {
+        if len(line) + len(word) + 1 > width {
+            result = result + line + "\n"
+            line = word
+        } else {
+            line = line == "" ? word : line + " " + word
+        }
+    }
+    return result + line
+}
+do pluralize(n: int, singular: str, plural: str) -> str {
+    return str(n) + " " + (n == 1 ? singular : plural)
+}
+do humanize(snake: str) -> str {
+    return strings.replace(snake, "_", " ")
+}
+do snake_case(s: str) -> str {
+    return strings.lower(strings.replace(strings.trim(s), " ", "_"))
+}
+do camel_case(s: str) -> str {
+    let parts = strings.split(strings.lower(strings.trim(s)), "_")
+    let mut result = parts[0]
+    loop i in 1..len(parts) {
+        result = result + strings.upper(parts[i][0]) + strings.split(parts[i], "")[1]
+    }
+    return result
+}

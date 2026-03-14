@@ -1,0 +1,33 @@
+use db
+
+let _db = "tstnt_graph"
+
+do add_node(id: str, data: str) {
+    db.set(_db, "node:" + id, data)
+}
+do add_edge(from: str, to: str, weight: int) {
+    let existing = db.get(_db, "edges:" + from)
+    let entry = to + ":" + str(weight)
+    if is_null(existing) || existing == "" {
+        db.set(_db, "edges:" + from, entry)
+    } else {
+        db.set(_db, "edges:" + from, existing + "," + entry)
+    }
+}
+do neighbors(id: str) -> [str] {
+    let edges_str = db.get(_db, "edges:" + id)
+    if is_null(edges_str) || edges_str == "" { return [] }
+    let edges = strings.split(edges_str, ",")
+    return map(edges, |e| strings.split(e, ":")[0])
+}
+do has_node(id: str) -> bool {
+    return db.has(_db, "node:" + id)
+}
+do node_data(id: str) -> str {
+    let v = db.get(_db, "node:" + id)
+    if is_null(v) { return "" }
+    return v
+}
+do clear_graph() {
+    db.clear(_db)
+}

@@ -1,0 +1,27 @@
+use db
+
+do new(name: str) {
+    db.set(name, "_top", "0")
+}
+do push(name: str, val: str) {
+    let top = int(db.get(name, "_top"))
+    db.set(name, str(top), val)
+    db.set(name, "_top", str(top + 1))
+}
+do pop(name: str) -> str {
+    let top = int(db.get(name, "_top"))
+    if top <= 0 { return "" }
+    let new_top = top - 1
+    let val = db.get(name, str(new_top))
+    db.set(name, "_top", str(new_top))
+    return val
+}
+do peek(name: str) -> str {
+    let top = int(db.get(name, "_top"))
+    if top <= 0 { return "" }
+    return db.get(name, str(top - 1))
+}
+do size(name: str) -> int {
+    return int(db.get(name, "_top"))
+}
+do is_empty(name: str) -> bool { return size(name) == 0 }

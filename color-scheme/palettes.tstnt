@@ -1,0 +1,15 @@
+do dark_theme() -> [str] {
+    return ["blue", "dim", "green", "red", "yellow", "cyan", "dim"]
+}
+do light_theme() -> [str] {
+    return ["blue", "dim", "green", "red", "yellow", "blue", "dim"]
+}
+do monokai() -> [str] {
+    return ["yellow", "dim", "green", "red", "yellow", "cyan", "dim"]
+}
+do nord() -> [str] {
+    return ["blue", "dim", "green", "red", "yellow", "cyan", "dim"]
+}
+do solarized() -> [str] {
+    return ["yellow", "dim", "green", "red", "yellow", "blue", "dim"]
+}

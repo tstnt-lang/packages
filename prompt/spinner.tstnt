@@ -1,0 +1,26 @@
+use thread
+use term
+
+let frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"]
+let mut _frame = 0
+
+do spin(msg: str) {
+    print_no_ln("\r" + term.cyan(frames[_frame % 10]) + " " + msg)
+    _frame = _frame + 1
+    thread.sleep(80)
+}
+do done(msg: str) {
+    print("\r" + term.green("✓") + " " + msg + strings.repeat(" ", 20))
+}
+do fail(msg: str) {
+    print("\r" + term.red("✗") + " " + msg + strings.repeat(" ", 20))
+}
+do wait(msg: str, ms: int) {
+    let steps = ms / 80
+    let mut i = 0
+    while i < steps {
+        spin(msg)
+        i += 1
+    }
+    done(msg)
+}

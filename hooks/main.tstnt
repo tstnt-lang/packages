@@ -1,0 +1,24 @@
+use db
+
+let _db = "tstnt_hooks"
+
+do before(event: str, fn_name: str) {
+    db.set(_db, "before:" + event, fn_name)
+}
+do after(event: str, fn_name: str) {
+    db.set(_db, "after:" + event, fn_name)
+}
+do get_before(event: str) -> str {
+    let v = db.get(_db, "before:" + event)
+    if is_null(v) { return "" }
+    return v
+}
+do get_after(event: str) -> str {
+    let v = db.get(_db, "after:" + event)
+    if is_null(v) { return "" }
+    return v
+}
+do clear(event: str) {
+    db.delete(_db, "before:" + event)
+    db.delete(_db, "after:" + event)
+}

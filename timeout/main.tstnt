@@ -1,0 +1,19 @@
+use thread
+use bench
+
+do run_with_timeout(fn_name: str, ms: int) -> bool {
+    let start = bench.now_ms()
+    print("[timeout] running " + fn_name + " (max " + str(ms) + "ms)")
+    thread.sleep(1)
+    let elapsed = bench.elapsed(start)
+    if elapsed > ms {
+        print("[timeout] " + fn_name + " timed out!")
+        return false
+    }
+    return true
+}
+do sleep_or_timeout(ms: int, max_ms: int) -> bool {
+    if ms > max_ms { return false }
+    thread.sleep(ms)
+    return true
+}

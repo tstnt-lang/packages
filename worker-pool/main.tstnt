@@ -1,0 +1,22 @@
+use db
+use thread
+
+let _db = "tstnt_workers"
+
+do new_pool(name: str, workers: int) {
+    db.set(_db, name + ":workers", str(workers))
+    db.set(_db, name + ":jobs", "0")
+    db.set(_db, name + ":done", "0")
+    print("[worker-pool] " + name + " created with " + str(workers) + " workers")
+}
+do submit(name: str, job: str) {
+    let n = db.incr(_db, name + ":jobs")
+    db.set(_db, name + ":job:" + str(n), job)
+    print("[worker-pool] job queued: " + job)
+}
+do stats(name: str) -> str {
+    let jobs = db.get(_db, name + ":jobs")
+    let done = db.get(_db, name + ":done")
+    let workers = db.get(_db, name + ":workers")
+    return "workers=" + workers + " jobs=" + jobs + " done=" + done
+}

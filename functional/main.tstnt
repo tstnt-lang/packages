@@ -1,0 +1,26 @@
+do compose(f: any, g: any) -> any {
+    return |x| apply(f, apply(g, x))
+}
+do pipe_fns(val: any, fns: [any]) -> any {
+    let mut v = val
+    loop fn in fns {
+        v = apply(fn, v)
+    }
+    return v
+}
+do curry(f: any, first_arg: any) -> any {
+    return |x| apply(f, first_arg, x)
+}
+do memoize_key(key: str, f: any) -> any {
+    return |x| {
+        let cached = game.get(key + str(x))
+        if !is_null(cached) { return cached }
+        let result = apply(f, x)
+        game.set(key + str(x), result)
+        return result
+    }
+}
+do identity(x: any) -> any { return x }
+do constant(x: any) -> any { return |_| x }
+do negate(f: any) -> any { return |x| !apply(f, x) }
+do flip(f: any) -> any { return |a b| apply(f, b, a) }

@@ -1,0 +1,24 @@
+use "benchmark-suite"
+
+let mut _suite_results = []
+let mut _suite_name = "Benchmark Suite"
+
+do suite(name: str) {
+    _suite_name = name
+    _suite_results = []
+    print("=== " + name + " ===")
+}
+do bench(name: str, fn: any) {
+    let result = run(name, fn, 10)
+    _suite_results = arr.push(_suite_results, result.avg_ms)
+    print("  " + name + ": " + str(result.avg_ms) + "ms avg")
+}
+do bench_n(name: str, fn: any, n: int) {
+    let result = run(name, fn, n)
+    _suite_results = arr.push(_suite_results, result.avg_ms)
+    print("  " + name + ": " + str(result.avg_ms) + "ms avg (" + str(n) + " runs)")
+}
+do summary() {
+    print("--- Summary ---")
+    print("  Total benchmarks: " + str(len(_suite_results)))
+}

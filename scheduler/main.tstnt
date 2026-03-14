@@ -1,0 +1,19 @@
+use thread
+use time
+
+do every_sec(n: int, fn_name: str) {
+    print("[scheduler] running " + fn_name + " every " + str(n) + "s (call manually in loop)")
+}
+do delay(ms: int, fn_name: str) {
+    thread.sleep(ms)
+    print("[scheduler] delayed " + fn_name + " executed after " + str(ms) + "ms")
+}
+do cron_match(hour: int, minute: int, target_hour: int, target_minute: int) -> bool {
+    return hour == target_hour && minute == target_minute
+}
+do now_hour() -> int {
+    return (time.now() / 1000 / 3600) % 24
+}
+do now_minute() -> int {
+    return (time.now() / 1000 / 60) % 60
+}

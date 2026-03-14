@@ -1,0 +1,32 @@
+do load_env(path: str) -> bool {
+    let content = fs.read(path)
+    if is_null(content) { return false }
+    let lines = strings.split(content, "\n")
+    loop line in lines {
+        let t = strings.trim(line)
+        if len(t) > 0 {
+            let parts = strings.split(t, "=")
+            if len(parts) >= 2 {
+                env.set(strings.trim(parts[0]), strings.trim(parts[1]))
+            }
+        }
+    }
+    return true
+}
+do get(key: str) -> str {
+    return env.get(key)
+}
+do get_or(key: str, default: str) -> str {
+    let v = env.get(key)
+    if v == "" { return default }
+    return v
+}
+do require(key: str) -> str {
+    let v = env.get(key)
+    if v == "" { throw "Config: missing required key: " + key }
+    return v
+}
+do load_json(path: str) -> any {
+    let content = fs.read(path)
+    return json.parse(content)
+}

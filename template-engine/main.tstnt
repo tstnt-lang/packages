@@ -1,0 +1,23 @@
+do render(template: str, key: str, val: str) -> str {
+    return strings.replace(template, "{{" + key + "}}", val)
+}
+do render_all(template: str, keys: [str], vals: [str]) -> str {
+    let mut result = template
+    let mut i = 0
+    while i < len(keys) {
+        result = render(result, keys[i], vals[i])
+        i += 1
+    }
+    return result
+}
+do render_loop(template: str, items: [str], item_key: str) -> str {
+    let mut result = ""
+    loop item in items {
+        result = result + render(template, item_key, item) + "\n"
+    }
+    return result
+}
+do if_block(condition: bool, content: str) -> str {
+    if condition { return content }
+    return ""
+}

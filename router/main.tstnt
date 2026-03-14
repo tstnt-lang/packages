@@ -1,0 +1,23 @@
+use db
+
+let _db = "tstnt_router"
+
+do add(method: str, path: str, handler: str) {
+    db.set(_db, method + ":" + path, handler)
+}
+do get(path: str, handler: str) { add("GET", path, handler) }
+do post(path: str, handler: str) { add("POST", path, handler) }
+do put(path: str, handler: str) { add("PUT", path, handler) }
+do delete(path: str, handler: str) { add("DELETE", path, handler) }
+do resolve(method: str, path: str) -> str {
+    let handler = db.get(_db, method + ":" + path)
+    if is_null(handler) || handler == "" {
+        let wildcard = db.get(_db, method + ":*")
+        if is_null(wildcard) { return "404" }
+        return wildcard
+    }
+    return handler
+}
+do routes() -> [str] {
+    return db.keys(_db)
+}

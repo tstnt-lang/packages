@@ -1,0 +1,25 @@
+use bench
+use thread
+
+do new() -> int {
+    return bench.now_ms()
+}
+do elapsed(start: int) -> int {
+    return bench.elapsed(start)
+}
+do elapsed_sec(start: int) -> float {
+    return float(elapsed(start)) / 1000.0
+}
+do sleep(ms: int) {
+    thread.sleep(ms)
+}
+do measure(fn: any) -> int {
+    let start = new()
+    apply(fn, 0)
+    return elapsed(start)
+}
+do format(ms: int) -> str {
+    if ms < 1000 { return str(ms) + "ms" }
+    if ms < 60000 { return str(ms / 1000) + "s" }
+    return str(ms / 60000) + "m " + str((ms % 60000) / 1000) + "s"
+}

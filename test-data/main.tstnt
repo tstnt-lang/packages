@@ -1,0 +1,31 @@
+do range_arr(from: int, to: int) -> [int] {
+    return range(from, to)
+}
+do fill_arr(n: int, val: any) -> [any] {
+    let mut result = []
+    let mut i = 0
+    while i < n { result = arr.push(result, val); i += 1 }
+    return result
+}
+do random_ints(n: int, min: int, max: int) -> [int] {
+    let mut result = []
+    let mut i = 0
+    while i < n { result = arr.push(result, rand.int(min, max)); i += 1 }
+    return result
+}
+do random_strs(n: int, length: int) -> [str] {
+    let chars = "abcdefghijklmnopqrstuvwxyz"
+    let mut result = []
+    let mut i = 0
+    while i < n {
+        let mut s = ""
+        let mut j = 0
+        while j < length { s = s + chars[rand.int(0, 25)]; j += 1 }
+        result = arr.push(result, s)
+        i += 1
+    }
+    return result
+}
+do shuffle(arr: [any]) -> [any] {
+    return rand.shuffle(arr)
+}

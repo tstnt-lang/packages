@@ -1,0 +1,16 @@
+use term
+use version-check
+
+do check(current: str, latest: str, pkg_name: str) -> bool {
+    if is_older(current, latest) {
+        print("")
+        print(term.yellow("╭─────────────────────────────────────╮"))
+        print(term.yellow("│") + " Update available: " + term.bold(pkg_name) + "              " + term.yellow("│"))
+        print(term.yellow("│") + " " + term.dim(current) + " → " + term.green(latest) + "                      " + term.yellow("│"))
+        print(term.yellow("│") + " Run: tstnt pkg install " + pkg_name + "       " + term.yellow("│"))
+        print(term.yellow("╰─────────────────────────────────────╯"))
+        print("")
+        return true
+    }
+    return false
+}

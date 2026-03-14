@@ -1,0 +1,29 @@
+do parse(url: str) -> any {
+    let has_https = strings.contains(url, "https://")
+    let has_http = strings.contains(url, "http://")
+    let protocol = has_https ? "https" : (has_http ? "http" : "")
+    let rest = strings.replace(strings.replace(url, "https://", ""), "http://", "")
+    let parts = strings.split(rest, "/")
+    let host = parts[0]
+    let path = len(parts) > 1 ? "/" + strings.join(filter(parts, |p| p != host), "/") : "/"
+    let qmark = strings.split(path, "?")
+    let clean_path = qmark[0]
+    let query = len(qmark) > 1 ? qmark[1] : ""
+    return struct_url(protocol, host, clean_path, query)
+}
+do struct_url(protocol: str, host: str, path: str, query: str) -> str {
+    return protocol + "://" + host + path + (query != "" ? "?" + query : "")
+}
+do get_host(url: str) -> str {
+    let rest = strings.replace(strings.replace(url, "https://", ""), "http://", "")
+    return strings.split(rest, "/")[0]
+}
+do get_path(url: str) -> str {
+    let rest = strings.replace(strings.replace(url, "https://", ""), "http://", "")
+    let parts = strings.split(rest, "/")
+    if len(parts) <= 1 { return "/" }
+    return "/" + parts[1]
+}
+do encode(s: str) -> str {
+    return strings.replace(strings.replace(strings.replace(s, " ", "%20"), "&", "%26"), "=", "%3D")
+}

@@ -1,0 +1,35 @@
+use term
+
+do rainbow(text: str) -> str {
+    let chars = strings.split(text, "")
+    let colors = ["red", "yellow", "green", "cyan", "blue", "magenta"]
+    let mut result = ""
+    loop i, ch in chars {
+        let color = colors[i % len(colors)]
+        match color {
+            "red" -> result = result + term.red(ch)
+            "yellow" -> result = result + term.yellow(ch)
+            "green" -> result = result + term.green(ch)
+            "cyan" -> result = result + term.blue(ch)
+            "blue" -> result = result + term.blue(ch)
+            _ -> result = result + term.dim(ch)
+        }
+    }
+    return result
+}
+do gradient(text: str) -> str {
+    let chars = strings.split(text, "")
+    let mut result = ""
+    let n = len(chars)
+    loop i, ch in chars {
+        if i < n / 3 { result = result + term.blue(ch) }
+        else {
+            if i < n * 2 / 3 { result = result + term.cyan(ch) }
+            else { result = result + term.green(ch) }
+        }
+    }
+    return result
+}
+do highlight(text: str, word: str) -> str {
+    return strings.replace(text, word, term.yellow(term.bold(word)))
+}

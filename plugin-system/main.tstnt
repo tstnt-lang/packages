@@ -1,0 +1,22 @@
+use db
+
+let _db = "tstnt_plugins"
+
+do register(name: str, version: str, description: str) {
+    db.set(_db, name + ":version", version)
+    db.set(_db, name + ":desc", description)
+    db.set(_db, name + ":enabled", "true")
+    print("[plugin] registered: " + name + " v" + version)
+}
+do enable(name: str) { db.set(_db, name + ":enabled", "true") }
+do disable(name: str) { db.set(_db, name + ":enabled", "false") }
+do is_enabled(name: str) -> bool {
+    return db.get(_db, name + ":enabled") == "true"
+}
+do list_plugins() -> [str] {
+    let all = db.keys(_db)
+    return filter(all, |k| strings.ends_with(k, ":version"))
+}
+do info(name: str) -> str {
+    return name + " v" + db.get(_db, name + ":version") + " - " + db.get(_db, name + ":desc")
+}

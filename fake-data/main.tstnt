@@ -1,0 +1,22 @@
+do first_name() -> str {
+    let names = ["Alice","Bob","Charlie","Diana","Eve","Frank","Grace","Henry","Iris","Jack","Kate","Leo","Mia","Noah","Olivia","Pete","Quinn","Rose","Sam","Tina","Uma","Vic","Wendy","Xander","Yara","Zoe"]
+    return names[rand.int(0, len(names) - 1)]
+}
+do last_name() -> str {
+    let names = ["Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Wilson","Moore","Taylor","Anderson","Thomas","Jackson","White","Harris","Martin","Thompson","Lee","Walker"]
+    return names[rand.int(0, len(names) - 1)]
+}
+do full_name() -> str { return first_name() + " " + last_name() }
+do email() -> str {
+    let domains = ["gmail.com","yahoo.com","outlook.com","mail.com","proton.me"]
+    let name = strings.lower(first_name()) + str(rand.int(10, 999))
+    return name + "@" + domains[rand.int(0, len(domains) - 1)]
+}
+do phone() -> str {
+    return "+1-" + str(rand.int(200,999)) + "-" + str(rand.int(100,999)) + "-" + str(rand.int(1000,9999))
+}
+do age() -> int { return rand.int(18, 80) }
+do company() -> str {
+    let names = ["Acme Corp","TechFlow","DataSync","CloudBase","ByteWave","NexGen","PixelFarm","CodeLab","AlphaNet","ZeroPoint"]
+    return names[rand.int(0, len(names) - 1)]
+}

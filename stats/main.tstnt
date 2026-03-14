@@ -1,0 +1,42 @@
+do mean(arr: [float]) -> float {
+    return float(sum(arr)) / float(len(arr))
+}
+do median(arr: [float]) -> float {
+    let s = sort(arr)
+    let n = len(s)
+    if n % 2 == 0 { return (float(s[n/2 - 1]) + float(s[n/2])) / 2.0 }
+    return float(s[n/2])
+}
+do variance(arr: [float]) -> float {
+    let m = mean(arr)
+    let diffs = map(arr, |x| (float(x) - m) * (float(x) - m))
+    return mean(diffs)
+}
+do std_dev(arr: [float]) -> float {
+    return math.sqrt(variance(arr))
+}
+do mode(arr: [any]) -> any {
+    let sorted = sort(arr)
+    let mut best = sorted[0]
+    let mut best_count = 1
+    let mut cur = sorted[0]
+    let mut cur_count = 1
+    loop i in 1..len(sorted) {
+        if sorted[i] == cur {
+            cur_count += 1
+            if cur_count > best_count {
+                best_count = cur_count
+                best = cur
+            }
+        } else {
+            cur = sorted[i]
+            cur_count = 1
+        }
+    }
+    return best
+}
+do percentile(arr: [float], p: float) -> float {
+    let s = sort(arr)
+    let idx = int(float(len(s)) * p / 100.0)
+    return float(s[idx])
+}

@@ -1,0 +1,27 @@
+do convert(amount: float, from: str, to: str) -> float {
+    let rates_usd = match from {
+        "USD" -> 1.0  "EUR" -> 1.08  "GBP" -> 1.27
+        "RUB" -> 0.011  "JPY" -> 0.0067  "CNY" -> 0.14
+        _ -> 1.0
+    }
+    let rates_to = match to {
+        "USD" -> 1.0  "EUR" -> 0.92  "GBP" -> 0.78
+        "RUB" -> 91.0  "JPY" -> 149.0  "CNY" -> 7.2
+        _ -> 1.0
+    }
+    return amount * rates_usd * rates_to
+}
+do format(amount: float, symbol: str) -> str {
+    let whole = int(amount)
+    let cents = int((amount - float(whole)) * 100.0)
+    let c_str = cents < 10 ? "0" + str(cents) : str(cents)
+    return symbol + str(whole) + "." + c_str
+}
+do symbols(code: str) -> str {
+    match code {
+        "USD" -> return "$"  "EUR" -> return "€"  "GBP" -> return "£"
+        "RUB" -> return "₽"  "JPY" -> return "¥"  "CNY" -> return "¥"
+        _ -> return code
+    }
+    return code
+}

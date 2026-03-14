@@ -1,0 +1,35 @@
+use process
+use db
+
+let _db = "tstnt_ws"
+
+do connect(url: str) -> str {
+    let id = "ws_" + str(rand.int(1000, 9999))
+    db.set(_db, id + ":url", url)
+    db.set(_db, id + ":state", "connected")
+    print("[ws] connected to " + url + " (id=" + id + ")")
+    return id
+}
+do send(id: str, msg: str) {
+    let url = db.get(_db, id + ":url")
+    print("[ws] send to " + url + ": " + msg)
+    db.set(_db, id + ":last_sent", msg)
+}
+do close(id: str) {
+    db.set(_db, id + ":state", "closed")
+    print("[ws] closed: " + id)
+}
+do is_connected(id: str) -> bool {
+    return db.get(_db, id + ":state") == "connected"
+}
+do on_message(id: str, handler: str) {
+    db.set(_db, id + ":handler", handler)
+    print("[ws] handler registered: " + handler)
+}
+do simulate_receive(id: str, msg: str) {
+    let handler = db.get(_db, id + ":handler")
+    print("[ws] received on " + id + ": " + msg)
+    if !is_null(handler) && handler != "" {
+        print("[ws] calling handler: " + handler + "(" + msg + ")")
+    }
+}

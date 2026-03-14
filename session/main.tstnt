@@ -1,0 +1,29 @@
+use db
+use crypto
+use time
+
+let _db = "tstnt_sessions"
+
+do create(user: str) -> str {
+    let token = crypto.sha256(user + str(time.now()) + str(rand.int(0, 999999)))
+    db.set(_db, token, user)
+    db.set(_db, token + ":created", str(time.now() / 1000))
+    return token
+}
+do get_user(token: str) -> str {
+    let v = db.get(_db, token)
+    if is_null(v) { return "" }
+    return v
+}
+do valid(token: str) -> bool {
+    return db.has(_db, token)
+}
+do destroy(token: str) {
+    db.delete(_db, token)
+    db.delete(_db, token + ":created")
+}
+do age_sec(token: str) -> int {
+    let created_str = db.get(_db, token + ":created")
+    if is_null(created_str) { return -1 }
+    return int(str(time.now() / 1000)) - int(created_str)
+}

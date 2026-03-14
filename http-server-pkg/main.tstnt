@@ -1,0 +1,29 @@
+use db
+use process
+
+let _db = "tstnt_http_routes"
+
+do route(method: str, path: str, handler: str) {
+    db.set(_db, method + ":" + path, handler)
+}
+do get(path: str, handler: str) { route("GET", path, handler) }
+do post(path: str, handler: str) { route("POST", path, handler) }
+do resolve(method: str, path: str) -> str {
+    let h = db.get(_db, method + ":" + path)
+    if is_null(h) || h == "" {
+        let wildcard = db.get(_db, method + ":*")
+        if is_null(wildcard) { return "404_handler" }
+        return wildcard
+    }
+    return h
+}
+do listen(port: int) {
+    print("[http] Listening on http://localhost:" + str(port))
+    print("[http] Routes registered: " + str(len(db.keys(_db))))
+    print("[http] Note: full HTTP server requires native extension")
+    print("[http] Use process.run('python3 -m http.server " + str(port) + "') for static files")
+}
+do start_python_server(port: int, dir: str) {
+    print("[http] Starting Python HTTP server on port " + str(port))
+    process.run("cd " + dir + " && python3 -m http.server " + str(port) + " &")
+}

@@ -1,0 +1,35 @@
+use db
+
+do new(name: str) {
+    db.set(name, "_size", "0")
+}
+do append(name: str, val: str) {
+    let n = int(db.get(name, "_size"))
+    db.set(name, str(n), val)
+    db.set(name, "_size", str(n + 1))
+}
+do get(name: str, idx: int) -> str {
+    return db.get(name, str(idx))
+}
+do size(name: str) -> int {
+    return int(db.get(name, "_size"))
+}
+do to_array(name: str) -> [str] {
+    let n = size(name)
+    let mut result = []
+    let mut i = 0
+    while i < n {
+        result = arr.push(result, get(name, i))
+        i += 1
+    }
+    return result
+}
+do remove_at(name: str, idx: int) {
+    let n = size(name)
+    let mut i = idx
+    while i < n - 1 {
+        db.set(name, str(i), db.get(name, str(i + 1)))
+        i += 1
+    }
+    db.set(name, "_size", str(n - 1))
+}

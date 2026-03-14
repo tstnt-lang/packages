@@ -1,0 +1,17 @@
+do encode(s: str) -> str {
+    return crypto.base64_encode(s)
+}
+do decode(s: str) -> str {
+    return crypto.base64_decode(s)
+}
+do encode_file(path: str) -> str {
+    let content = fs.read(path)
+    return encode(content)
+}
+do is_valid(s: str) -> bool {
+    let decoded = decode(s)
+    return len(decoded) > 0
+}
+do encode_url(s: str) -> str {
+    return strings.replace(strings.replace(strings.replace(encode(s), "+", "-"), "/", "_"), "=", "")
+}

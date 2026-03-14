@@ -1,0 +1,35 @@
+use input
+use term
+
+do ask(question: str) -> str {
+    print_no_ln(term.cyan("? ") + term.bold(question) + " ")
+    return input.read("")
+}
+do ask_int(question: str) -> int {
+    print_no_ln(term.cyan("? ") + term.bold(question) + " ")
+    return input.read_int("")
+}
+do ask_secret(question: str) -> str {
+    print_no_ln(term.cyan("? ") + term.bold(question) + " (hidden) ")
+    return input.read("")
+}
+do ask_confirm(question: str) -> bool {
+    print_no_ln(term.cyan("? ") + term.bold(question) + term.dim(" (y/n) "))
+    return input.confirm("")
+}
+do ask_choice(question: str, options: [str]) -> str {
+    print(term.cyan("? ") + term.bold(question))
+    loop i, opt in options {
+        print("  " + term.dim(str(i + 1) + ".") + " " + opt)
+    }
+    let idx = input.read_int("→ ") - 1
+    let safe_idx = idx < 0 ? 0 : (idx >= len(options) ? len(options) - 1 : idx)
+    return options[safe_idx]
+}
+do ask_multi(questions: [str]) -> [str] {
+    let mut answers = []
+    loop q in questions {
+        answers = arr.push(answers, ask(q))
+    }
+    return answers
+}

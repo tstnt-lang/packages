@@ -1,0 +1,23 @@
+do mr_map(data: [any], mapper: any) -> [any] {
+    return map(data, mapper)
+}
+do mr_filter(data: [any], predicate: any) -> [any] {
+    return filter(data, predicate)
+}
+do mr_reduce(data: [any], reducer: any, init: any) -> any {
+    return reduce(data, reducer, init)
+}
+do word_count(text: str) -> any {
+    let words = strings.split(text, " ")
+    let counts = reduce(words, |acc word|
+        game.set("wc:" + word, str(int(str(game.get("wc:" + word))) + 1)), 0)
+    return counts
+}
+do group_by(data: [any], key_fn: any) -> any {
+    let mut result = []
+    loop item in data {
+        let key = apply(key_fn, item)
+        result = arr.push(result, key + ":" + str(item))
+    }
+    return result
+}

@@ -1,0 +1,30 @@
+use db
+
+let _db = "tstnt_promise"
+
+do resolve(id: str, value: str) {
+    db.set(_db, id + ":state", "resolved")
+    db.set(_db, id + ":value", value)
+}
+do reject(id: str, reason: str) {
+    db.set(_db, id + ":state", "rejected")
+    db.set(_db, id + ":value", reason)
+}
+do is_resolved(id: str) -> bool {
+    return db.get(_db, id + ":state") == "resolved"
+}
+do is_rejected(id: str) -> bool {
+    return db.get(_db, id + ":state") == "rejected"
+}
+do value(id: str) -> str {
+    let v = db.get(_db, id + ":value")
+    if is_null(v) { return "" }
+    return v
+}
+do then(id: str, fn_name: str) -> str {
+    if is_resolved(id) {
+        print("[promise] then -> " + fn_name)
+        return value(id)
+    }
+    return ""
+}

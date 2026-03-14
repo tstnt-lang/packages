@@ -1,0 +1,27 @@
+do box(text: str) -> str {
+    let w = len(text) + 2
+    let top = "┌" + strings.repeat("─", w) + "┐"
+    let mid = "│ " + text + " │"
+    let bot = "└" + strings.repeat("─", w) + "┘"
+    return top + "\n" + mid + "\n" + bot
+}
+do double_box(text: str) -> str {
+    let w = len(text) + 2
+    let top = "╔" + strings.repeat("═", w) + "╗"
+    let mid = "║ " + text + " ║"
+    let bot = "╚" + strings.repeat("═", w) + "╝"
+    return top + "\n" + mid + "\n" + bot
+}
+do banner(text: str) {
+    let line = strings.repeat("=", len(text) + 4)
+    print(line)
+    print("= " + text + " =")
+    print(line)
+}
+do separator(char: str, width: int) -> str {
+    return strings.repeat(char, width)
+}
+do center(text: str, width: int) -> str {
+    let pad = (width - len(text)) / 2
+    return strings.repeat(" ", pad) + text
+}

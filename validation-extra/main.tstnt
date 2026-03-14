@@ -1,0 +1,36 @@
+do is_phone(s: str) -> bool {
+    let clean = strings.replace(strings.replace(strings.replace(s, "+", ""), "-", ""), " ", "")
+    return len(clean) >= 7 && len(clean) <= 15
+}
+do is_credit_card(s: str) -> bool {
+    let clean = strings.replace(s, " ", "")
+    return len(clean) >= 13 && len(clean) <= 19
+}
+do is_hex_color(s: str) -> bool {
+    if s[0] != "#" { return false }
+    return len(s) == 4 || len(s) == 7
+}
+do is_ipv4(s: str) -> bool {
+    let parts = strings.split(s, ".")
+    if len(parts) != 4 { return false }
+    let mut valid = true
+    loop part in parts {
+        let n = int(part)
+        if n < 0 || n > 255 { valid = false }
+    }
+    return valid
+}
+do is_semver(s: str) -> bool {
+    let parts = strings.split(s, ".")
+    if len(parts) != 3 { return false }
+    let mut valid = true
+    loop part in parts {
+        let n = int(part)
+        if str(n) != part { valid = false }
+    }
+    return valid
+}
+do is_json(s: str) -> bool {
+    let t = strings.trim(s)
+    return (t[0] == "{" || t[0] == "[") && (strings.ends_with(t, "}") || strings.ends_with(t, "]"))
+}

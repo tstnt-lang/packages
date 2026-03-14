@@ -1,0 +1,13 @@
+use sys
+use process
+
+do info() -> str {
+    return "OS: " + sys.os() + "\nArch: " + sys.arch() + "\nCPUs: " + str(sys.cpu_count()) + "\nHome: " + sys.home()
+}
+do os() -> str { return sys.os() }
+do arch() -> str { return sys.arch() }
+do cpus() -> int { return sys.cpu_count() }
+do cwd() -> str { return sys.cwd() }
+do home() -> str { return sys.home() }
+do hostname() -> str { return sys.hostname() }
+do pid() -> int { return process.pid() }

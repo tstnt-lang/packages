@@ -1,0 +1,35 @@
+do min_length(val: str, n: int, field: str) -> bool {
+    if len(val) < n {
+        print("[validate] " + field + " must be at least " + str(n) + " chars")
+        return false
+    }
+    return true
+}
+do max_length(val: str, n: int, field: str) -> bool {
+    if len(val) > n {
+        print("[validate] " + field + " max " + str(n) + " chars")
+        return false
+    }
+    return true
+}
+do is_email(val: str, field: str) -> bool {
+    if !strings.contains(val, "@") || !strings.contains(val, ".") {
+        print("[validate] " + field + " must be a valid email")
+        return false
+    }
+    return true
+}
+do is_in(val: str, allowed: [str], field: str) -> bool {
+    if !(val in allowed) {
+        print("[validate] " + field + " must be one of: " + strings.join(allowed, ", "))
+        return false
+    }
+    return true
+}
+do matches(val: str, other: str, field: str) -> bool {
+    if val != other {
+        print("[validate] " + field + " does not match")
+        return false
+    }
+    return true
+}

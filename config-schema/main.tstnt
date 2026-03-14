@@ -1,0 +1,44 @@
+use db
+
+let _db = "tstnt_schema"
+
+do define(key: str, type_: str, required: bool, default: str) {
+    db.set(_db, key + ":type", type_)
+    db.set(_db, key + ":required", required ? "true" : "false")
+    db.set(_db, key + ":default", default)
+}
+do validate(key: str, val: str) -> bool {
+    let type_ = db.get(_db, key + ":type")
+    if is_null(type_) { return true }
+    match type_ {
+        "int" -> {
+            let n = int(val)
+            return str(n) == strings.trim(val)
+        }
+        "bool" -> { return val == "true" || val == "false" }
+        "email" -> { return strings.contains(val, "@") && strings.contains(val, ".") }
+        "url" -> { return strings.contains(val, "://") }
+        _ -> return len(val) > 0
+    }
+    return true
+}
+do get_default(key: str) -> str {
+    let v = db.get(_db, key + ":default")
+    if is_null(v) { return "" }
+    return v
+}
+do is_required(key: str) -> bool {
+    return db.get(_db, key + ":required") == "true"
+}
+do validate_all(keys: [str], vals: [str]) -> bool {
+    let mut ok = true
+    let mut i = 0
+    while i < len(keys) {
+        if !validate(keys[i], vals[i]) {
+            print("[schema] invalid: " + keys[i] + " = " + vals[i])
+            ok = false
+        }
+        i += 1
+    }
+    return ok
+}

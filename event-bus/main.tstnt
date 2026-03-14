@@ -1,0 +1,23 @@
+use db
+
+let _db = "tstnt_eventbus"
+
+do on(event: str, handler: str) {
+    let existing = db.get(_db, event)
+    if is_null(existing) || existing == "" {
+        db.set(_db, event, handler)
+    } else {
+        db.set(_db, event, existing + "," + handler)
+    }
+}
+do handlers(event: str) -> [str] {
+    let v = db.get(_db, event)
+    if is_null(v) || v == "" { return [] }
+    return strings.split(v, ",")
+}
+do off(event: str) {
+    db.delete(_db, event)
+}
+do events() -> [str] {
+    return db.keys(_db)
+}

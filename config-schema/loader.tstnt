@@ -1,0 +1,18 @@
+do from_env(keys: [str]) -> [str] {
+    return map(keys, |k| env.get(k))
+}
+do from_file(path: str, sep: str) -> [[str]] {
+    let content = fs.read(path)
+    let lines = strings.split(content, "\n")
+    return map(filter(lines, |l| len(strings.trim(l)) > 0 && l[0] != "#"), |line| strings.split(line, sep))
+}
+do merge(base: [str], override_: [str]) -> [str] {
+    let mut result = []
+    let mut i = 0
+    while i < len(base) {
+        let ov = override_[i]
+        result = arr.push(result, ov != "" ? ov : base[i])
+        i += 1
+    }
+    return result
+}
