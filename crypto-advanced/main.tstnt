@@ -1,0 +1,33 @@
+use crypto
+
+do pbkdf2_simple(password: str, salt: str, iterations: int) -> str {
+    let mut result = crypto.sha256(password + salt)
+    let mut i = 0
+    while i < iterations {
+        result = crypto.sha256(result + salt)
+        i += 1
+    }
+    return result
+}
+do hmac_sha256(key: str, message: str) -> str {
+    return crypto.sha256(key + message + crypto.sha256(key))
+}
+do otp_generate(secret: str, counter: int) -> str {
+    let hash = crypto.sha256(secret + str(counter))
+    let offset = int(strings.split(hash, "")[len(hash)-1]) % 15
+    let code = int(strings.split(hash, "")[offset]) % 1000000
+    return str(code)
+}
+do token_generate(n: int) -> str {
+    let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    let mut result = ""
+    let mut i = 0
+    while i < n {
+        result = result + chars[rand.int(0, len(chars) - 1)]
+        i += 1
+    }
+    return result
+}
+do checksum(data: str) -> str {
+    return crypto.sha256(data)[0..8]
+}

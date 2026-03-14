@@ -1,0 +1,28 @@
+use db
+
+let _db = "rpg_items"
+
+do define_item(id: str, name: str, type_: str, value: int, effect: str) {
+    db.set(_db, id + ":name", name)
+    db.set(_db, id + ":type", type_)
+    db.set(_db, id + ":value", str(value))
+    db.set(_db, id + ":effect", effect)
+}
+do give_item(player_id: str, item_id: str) {
+    let inv = db.get(_db, player_id + ":inv")
+    if is_null(inv) || inv == "" {
+        db.set(_db, player_id + ":inv", item_id)
+    } else {
+        db.set(_db, player_id + ":inv", inv + "," + item_id)
+    }
+}
+do get_inventory(player_id: str) -> [str] {
+    let inv = db.get(_db, player_id + ":inv")
+    if is_null(inv) || inv == "" { return [] }
+    return strings.split(inv, ",")
+}
+do use_item(player_id: str, item_id: str) -> str {
+    let name = db.get(_db, item_id + ":name")
+    let effect = db.get(_db, item_id + ":effect")
+    return "Used " + name + ": " + effect
+}

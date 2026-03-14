@@ -1,0 +1,43 @@
+use db
+
+let _db = "tstnt_toml"
+
+do parse(content: str) {
+    let mut section = ""
+    let lines = strings.split(content, "\n")
+    loop line in lines {
+        let t = strings.trim(line)
+        if len(t) == 0 || t[0] == "#" { continue }
+        if t[0] == "[" {
+            section = strings.replace(strings.replace(t, "[", ""), "]", "")
+        } else {
+            let parts = strings.split(t, "=")
+            if len(parts) >= 2 {
+                let key = strings.trim(parts[0])
+                let raw = strings.trim(parts[1])
+                let val = strings.replace(strings.replace(raw, "\"", ""), "'", "")
+                let full_key = section == "" ? key : section + "." + key
+                db.set(_db, full_key, val)
+            }
+        }
+    }
+}
+do get(key: str) -> str {
+    let v = db.get(_db, key)
+    if is_null(v) { return "" }
+    return v
+}
+do get_bool(key: str) -> bool {
+    return get(key) == "true"
+}
+do get_int(key: str) -> int {
+    return int(get(key))
+}
+do get_or(key: str, default: str) -> str {
+    let v = get(key)
+    if v == "" { return default }
+    return v
+}
+do load(path: str) {
+    parse(fs.read(path))
+}

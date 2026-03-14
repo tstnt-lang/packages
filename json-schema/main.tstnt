@@ -1,0 +1,45 @@
+use db
+
+let _db = "json_schema"
+
+do define(name: str, fields: [str], types: [str], required: [bool]) {
+    let mut i = 0
+    while i < len(fields) {
+        db.set(_db, name + ":" + fields[i] + ":type", types[i])
+        db.set(_db, name + ":" + fields[i] + ":required", required[i] ? "true" : "false")
+        i += 1
+    }
+    db.set(_db, name + ":fields", strings.join(fields, ","))
+}
+do validate_field(schema: str, field: str, val: str) -> bool {
+    let type_ = db.get(_db, schema + ":" + field + ":type")
+    let required = db.get(_db, schema + ":" + field + ":required") == "true"
+    if required && (is_null(val) || val == "") {
+        print("[schema] " + field + " is required")
+        return false
+    }
+    if !is_null(type_) {
+        match type_ {
+            "int" -> {
+                let n = int(val)
+                if str(n) != strings.trim(val) {
+                    print("[schema] " + field + " must be int")
+                    return false
+                }
+            }
+            "email" -> {
+                if !strings.contains(val, "@") {
+                    print("[schema] " + field + " must be email")
+                    return false
+                }
+            }
+            _ -> {}
+        }
+    }
+    return true
+}
+do get_fields(schema: str) -> [str] {
+    let v = db.get(_db, schema + ":fields")
+    if is_null(v) || v == "" { return [] }
+    return strings.split(v, ",")
+}

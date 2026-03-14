@@ -1,0 +1,18 @@
+do css_rule(selector: str, props: [str]) -> str {
+    return selector + " {\n  " + strings.join(props, ";\n  ") + "\n}"
+}
+do inline_style(props: [str]) -> str {
+    return "style=\"" + strings.join(props, "; ") + "\""
+}
+do styled(tag_name: str, style: str, content: str) -> str {
+    return "<" + tag_name + " style=\"" + style + "\">" + content + "</" + tag_name + ">"
+}
+do color(hex: str, text: str) -> str {
+    return styled("span", "color:" + hex, text)
+}
+do bg_color(hex: str, text: str) -> str {
+    return styled("span", "background:" + hex, text)
+}
+do center(content: str) -> str {
+    return styled("div", "text-align:center", content)
+}

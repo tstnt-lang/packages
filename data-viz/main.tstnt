@@ -1,0 +1,54 @@
+use term
+
+do bar_chart(data: [int], labels: [str], title: str) {
+    print(term.bold(title))
+    let max_val = max(data)
+    let width = 30
+    loop i, val in data {
+        let bar_len = val * width / (int(str(max_val)) > 0 ? int(str(max_val)) : 1)
+        let bar = strings.repeat("█", bar_len) + strings.repeat("░", width - bar_len)
+        let label = i < len(labels) ? labels[i] : str(i)
+        let padded = label + strings.repeat(" ", 10 - len(label))
+        print(term.dim(padded) + term.green(bar) + " " + term.cyan(str(val)))
+    }
+}
+do pie_chart(data: [int], labels: [str]) {
+    let total = sum(data)
+    print("Breakdown:")
+    loop i, val in data {
+        let pct = val * 100 / (total > 0 ? total : 1)
+        let label = i < len(labels) ? labels[i] : str(i)
+        let bar = strings.repeat("▓", pct / 5)
+        print("  " + term.dim(label) + " " + term.yellow(bar) + " " + str(pct) + "%")
+    }
+}
+do sparkline(data: [int]) -> str {
+    let chars = ["▁","▂","▃","▄","▅","▆","▇","█"]
+    let max_v = max(data)
+    let min_v = min(data)
+    let range = int(str(max_v)) - int(str(min_v))
+    let mut result = ""
+    loop v in data {
+        let idx = range > 0 ? (int(str(v)) - int(str(min_v))) * 7 / range : 0
+        result = result + chars[idx]
+    }
+    return result
+}
+do line_chart(data: [int], width: int, height: int) {
+    let max_v = max(data)
+    let mut r = height - 1
+    while r >= 0 {
+        let threshold = int(str(max_v)) * r / (height - 1)
+        let mut line = ""
+        loop v in data {
+            if int(str(v)) >= threshold {
+                line = line + "●"
+            } else {
+                line = line + " "
+            }
+        }
+        print(term.dim(str(threshold)) + " │" + line)
+        r -= 1
+    }
+    print(strings.repeat("─", len(data) + 8))
+}

@@ -1,0 +1,28 @@
+do tag(name: str, content: str) -> str {
+    return "<" + name + ">" + content + "</" + name + ">"
+}
+do attr_tag(name: str, attrs: str, content: str) -> str {
+    return "<" + name + " " + attrs + ">" + content + "</" + name + ">"
+}
+do self_close(name: str) -> str { return "<" + name + "/>" }
+do with_attr(name: str, attrs: str) -> str { return "<" + name + " " + attrs + "/>"}
+do header() -> str { return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" }
+do escape(s: str) -> str {
+    let s1 = strings.replace(s, "&", "&amp;")
+    let s2 = strings.replace(s1, "<", "&lt;")
+    let s3 = strings.replace(s2, ">", "&gt;")
+    return strings.replace(s3, "\"", "&quot;")
+}
+do cdata(content: str) -> str {
+    return "<![CDATA[" + content + "]]>"
+}
+do comment(text: str) -> str {
+    return "<!-- " + text + " -->"
+}
+do wrap(name: str, items: [str]) -> str {
+    let inner = strings.join(items, "\n  ")
+    return "<" + name + ">\n  " + inner + "\n</" + name + ">"
+}
+do rss_item(title: str, link: str, description: str) -> str {
+    return tag("item", tag("title", escape(title)) + tag("link", link) + tag("description", escape(description)))
+}

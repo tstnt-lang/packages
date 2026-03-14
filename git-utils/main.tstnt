@@ -1,0 +1,13 @@
+do status() -> str { return process.run("git status --short") }
+do branch() -> str { return strings.trim(process.run("git branch --show-current")) }
+do log(n: int) -> str { return process.run("git log --oneline -" + str(n)) }
+do add(path: str) { process.run("git add " + path) }
+do commit(msg: str) { process.run("git commit -m \"" + msg + "\"") }
+do push() -> bool { return process.run_status("git push") == 0 }
+do pull() -> bool { return process.run_status("git pull") == 0 }
+do clone(url: str, dir: str) -> bool { return process.run_status("git clone " + url + " " + dir) == 0 }
+do diff() -> str { return process.run("git diff") }
+do tags() -> str { return process.run("git tag") }
+do last_commit() -> str { return strings.trim(process.run("git log -1 --format=%s")) }
+do is_repo() -> bool { return fs.exists(".git") }
+do init() { process.run("git init") }

@@ -1,0 +1,22 @@
+use term
+use input
+
+do header(text: str) {
+    let w = len(text) + 4
+    print(term.bold(strings.repeat("═", w)))
+    print(term.bold("  " + text))
+    print(term.bold(strings.repeat("═", w)))
+}
+do success(msg: str) { print(term.green("  ✓ ") + msg) }
+do error(msg: str) { print(term.red("  ✗ ") + msg) }
+do warn(msg: str) { print(term.yellow("  ⚠ ") + msg) }
+do info(msg: str) { print(term.blue("  ℹ ") + msg) }
+do step(n: int, msg: str) { print(term.cyan("  [" + str(n) + "] ") + msg) }
+do ask(q: str) -> str { return input.read(term.cyan("  ? ") + q + " ") }
+do confirm(q: str) -> bool { return input.confirm(term.cyan("  ? ") + q + " (y/n) ") }
+do divider() { print(term.dim(strings.repeat("─", 40))) }
+do list(items: [str]) {
+    loop i, item in items {
+        print("  " + term.dim(str(i + 1) + ".") + " " + item)
+    }
+}

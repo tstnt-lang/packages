@@ -1,0 +1,22 @@
+use db
+
+let _db = "tg_commands"
+
+do register(cmd: str, description: str) {
+    db.set(_db, cmd, description)
+}
+do list_commands() -> [str] {
+    return db.keys(_db)
+}
+do get_help() -> str {
+    let cmds = list_commands()
+    let mut text = "Commands:\n"
+    loop cmd in cmds {
+        let desc = db.get(_db, cmd)
+        text = text + cmd + " - " + desc + "\n"
+    }
+    return text
+}
+do matches(text: str, cmd: str) -> bool {
+    return text == cmd || text == "/" + cmd
+}

@@ -1,0 +1,35 @@
+use tg
+use thread
+use db
+
+let _db = "tg_admin"
+
+do set_admins(ids: [int]) {
+    loop id in ids {
+        db.set(_db, "admin:" + str(id), "true")
+    }
+}
+do is_admin(chat_id: int) -> bool {
+    return db.has(_db, "admin:" + str(chat_id))
+}
+do ban(chat_id: int) {
+    db.set(_db, "banned:" + str(chat_id), "true")
+}
+do unban(chat_id: int) {
+    db.delete(_db, "banned:" + str(chat_id))
+}
+do is_banned(chat_id: int) -> bool {
+    return db.has(_db, "banned:" + str(chat_id))
+}
+do broadcast(token: str, ids: [int], text: str) {
+    tg.token(token)
+    loop id in ids {
+        if !is_banned(id) {
+            tg.send(id, text)
+        }
+    }
+}
+do stats() -> str {
+    let admins = len(db.keys(_db))
+    return "Admins: " + str(admins)
+}

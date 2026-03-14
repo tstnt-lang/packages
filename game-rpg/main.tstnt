@@ -1,0 +1,82 @@
+use db
+use rand
+
+let _db = "rpg"
+
+struct Hero {
+    name: str
+    hp: int
+    max_hp: int
+    atk: int
+    def: int
+    level: int
+    xp: int
+    gold: int
+}
+struct Monster {
+    name: str
+    hp: int
+    atk: int
+    reward_xp: int
+    reward_gold: int
+}
+
+do create_hero(id: str, name: str) {
+    db.set(_db, id + ":name", name)
+    db.set(_db, id + ":hp", "100")
+    db.set(_db, id + ":max_hp", "100")
+    db.set(_db, id + ":atk", "10")
+    db.set(_db, id + ":def", "5")
+    db.set(_db, id + ":level", "1")
+    db.set(_db, id + ":xp", "0")
+    db.set(_db, id + ":gold", "50")
+}
+do get_stat(id: str, stat: str) -> int {
+    let v = db.get(_db, id + ":" + stat)
+    if is_null(v) { return 0 }
+    return int(v)
+}
+do set_stat(id: str, stat: str, val: int) {
+    db.set(_db, id + ":" + stat, str(val))
+}
+do attack(attacker_id: str, monster_hp: int, monster_atk: int) -> str {
+    let atk = get_stat(attacker_id, "atk")
+    let def = get_stat(attacker_id, "def")
+    let dmg_dealt = atk + rand.int(0, 5)
+    let dmg_taken = monster_atk - def
+    let real_dmg = dmg_taken < 1 ? 1 : dmg_taken
+    let cur_hp = get_stat(attacker_id, "hp")
+    set_stat(attacker_id, "hp", cur_hp - real_dmg)
+    let remaining = monster_hp - dmg_dealt
+    return "You dealt " + str(dmg_dealt) + " dmg. Took " + str(real_dmg) + " dmg. Monster HP: " + str(remaining < 0 ? 0 : remaining)
+}
+do gain_xp(id: str, amount: int) {
+    let xp = get_stat(id, "xp") + amount
+    let level = get_stat(id, "level")
+    let needed = level * level * 100
+    set_stat(id, "xp", xp)
+    if xp >= needed {
+        set_stat(id, "level", level + 1)
+        set_stat(id, "atk", get_stat(id, "atk") + 2)
+        set_stat(id, "def", get_stat(id, "def") + 1)
+        set_stat(id, "max_hp", get_stat(id, "max_hp") + 10)
+        set_stat(id, "hp", get_stat(id, "max_hp"))
+    }
+}
+do heal(id: str, amount: int) {
+    let hp = get_stat(id, "hp")
+    let max_hp = get_stat(id, "max_hp")
+    let new_hp = hp + amount
+    set_stat(id, "hp", new_hp > max_hp ? max_hp : new_hp)
+}
+do is_alive(id: str) -> bool {
+    return get_stat(id, "hp") > 0
+}
+do status(id: str) -> str {
+    let name = db.get(_db, id + ":name")
+    let hp = str(get_stat(id, "hp"))
+    let max_hp = str(get_stat(id, "max_hp"))
+    let level = str(get_stat(id, "level"))
+    let gold = str(get_stat(id, "gold"))
+    return name + " | HP: " + hp + "/" + max_hp + " | Lv." + level + " | Gold: " + gold
+}

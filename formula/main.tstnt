@@ -1,0 +1,38 @@
+do eval_simple(expr: str) -> float {
+    let parts = strings.split(expr, "+")
+    if len(parts) > 1 {
+        return reduce(parts, |acc p| acc + float(strings.trim(p)), 0.0)
+    }
+    let parts = strings.split(expr, "*")
+    if len(parts) > 1 {
+        return reduce(parts, |acc p| acc * float(strings.trim(p)), 1.0)
+    }
+    return float(strings.trim(expr))
+}
+do compound_interest(principal: float, rate: float, years: int) -> float {
+    let mut amount = principal
+    let mut i = 0
+    while i < years {
+        amount = amount * (1.0 + rate / 100.0)
+        i += 1
+    }
+    return amount
+}
+do percentage(part: float, total: float) -> float {
+    return part / total * 100.0
+}
+do bmi(weight_kg: float, height_m: float) -> float {
+    return weight_kg / (height_m * height_m)
+}
+do bmi_category(bmi: float) -> str {
+    if bmi < 18.5 { return "underweight" }
+    if bmi < 25.0 { return "normal" }
+    if bmi < 30.0 { return "overweight" }
+    return "obese"
+}
+do speed(distance: float, time_h: float) -> float {
+    return distance / time_h
+}
+do kinetic_energy(mass: float, velocity: float) -> float {
+    return 0.5 * mass * velocity * velocity
+}

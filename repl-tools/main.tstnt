@@ -1,0 +1,39 @@
+use term
+use input
+
+do run_session(prompt: str, handler: any) {
+    print(term.bold("TSTNT REPL Session"))
+    print(term.dim("Type 'exit' to quit"))
+    print("")
+    while true {
+        let line = input.read(term.cyan(prompt) + " ")
+        if line == "exit" || line == "quit" || line == ":q" {
+            print(term.dim("Goodbye!"))
+            break
+        }
+        if len(strings.trim(line)) == 0 { continue }
+        let result = apply(handler, line)
+        if !is_null(result) && result != "" {
+            print(term.green("=> ") + str(result))
+        }
+    }
+}
+do history_repl(prompt: str, history_file: str) {
+    let mut history = []
+    if fs.exists(history_file) {
+        let content = fs.read(history_file)
+        history = strings.split(content, "\n")
+    }
+    print(term.bold("REPL with history"))
+    while true {
+        let line = input.read(term.cyan(prompt) + " ")
+        if line == "exit" { break }
+        if len(strings.trim(line)) > 0 {
+            history = arr.push(history, line)
+            fs.write(history_file, strings.join(history, "\n"))
+        }
+    }
+}
+do eval_and_print(expr: str) -> str {
+    return "=> " + expr
+}

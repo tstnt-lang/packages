@@ -1,0 +1,29 @@
+do get_args() -> [str] { return env.args() }
+do get_arg(n: int) -> str {
+    let a = env.args()
+    if n >= len(a) { return "" }
+    return a[n]
+}
+do has_flag(name: str) -> bool {
+    let a = env.args()
+    return "--" + name in a || "-" + name in a
+}
+do get_option(name: str) -> str {
+    let a = env.args()
+    let mut i = 0
+    while i < len(a) {
+        if a[i] == "--" + name || a[i] == "-" + name {
+            if i + 1 < len(a) { return a[i + 1] }
+        }
+        i += 1
+    }
+    return ""
+}
+do require_arg(name: str) -> str {
+    let v = get_option(name)
+    if v == "" {
+        print("Error: missing required argument --" + name)
+        process.exit(1)
+    }
+    return v
+}

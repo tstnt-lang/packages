@@ -203,3 +203,19 @@ do main {
 ---
 
 *Built for TSTNT v0.8.0+ — github.com/tstnt-lang*
+
+### v9 New Packages
+| Package | Description |
+|---------|-------------|
+| tg-admin | Admin management, banning, broadcasting for TG bots |
+| tg-admin/commands | Command registration and help generation |
+| game-rpg | Full RPG engine with hero stats, combat, XP |
+| game-rpg/items | Item system with inventory management |
+| formula | Math formulas: compound interest, BMI, kinetic energy |
+| cli-tools | Styled CLI output + argument parsing |
+| data-viz | Bar charts, sparklines, pie charts in terminal |
+| crypto-advanced | PBKDF2, HMAC, OTP, token generation |
+| format-table | Simple, box, and CSV table rendering |
+| git-utils | Git wrapper: status, commit, push, log |
+| json-schema | Define and validate JSON-like schemas |
+| repl-tools | Build interactive REPLs with history |

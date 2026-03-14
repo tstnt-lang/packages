@@ -1,0 +1,46 @@
+use term
+
+do simple(headers: [str], rows: [[str]]) {
+    loop h in headers { print_no_ln(h + "\t") }
+    print("")
+    print(strings.repeat("-", len(headers) * 16))
+    loop row in rows {
+        loop cell in row { print_no_ln(cell + "\t") }
+        print("")
+    }
+}
+do box_table(headers: [str], rows: [[str]]) {
+    let mut widths = map(headers, |h| len(h))
+    loop row in rows {
+        loop i, cell in row {
+            if i < len(widths) && len(cell) > widths[i] {
+                widths[i] = len(cell)
+            }
+        }
+    }
+    let border = "+" + strings.join(map(widths, |w| strings.repeat("-", w + 2)), "+") + "+"
+    print(border)
+    let mut h_cells = []
+    loop i, h in headers {
+        h_cells = arr.push(h_cells, " " + term.bold(h) + strings.repeat(" ", widths[i] - len(h)) + " ")
+    }
+    print("|" + strings.join(h_cells, "|") + "|")
+    print(border)
+    loop row in rows {
+        let mut cells = []
+        loop i, cell in row {
+            if i < len(widths) {
+                cells = arr.push(cells, " " + cell + strings.repeat(" ", widths[i] - len(cell)) + " ")
+            }
+        }
+        print("|" + strings.join(cells, "|") + "|")
+    }
+    print(border)
+}
+do csv_table(csv_str: str) {
+    let rows = csv.parse(csv_str)
+    if len(rows) == 0 { return }
+    let headers = map(rows[0], |h| str(h))
+    let data_rows = filter(rows, |r| r != rows[0])
+    box_table(headers, map(data_rows, |r| map(r, |c| str(c))))
+}

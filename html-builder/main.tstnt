@@ -1,0 +1,28 @@
+do tag(name: str, content: str) -> str {
+    return "<" + name + ">" + content + "</" + name + ">"
+}
+do attr_tag(name: str, attrs: str, content: str) -> str {
+    return "<" + name + " " + attrs + ">" + content + "</" + name + ">"
+}
+do self_close(name: str, attrs: str) -> str {
+    if len(attrs) == 0 { return "<" + name + "/>" }
+    return "<" + name + " " + attrs + "/>"
+}
+do p(text: str) -> str { return tag("p", text) }
+do h1(text: str) -> str { return tag("h1", text) }
+do h2(text: str) -> str { return tag("h2", text) }
+do h3(text: str) -> str { return tag("h3", text) }
+do div(content: str) -> str { return tag("div", content) }
+do span(content: str) -> str { return tag("span", content) }
+do bold(text: str) -> str { return tag("strong", text) }
+do italic(text: str) -> str { return tag("em", text) }
+do code(text: str) -> str { return tag("code", text) }
+do a(href: str, text: str) -> str { return attr_tag("a", "href=\"" + href + "\"", text) }
+do img(src: str, alt: str) -> str { return self_close("img", "src=\"" + src + "\" alt=\"" + alt + "\"") }
+do ul(items: [str]) -> str {
+    let li = strings.join(map(items, |item| tag("li", item)), "\n  ")
+    return "<ul>\n  " + li + "\n</ul>"
+}
+do page(title: str, body: str) -> str {
+    return "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>" + title + "</title></head><body>" + body + "</body></html>"
+}

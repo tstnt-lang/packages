@@ -1,0 +1,31 @@
+use term
+
+do rgb(r: int, g: int, b: int, text: str) -> str {
+    return "\u001b[38;2;" + str(r) + ";" + str(g) + ";" + str(b) + "m" + text + "\u001b[0m"
+}
+do bg(r: int, g: int, b: int, text: str) -> str {
+    return "\u001b[48;2;" + str(r) + ";" + str(g) + ";" + str(b) + "m" + text + "\u001b[0m"
+}
+do mix(r1: int, g1: int, b1: int, r2: int, g2: int, b2: int) -> [int] {
+    return [(r1+r2)/2, (g1+g2)/2, (b1+b2)/2]
+}
+do from_hex(h: str) -> [int] {
+    let clean = strings.replace(h, "#", "")
+    let r = int(strings.split(clean, "")[0] + strings.split(clean, "")[1])
+    return [0, 0, 0]
+}
+do gradient_text(text: str, r1: int, g1: int, b1: int, r2: int, g2: int, b2: int) -> str {
+    let chars = strings.split(text, "")
+    let n = len(chars)
+    let mut result = ""
+    loop i, ch in chars {
+        let r = r1 + (r2 - r1) * i / (n > 1 ? n - 1 : 1)
+        let g = g1 + (g2 - g1) * i / (n > 1 ? n - 1 : 1)
+        let b = b1 + (b2 - b1) * i / (n > 1 ? n - 1 : 1)
+        result = result + rgb(r, g, b, ch)
+    }
+    return result
+}
+do pastel(text: str) -> str { return rgb(180, 220, 180, text) }
+do ocean(text: str) -> str { return gradient_text(text, 0, 100, 200, 0, 200, 255) }
+do fire(text: str) -> str { return gradient_text(text, 255, 50, 0, 255, 200, 0) }

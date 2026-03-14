@@ -1,0 +1,65 @@
+use db
+
+let _db = "tstnt_ini"
+
+do load(path: str) -> str {
+    return fs.read(path)
+}
+do parse(content: str) -> str {
+    let mut section = "default"
+    let lines = strings.split(content, "\n")
+    loop line in lines {
+        let t = strings.trim(line)
+        if len(t) == 0 { continue }
+        if t[0] == ";" || t[0] == "#" { continue }
+        if t[0] == "[" {
+            section = strings.replace(strings.replace(t, "[", ""), "]", "")
+        } else {
+            let parts = strings.split(t, "=")
+            if len(parts) >= 2 {
+                let key = strings.trim(parts[0])
+                let val = strings.trim(parts[1])
+                db.set(_db, section + "." + key, val)
+            }
+        }
+    }
+    return section
+}
+do get(section: str, key: str) -> str {
+    let v = db.get(_db, section + "." + key)
+    if is_null(v) { return "" }
+    return v
+}
+do get_or(section: str, key: str, default: str) -> str {
+    let v = get(section, key)
+    if v == "" { return default }
+    return v
+}
+do set(section: str, key: str, val: str) {
+    db.set(_db, section + "." + key, val)
+}
+do save(path: str) {
+    let keys = db.keys(_db)
+    let mut sections = []
+    loop k in keys {
+        let parts = strings.split(k, ".")
+        if len(parts) >= 1 {
+            let sec = parts[0]
+            if !(sec in sections) {
+                sections = arr.push(sections, sec)
+            }
+        }
+    }
+    let mut content = ""
+    loop sec in sections {
+        content = content + "[" + sec + "]\n"
+        let sec_keys = filter(keys, |k| strings.split(k, ".")[0] == sec)
+        loop sk in sec_keys {
+            let k = strings.split(sk, ".")[1]
+            let v = db.get(_db, sk)
+            content = content + k + " = " + v + "\n"
+        }
+        content = content + "\n"
+    }
+    fs.write(path, content)
+}
