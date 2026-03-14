@@ -1,6 +1,6 @@
 # TSTNT Packages
 
-Official package registry for the [TSTNT](https://github.com/tstnt-dev) programming language.
+Official package registry for the [TSTNT](https://github.com/tstnt) programming language.
 
 ## Install
 
