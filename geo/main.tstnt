@@ -1,0 +1,53 @@
+use math2
+
+let PI = math2.pi()
+let EARTH_RADIUS_KM = 6371
+
+do to_rad(deg: float) -> float {
+    return deg * PI / 180
+}
+
+do to_deg(rad: float) -> float {
+    return rad * 180 / PI
+}
+
+do haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float {
+    let r1 = to_rad(lat1)
+    let r2 = to_rad(lat2)
+    let dlat = to_rad(lat2 - lat1)
+    let dlon = to_rad(lon2 - lon1)
+    let a = math2.sin(dlat / 2) * math2.sin(dlat / 2) + math2.cos(r1) * math2.cos(r2) * math2.sin(dlon / 2) * math2.sin(dlon / 2)
+    let c = 2 * math2.atan2(math2.sqrt(a), math2.sqrt(1 - a))
+    return EARTH_RADIUS_KM * c
+}
+
+do distance_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float {
+    return haversine(lat1, lon1, lat2, lon2)
+}
+
+do distance_miles(lat1: float, lon1: float, lat2: float, lon2: float) -> float {
+    return haversine(lat1, lon1, lat2, lon2) * 0.621371
+}
+
+do bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float {
+    let r1 = to_rad(lat1)
+    let r2 = to_rad(lat2)
+    let dlon = to_rad(lon2 - lon1)
+    let x = math2.sin(dlon) * math2.cos(r2)
+    let y = math2.cos(r1) * math2.sin(r2) - math2.sin(r1) * math2.cos(r2) * math2.cos(dlon)
+    let bearing = to_deg(math2.atan2(x, y))
+    return (bearing + 360) % 360
+}
+
+do midpoint(lat1: float, lon1: float, lat2: float, lon2: float) -> [float] {
+    return [(lat1 + lat2) / 2, (lon1 + lon2) / 2]
+}
+
+do is_in_box(lat: float, lon: float, min_lat: float, min_lon: float, max_lat: float, max_lon: float) -> bool {
+    return lat >= min_lat && lat <= max_lat && lon >= min_lon && lon <= max_lon
+}
+
+do km_to_miles(km: float) -> float { return km * 0.621371 }
+do miles_to_km(miles: float) -> float { return miles * 1.60934 }
+do m_to_ft(m: float) -> float { return m * 3.28084 }
+do ft_to_m(ft: float) -> float { return ft * 0.3048 }

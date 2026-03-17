@@ -1,0 +1,50 @@
+use sql
+
+let _db = ""
+
+do connect(name: str) {
+    sql.open(name)
+    _db = name
+}
+
+do define(table: str, cols: [str]) {
+    sql.create_table(_db, table, cols)
+}
+
+do save(table: str, record: any) -> int {
+    return sql.insert(_db, table, record)
+}
+
+do find_all(table: str) -> [any] {
+    return sql.select(_db, table)
+}
+
+do find_by(table: str, col: str, val: str) -> [any] {
+    return sql.where(_db, table, col, val)
+}
+
+do find_one(table: str, col: str, val: str) -> any {
+    let rows = sql.where(_db, table, col, val)
+    if len(rows) == 0 { return null }
+    return rows[0]
+}
+
+do update(table: str, where_col: str, where_val: str, set_col: str, set_val: str) -> int {
+    return sql.update(_db, table, where_col, where_val, set_col, set_val)
+}
+
+do remove(table: str, col: str, val: str) -> int {
+    return sql.delete_where(_db, table, col, val)
+}
+
+do count(table: str) -> int {
+    return sql.count(_db, table)
+}
+
+do tables() -> [str] {
+    return sql.tables(_db)
+}
+
+do drop(table: str) {
+    sql.drop(_db, table)
+}

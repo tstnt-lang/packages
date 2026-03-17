@@ -1,0 +1,65 @@
+use fs
+use strings
+use env
+
+do load(path: str) {
+    let content = fs.read(path)
+    let lines = strings.split(content, "\n")
+    loop line in lines {
+        let trimmed = strings.trim(line)
+        if len(trimmed) == 0 { continue }
+        if strings.starts_with(trimmed, "#") { continue }
+        if strings.contains(trimmed, "=") {
+            let parts = strings.split(trimmed, "=")
+            let key = strings.trim(parts[0])
+            let val = strings.trim(parts[1])
+            let val = strings.replace(val, "\"", "")
+            let val = strings.replace(val, "'", "")
+            env.set(key, val)
+        }
+    }
+}
+
+do load_default() {
+    if fs.exists(".env") {
+        load(".env")
+    }
+}
+
+do get(key: str, default: str) -> str {
+    let val = env.get(key)
+    if is_null(val) || val == "" { return default }
+    return val
+}
+
+do require(key: str) -> str {
+    let val = env.get(key)
+    if is_null(val) || val == "" {
+        print("error: env variable '" + key + "' is required")
+        return ""
+    }
+    return val
+}
+
+do get_int(key: str, default: int) -> int {
+    let val = env.get(key)
+    if is_null(val) || val == "" { return default }
+    return int(val)
+}
+
+do get_bool(key: str) -> bool {
+    let val = env.get(key)
+    if is_null(val) { return false }
+    return val == "true" || val == "1" || val == "yes"
+}
+
+do dump() {
+    print("[dotenv] loaded variables:")
+    let keys = ["DEBUG", "PORT", "HOST", "DATABASE_URL", "SECRET_KEY", "API_KEY"]
+    loop k in keys {
+        let v = env.get(k)
+        if !is_null(v) && v != "" {
+            print("  " + k + " = " + v)
+        }
+    }
+}

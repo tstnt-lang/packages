@@ -1,0 +1,75 @@
+use db
+use strings
+
+let _store = "tstnt_i18n"
+let _lang = "en"
+
+do set_lang(lang: str) {
+    _lang = lang
+    db.set(_store, "__lang__", lang)
+}
+
+do get_lang() -> str {
+    let saved = db.get(_store, "__lang__")
+    if !is_null(saved) && saved != "" { return saved }
+    return _lang
+}
+
+do add(lang: str, key: str, value: str) {
+    db.set(_store, lang + ":" + key, value)
+}
+
+do add_many(lang: str, pairs: [[str]]) {
+    loop pair in pairs {
+        if len(pair) >= 2 {
+            add(lang, pair[0], pair[1])
+        }
+    }
+}
+
+do t(key: str) -> str {
+    let lang = get_lang()
+    let val = db.get(_store, lang + ":" + key)
+    if is_null(val) || val == "" {
+        let en_val = db.get(_store, "en:" + key)
+        if !is_null(en_val) && en_val != "" { return en_val }
+        return key
+    }
+    return val
+}
+
+do t_with(key: str, args: [str]) -> str {
+    let mut text = t(key)
+    loop i, arg in args {
+        text = strings.replace(text, "{" + str(i) + "}", arg)
+        text = strings.replace(text, "{}", arg)
+    }
+    return text
+}
+
+do has(key: str) -> bool {
+    let lang = get_lang()
+    let val = db.get(_store, lang + ":" + key)
+    return !is_null(val) && val != ""
+}
+
+do langs() -> [str] {
+    let keys = db.keys(_store)
+    let mut result = []
+    loop k in keys {
+        if k != "__lang__" && strings.contains(k, ":") {
+            let parts = strings.split(k, ":")
+            let lang = parts[0]
+            if !arr.contains(result, lang) {
+                result = arr.push(result, lang)
+            }
+        }
+    }
+    return result
+}
+
+do plural_rule(n: int, one: str, few: str, many: str) -> str {
+    if n == 1 { return one }
+    if n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) { return few }
+    return many
+}

@@ -1,0 +1,60 @@
+use fmt2
+use strings
+
+do format(template: str, a: any, b: any, c: any) -> str {
+    let r = strings.replace(template, "{0}", str(a))
+    let r = strings.replace(r, "{1}", str(b))
+    let r = strings.replace(r, "{2}", str(c))
+    let r = strings.replace(r, "{}", str(a))
+    return r
+}
+
+do pad_left(s: str, width: int) -> str {
+    return fmt2.pad_left(s, width)
+}
+
+do pad_right(s: str, width: int) -> str {
+    return fmt2.pad_right(s, width)
+}
+
+do center(s: str, width: int) -> str {
+    return fmt2.pad_center(s, width)
+}
+
+do truncate(s: str, max: int) -> str {
+    return fmt2.truncate(s, max, "...")
+}
+
+do number(n: float, decimals: int) -> str {
+    return fmt2.number(n, decimals)
+}
+
+do thousands(n: int) -> str {
+    return fmt2.thousands(n)
+}
+
+do bytes(n: int) -> str {
+    return fmt2.bytes(n)
+}
+
+do duration(ms: int) -> str {
+    return fmt2.duration(ms)
+}
+
+do plural(n: int, singular: str, plural: str) -> str {
+    return fmt2.plural(n, singular, plural)
+}
+
+do table(rows: [[str]], headers: [str]) -> str {
+    return fmt2.table(rows, headers)
+}
+
+do currency(amount: float, symbol: str) -> str {
+    return symbol + fmt2.thousands(int(amount)) + "." + str(int((amount - int(amount)) * 100))
+}
+
+do percent(value: float, total: float) -> str {
+    if total == 0 { return "0%" }
+    let pct = (value / total) * 100
+    return fmt2.number(pct, 1) + "%"
+}

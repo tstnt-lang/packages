@@ -1,0 +1,86 @@
+use strings
+use arr
+
+do parse(version: str) -> [int] {
+    let parts = strings.split(version, ".")
+    let major = int(parts[0])
+    let minor = 0
+    let patch = 0
+    if len(parts) > 1 { minor = int(parts[1]) }
+    if len(parts) > 2 { patch = int(parts[2]) }
+    return [major, minor, patch]
+}
+
+do compare(a: str, b: str) -> int {
+    let va = parse(a)
+    let vb = parse(b)
+    if va[0] != vb[0] {
+        if va[0] > vb[0] { return 1 }
+        return -1
+    }
+    if va[1] != vb[1] {
+        if va[1] > vb[1] { return 1 }
+        return -1
+    }
+    if va[2] != vb[2] {
+        if va[2] > vb[2] { return 1 }
+        return -1
+    }
+    return 0
+}
+
+do is_greater(a: str, b: str) -> bool {
+    return compare(a, b) > 0
+}
+
+do is_less(a: str, b: str) -> bool {
+    return compare(a, b) < 0
+}
+
+do is_equal(a: str, b: str) -> bool {
+    return compare(a, b) == 0
+}
+
+do bump_major(version: str) -> str {
+    let v = parse(version)
+    return str(v[0] + 1) + ".0.0"
+}
+
+do bump_minor(version: str) -> str {
+    let v = parse(version)
+    return str(v[0]) + "." + str(v[1] + 1) + ".0"
+}
+
+do bump_patch(version: str) -> str {
+    let v = parse(version)
+    return str(v[0]) + "." + str(v[1]) + "." + str(v[2] + 1)
+}
+
+do is_valid(version: str) -> bool {
+    if !strings.contains(version, ".") { return false }
+    let parts = strings.split(version, ".")
+    if len(parts) < 2 { return false }
+    return true
+}
+
+do satisfies(version: str, range: str) -> bool {
+    if strings.starts_with(range, ">=") {
+        return !is_less(version, strings.slice(range, 2, len(range)))
+    }
+    if strings.starts_with(range, "<=") {
+        return !is_greater(version, strings.slice(range, 2, len(range)))
+    }
+    if strings.starts_with(range, ">") {
+        return is_greater(version, strings.slice(range, 1, len(range)))
+    }
+    if strings.starts_with(range, "<") {
+        return is_less(version, strings.slice(range, 1, len(range)))
+    }
+    if strings.starts_with(range, "^") {
+        let base = strings.slice(range, 1, len(range))
+        let bv = parse(base)
+        let cv = parse(version)
+        return cv[0] == bv[0] && !is_less(version, base)
+    }
+    return is_equal(version, range)
+}

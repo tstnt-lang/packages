@@ -1,0 +1,53 @@
+use process
+use time
+use term
+
+let _tasks = []
+let _descriptions = []
+
+do task(name: str, description: str, cmd: str) {
+    _tasks = arr.push(_tasks, [name, cmd])
+    _descriptions = arr.push(_descriptions, [name, description])
+}
+
+do run(name: str) {
+    let found = false
+    loop t in _tasks {
+        if t[0] == name {
+            found = true
+            let start = time.now()
+            print(term.cyan("▶") + " Running: " + term.bold(name))
+            let code = process.run(t[1])
+            let elapsed = time.now() - start
+            if code == 0 {
+                print(term.green("✓") + " Done in " + str(elapsed / 1000) + "ms")
+            } else {
+                print(term.red("✗") + " Failed with code " + str(code))
+            }
+        }
+    }
+    if !found {
+        print(term.red("error") + ": task '" + name + "' not found")
+        list()
+    }
+}
+
+do list() {
+    print("\n" + term.bold("Available tasks:"))
+    loop d in _descriptions {
+        print("  " + term.cyan(d[0]) + "  \t" + d[1])
+    }
+    print("")
+}
+
+do run_all() {
+    loop t in _tasks {
+        run(t[0])
+    }
+}
+
+do run_seq(names: [str]) {
+    loop name in names {
+        run(name)
+    }
+}

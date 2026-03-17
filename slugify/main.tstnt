@@ -1,0 +1,40 @@
+use strings
+
+do slugify(text: str) -> str {
+    let s = strings.lower(text)
+    let s = strings.trim(s)
+    let s = strings.replace(s, " ", "-")
+    let s = strings.replace(s, "_", "-")
+    let s = strings.replace(s, ".", "-")
+    let s = strings.replace(s, "/", "-")
+    let s = strings.replace(s, "\\", "-")
+    let s = strings.replace(s, ":", "")
+    let s = strings.replace(s, "?", "")
+    let s = strings.replace(s, "#", "")
+    let s = strings.replace(s, "!", "")
+    let s = strings.replace(s, "@", "")
+    let s = strings.replace(s, "&", "and")
+    let s = strings.replace(s, "+", "plus")
+    let s = strings.replace(s, "%", "percent")
+    return s
+}
+
+do to_filename(text: str, ext: str) -> str {
+    return slugify(text) + "." + ext
+}
+
+do to_id(text: str) -> str {
+    let s = slugify(text)
+    let s = strings.replace(s, "-", "_")
+    return s
+}
+
+do truncate_slug(text: str, max: int) -> str {
+    let s = slugify(text)
+    if len(s) <= max { return s }
+    let s = strings.slice(s, 0, max)
+    if strings.ends_with(s, "-") {
+        return strings.slice(s, 0, len(s) - 1)
+    }
+    return s
+}

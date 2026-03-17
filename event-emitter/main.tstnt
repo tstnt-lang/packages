@@ -1,0 +1,48 @@
+use db
+
+let _store = "tstnt_events"
+
+do on(event: str, handler_id: str) {
+    let existing = db.get(_store, "event:" + event)
+    if is_null(existing) || existing == "" {
+        db.set(_store, "event:" + event, handler_id)
+    } else {
+        db.set(_store, "event:" + event, existing + "," + handler_id)
+    }
+}
+
+do off(event: str) {
+    db.delete(_store, "event:" + event)
+}
+
+do emit(event: str) -> [str] {
+    let handlers_str = db.get(_store, "event:" + event)
+    if is_null(handlers_str) || handlers_str == "" { return [] }
+    let handlers = strings.split(handlers_str, ",")
+    return handlers
+}
+
+do has(event: str) -> bool {
+    let v = db.get(_store, "event:" + event)
+    return !is_null(v) && v != ""
+}
+
+do events() -> [str] {
+    let all_keys = db.keys(_store)
+    let result = []
+    loop k in all_keys {
+        if strings.starts_with(k, "event:") {
+            result = arr.push(result, strings.slice(k, 6, len(k)))
+        }
+    }
+    return result
+}
+
+do clear_all() {
+    db.clear(_store)
+}
+
+do once(event: str, handler_id: str) {
+    on(event, handler_id)
+    on(event + ":__once__", "true")
+}

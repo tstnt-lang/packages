@@ -1,0 +1,26 @@
+use server
+
+do route(path: str, body: str) {
+    server.route(path, body)
+}
+
+do route_post(path: str, body: str) {
+    server.route_post(path, body)
+}
+
+do json_route(path: str, json_str: str) {
+    server.route(path, json_str)
+}
+
+do static_page(path: str, title: str, content: str) {
+    let html = "<html><head><title>" + title + "</title><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px}</style></head><body>" + content + "</body></html>"
+    server.route(path, html)
+}
+
+do listen(port: int) {
+    server.listen(port)
+}
+
+do not_found(body: str) {
+    server.route("/404", body)
+}

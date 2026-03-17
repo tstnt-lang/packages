@@ -1,0 +1,77 @@
+use time
+use thread
+use db
+
+let _store = "tstnt_cron"
+
+do every_seconds(name: str, seconds: int, cmd: str) {
+    db.set(_store, name + ":interval", str(seconds * 1000))
+    db.set(_store, name + ":cmd", cmd)
+    db.set(_store, name + ":next", str(time.now() + seconds * 1000))
+    db.set(_store, name + ":type", "interval")
+}
+
+do every_minutes(name: str, minutes: int, cmd: str) {
+    every_seconds(name, minutes * 60, cmd)
+}
+
+do every_hours(name: str, hours: int, cmd: str) {
+    every_seconds(name, hours * 3600, cmd)
+}
+
+do daily(name: str, cmd: str) {
+    every_hours(name, 24, cmd)
+}
+
+do jobs() -> [str] {
+    let all = db.keys(_store)
+    let mut names = []
+    loop k in all {
+        if strings.ends_with(k, ":cmd") {
+            let name = strings.slice(k, 0, len(k) - 4)
+            names = arr.push(names, name)
+        }
+    }
+    return names
+}
+
+do next_run(name: str) -> int {
+    let v = db.get(_store, name + ":next")
+    if is_null(v) { return 0 }
+    return int(v)
+}
+
+do is_due(name: str) -> bool {
+    return time.now() >= next_run(name)
+}
+
+do mark_done(name: str) {
+    let interval = int(db.get(_store, name + ":interval"))
+    db.set(_store, name + ":next", str(time.now() + interval))
+    db.set(_store, name + ":last_run", str(time.now()))
+}
+
+do get_cmd(name: str) -> str {
+    let v = db.get(_store, name + ":cmd")
+    if is_null(v) { return "" }
+    return v
+}
+
+do remove(name: str) {
+    db.delete(_store, name + ":interval")
+    db.delete(_store, name + ":cmd")
+    db.delete(_store, name + ":next")
+    db.delete(_store, name + ":type")
+    db.delete(_store, name + ":last_run")
+}
+
+do status() {
+    let all = jobs()
+    print("Cron jobs: " + str(len(all)))
+    loop name in all {
+        let due = is_due(name)
+        let next = next_run(name)
+        let status = if due { "[DUE]" } else { "[waiting]" }
+        print("  " + status + " " + name + " — next: " + str(next))
+    }
+}

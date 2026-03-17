@@ -1,0 +1,72 @@
+use env
+use strings
+use arr
+
+let _args = env.args()
+let _flags = []
+let _opts = []
+let _positional = []
+
+do parse() {
+    let raw = env.args()
+    loop arg in raw {
+        if strings.starts_with(arg, "--") {
+            let part = strings.slice(arg, 2, len(arg))
+            if strings.contains(part, "=") {
+                let kv = strings.split(part, "=")
+                _opts = arr.push(_opts, [kv[0], kv[1]])
+            } else {
+                _flags = arr.push(_flags, part)
+            }
+        } else if strings.starts_with(arg, "-") {
+            _flags = arr.push(_flags, strings.slice(arg, 1, len(arg)))
+        } else {
+            _positional = arr.push(_positional, arg)
+        }
+    }
+}
+
+do has_flag(name: str) -> bool {
+    return arr.contains(_flags, name)
+}
+
+do get_opt(name: str, default: str) -> str {
+    loop pair in _opts {
+        if pair[0] == name { return pair[1] }
+    }
+    return default
+}
+
+do positional(idx: int) -> str {
+    if idx >= len(_positional) { return "" }
+    return _positional[idx]
+}
+
+do all_positional() -> [str] {
+    return _positional
+}
+
+do flags() -> [str] {
+    return _flags
+}
+
+do help(name: str, description: str, options: [[str]]) {
+    print("\nUsage: " + name + " [options]\n")
+    print(description + "\n")
+    print("Options:")
+    loop opt in options {
+        if len(opt) >= 2 {
+            print("  " + opt[0] + "  \t" + opt[1])
+        }
+    }
+    print("")
+}
+
+do require(name: str) -> str {
+    let val = get_opt(name, "")
+    if val == "" {
+        print("error: --" + name + " is required")
+        return ""
+    }
+    return val
+}

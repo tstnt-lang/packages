@@ -1,0 +1,61 @@
+use result
+
+do ok(value: any) -> any {
+    return result.ok(value)
+}
+
+do err(message: str) -> any {
+    return result.err(message)
+}
+
+do some(value: any) -> any {
+    return result.some(value)
+}
+
+do none() -> any {
+    return result.none()
+}
+
+do unwrap(r: any) -> any {
+    return result.unwrap(r)
+}
+
+do unwrap_or(r: any, fallback: any) -> any {
+    return result.unwrap_or(r, fallback)
+}
+
+do is_ok(r: any) -> bool {
+    return result.is_ok(r)
+}
+
+do is_err(r: any) -> bool {
+    return result.is_err(r)
+}
+
+do is_some(r: any) -> bool {
+    return result.is_some(r)
+}
+
+do is_none(r: any) -> bool {
+    return result.is_none(r)
+}
+
+do get_err(r: any) -> str {
+    return result.get_err(r)
+}
+
+do try_parse_int(s: str) -> any {
+    let n = int(s)
+    if str(n) == s {
+        return result.ok(n)
+    }
+    return result.err("cannot parse: " + s)
+}
+
+do try_parse_float(s: str) -> any {
+    let n = float(s)
+    if str(n) != "0" || s == "0" {
+        return result.ok(n)
+    }
+    return result.err("cannot parse float: " + s)
+}

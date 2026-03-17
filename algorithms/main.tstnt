@@ -1,0 +1,116 @@
+use math3
+
+do binary_search(arr: [int], target: int) -> int {
+    let mut lo = 0
+    let mut hi = len(arr) - 1
+    while lo <= hi {
+        let mid = (lo + hi) / 2
+        if arr[mid] == target { return mid }
+        if arr[mid] < target { lo = mid + 1 }
+        else { hi = mid - 1 }
+    }
+    return -1
+}
+
+do bubble_sort(arr: [int]) -> [int] {
+    let mut a = arr
+    let n = len(a)
+    loop i in 0..n {
+        loop j in 0..(n - i - 1) {
+            if a[j] > a[j + 1] {
+                let tmp = a[j]
+                a[j] = a[j + 1]
+                a[j + 1] = tmp
+            }
+        }
+    }
+    return a
+}
+
+do is_palindrome(s: str) -> bool {
+    let chars = strings.split(s, "")
+    let n = len(chars)
+    loop i in 0..(n / 2) {
+        if chars[i] != chars[n - i - 1] { return false }
+    }
+    return true
+}
+
+do fibonacci(n: int) -> [int] {
+    let mut result = []
+    let mut a = 0
+    let mut b = 1
+    loop i in 0..n {
+        result = arr.push(result, a)
+        let tmp = a + b
+        a = b
+        b = tmp
+    }
+    return result
+}
+
+do primes_up_to(n: int) -> [int] {
+    let mut result = []
+    loop i in 2..n {
+        if math3.is_prime(i) {
+            result = arr.push(result, i)
+        }
+    }
+    return result
+}
+
+do gcd(a: int, b: int) -> int {
+    return math3.gcd(a, b)
+}
+
+do lcm(a: int, b: int) -> int {
+    return math3.lcm(a, b)
+}
+
+do flatten_deep(arr: [any]) -> [any] {
+    let mut result = []
+    loop item in arr {
+        if type_of(item) == "array" {
+            let inner = flatten_deep(item)
+            loop x in inner {
+                result = arr.push(result, x)
+            }
+        } else {
+            result = arr.push(result, item)
+        }
+    }
+    return result
+}
+
+do count_occurrences(arr: [any], target: any) -> int {
+    let mut count = 0
+    loop item in arr {
+        if item == target { count += 1 }
+    }
+    return count
+}
+
+do two_sum(nums: [int], target: int) -> [int] {
+    loop i in 0..len(nums) {
+        loop j in (i+1)..len(nums) {
+            if nums[i] + nums[j] == target {
+                return [i, j]
+            }
+        }
+    }
+    return []
+}
+
+do max_subarray(nums: [int]) -> int {
+    let mut max_sum = nums[0]
+    let mut cur = nums[0]
+    loop i in 1..len(nums) {
+        if nums[i] > cur + nums[i] {
+            cur = nums[i]
+        } else {
+            cur = cur + nums[i]
+        }
+        if cur > max_sum { max_sum = cur }
+    }
+    return max_sum
+}

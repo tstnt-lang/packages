@@ -1,0 +1,90 @@
+use game
+use arr
+
+do bfs(grid: [[int]], start_row: int, start_col: int, end_row: int, end_col: int) -> [[int]] {
+    let rows = len(grid)
+    let cols = len(grid[0])
+    let mut visited = []
+    let mut queue = [[start_row, start_col, []]]
+    loop i in 0..rows {
+        let mut row = []
+        loop j in 0..cols { row = arr.push(row, 0) }
+        visited = arr.push(visited, row)
+    }
+    while len(queue) > 0 {
+        let cur = queue[0]
+        queue = arr.slice(queue, 1, len(queue))
+        let r = cur[0]
+        let c = cur[1]
+        let path = cur[2]
+        if r == end_row && c == end_col {
+            return path
+        }
+        if visited[r][c] == 1 { continue }
+        visited[r][c] = 1
+        let dirs = [[-1,0],[1,0],[0,-1],[0,1]]
+        loop d in dirs {
+            let nr = r + d[0]
+            let nc = c + d[1]
+            if nr >= 0 && nr < rows && nc >= 0 && nc < cols {
+                if grid[nr][nc] == 0 && visited[nr][nc] == 0 {
+                    let new_path = arr.push(path, [nr, nc])
+                    queue = arr.push(queue, [nr, nc, new_path])
+                }
+            }
+        }
+    }
+    return []
+}
+
+do flood_fill(grid: [[int]], row: int, col: int, old_val: int, new_val: int) -> [[int]] {
+    let mut g = grid
+    let rows = len(g)
+    let cols = len(g[0])
+    if g[row][col] != old_val { return g }
+    g = game.map_set(g, row, col, new_val)
+    let dirs = [[-1,0],[1,0],[0,-1],[0,1]]
+    loop d in dirs {
+        let nr = row + d[0]
+        let nc = col + d[1]
+        if nr >= 0 && nr < rows && nc >= 0 && nc < cols {
+            if g[nr][nc] == old_val {
+                g = flood_fill(g, nr, nc, old_val, new_val)
+            }
+        }
+    }
+    return g
+}
+
+do manhattan(r1: int, c1: int, r2: int, c2: int) -> int {
+    return abs(r2 - r1) + abs(c2 - c1)
+}
+
+do print_grid(grid: [[int]]) {
+    loop row in grid {
+        let mut line = ""
+        loop cell in row {
+            if cell == 0 { line = line + "· " }
+            else if cell == 1 { line = line + "█ " }
+            else if cell == 2 { line = line + "S " }
+            else if cell == 3 { line = line + "E " }
+            else { line = line + str(cell) + " " }
+        }
+        print(line)
+    }
+}
+
+do neighbors(grid: [[int]], row: int, col: int) -> [[int]] {
+    let rows = len(grid)
+    let cols = len(grid[0])
+    let dirs = [[-1,0],[1,0],[0,-1],[0,1]]
+    let mut result = []
+    loop d in dirs {
+        let nr = row + d[0]
+        let nc = col + d[1]
+        if nr >= 0 && nr < rows && nc >= 0 && nc < cols {
+            result = arr.push(result, [nr, nc])
+        }
+    }
+    return result
+}

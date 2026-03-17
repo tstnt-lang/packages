@@ -1,0 +1,52 @@
+use color2
+
+do fg(n: int, text: str) -> str {
+    return "\x1b[38;5;" + str(n) + "m" + text + "\x1b[0m"
+}
+
+do bg(n: int, text: str) -> str {
+    return "\x1b[48;5;" + str(n) + "m" + text + "\x1b[0m"
+}
+
+do gradient(text: str, from: int, to: int) -> str {
+    let chars = strings.split(text, "")
+    let n = len(chars)
+    let mut result = ""
+    loop i in 0..n {
+        let color = from + int((to - from) * i / n)
+        result = result + fg(color, chars[i])
+    }
+    return result
+}
+
+do rainbow(text: str) -> str {
+    let colors = [196, 208, 226, 46, 21, 93]
+    let chars = strings.split(text, "")
+    let mut result = ""
+    loop i, ch in chars {
+        let color = colors[i % len(colors)]
+        result = result + fg(color, ch)
+    }
+    return result
+}
+
+do print_palette() {
+    loop i in 0..16 {
+        loop j in 0..16 {
+            let n = i * 16 + j
+            print_no_ln(bg(n, "  "))
+        }
+        print("")
+    }
+}
+
+do pastel_pink(text: str) -> str { return fg(218, text) }
+do pastel_blue(text: str) -> str { return fg(153, text) }
+do pastel_green(text: str) -> str { return fg(157, text) }
+do pastel_yellow(text: str) -> str { return fg(228, text) }
+do pastel_purple(text: str) -> str { return fg(183, text) }
+do orange(text: str) -> str { return fg(214, text) }
+do deep_red(text: str) -> str { return fg(160, text) }
+do teal(text: str) -> str { return fg(37, text) }
+do gold(text: str) -> str { return fg(220, text) }
+do silver(text: str) -> str { return fg(250, text) }

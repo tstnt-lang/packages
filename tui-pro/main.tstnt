@@ -1,0 +1,80 @@
+use tui2
+use term
+use io
+
+do clear() {
+    tui2.clear()
+}
+
+do box(row: int, col: int, w: int, h: int, title: str) {
+    tui2.box(row, col, w, h, title)
+}
+
+do progress(cur: int, total: int, label: str) {
+    tui2.progress_bar(cur, total, 40, label)
+}
+
+do table(headers: [str], rows: [[str]]) {
+    tui2.table(headers, rows)
+}
+
+do menu(items: [str], title: str) -> str {
+    return tui2.menu(items, title)
+}
+
+do confirm(msg: str) -> bool {
+    return tui2.confirm(msg)
+}
+
+do alert(msg: str, kind: str) {
+    tui2.alert(msg, kind)
+}
+
+do input(prompt: str) -> str {
+    return tui2.input(prompt)
+}
+
+do rule(label: str, width: int) {
+    tui2.rule(width, label)
+}
+
+do spinner(frame: int, msg: str) {
+    tui2.spinner_frame(frame, msg)
+}
+
+do header(title: str) {
+    let line = "═".repeat(len(title) + 4)
+    print(term.bold("╔" + line + "╗"))
+    print(term.bold("║  " + title + "  ║"))
+    print(term.bold("╚" + line + "╝"))
+}
+
+do success(msg: str) {
+    tui2.alert(msg, "success")
+}
+
+do error(msg: str) {
+    tui2.alert(msg, "error")
+}
+
+do warn(msg: str) {
+    tui2.alert(msg, "warn")
+}
+
+do info(msg: str) {
+    tui2.alert(msg, "info")
+}
+
+do separator() {
+    tui2.rule(50, "")
+}
+
+do print_kv(key: str, value: str) {
+    print(term.dim(key + ":") + " " + term.bold(value))
+}
+
+do print_list(items: [str]) {
+    loop item in items {
+        print("  " + term.cyan("•") + " " + item)
+    }
+}
