@@ -1,0 +1,52 @@
+do art_box(text: str) -> str {
+    let n = len(text)
+    let top = "+" + repeat_str("-", n+2) + "+"
+    return top + "\n| " + text + " |\n" + top
+}
+do art_diamond(n: int) -> str {
+    let result = ""
+    loop i in 0..n {
+        let spaces = n - i - 1
+        let stars = 2 * i + 1
+        loop j in 0..spaces { result = result + " " }
+        loop j in 0..stars { result = result + "*" }
+        result = result + "\n"
+    }
+    loop i in 0..n-1 {
+        let row = n - i - 2
+        let spaces = i + 1
+        let stars = 2 * row + 1
+        loop j in 0..spaces { result = result + " " }
+        loop j in 0..stars { result = result + "*" }
+        result = result + "\n"
+    }
+    return result
+}
+do art_triangle(n: int) -> str {
+    let result = ""
+    loop i in 0..n {
+        loop j in 0..i+1 { result = result + "* " }
+        result = result + "\n"
+    }
+    return result
+}
+do art_pyramid(n: int, char: str) -> str {
+    let result = ""
+    loop i in 0..n {
+        loop j in 0..n-i-1 { result = result + " " }
+        loop j in 0..2*i+1 { result = result + char }
+        result = result + "\n"
+    }
+    return result
+}
+do art_checkerboard(rows: int, cols: int) -> str {
+    let result = ""
+    loop r in 0..rows {
+        loop c in 0..cols {
+            if (r + c) % 2 == 0 { result = result + "█" }
+            else { result = result + "░" }
+        }
+        result = result + "\n"
+    }
+    return result
+}

@@ -1,0 +1,32 @@
+do ulid_chars() -> str { return "0123456789ABCDEFGHJKMNPQRSTVWXYZ" }
+do ulid_encode_time(ts: int) -> str {
+    let chars = ulid_chars()
+    let result = ""
+    let t = ts
+    loop i in 0..10 {
+        result = chars[t % 32] + result
+        t = t / 32
+    }
+    return result
+}
+do ulid_random_part() -> str {
+    let chars = ulid_chars()
+    let result = ""
+    loop i in 0..16 {
+        result = result + chars[int(math.random() * 32.0)]
+    }
+    return result
+}
+do ulid_generate(timestamp: int) -> str {
+    return ulid_encode_time(timestamp) + ulid_random_part()
+}
+do ulid_valid(s: str) -> bool {
+    if len(s) != 26 { return false }
+    let chars = ulid_chars()
+    loop i in 0..len(s) {
+        let found = false
+        loop j in 0..len(chars) { if s[i] == chars[j] { found = true } }
+        if found == false { return false }
+    }
+    return true
+}

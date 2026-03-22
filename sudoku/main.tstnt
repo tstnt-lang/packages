@@ -1,0 +1,42 @@
+do sudoku_new() -> array {
+    let board = []
+    loop i in 0..9 {
+        let row = []
+        loop j in 0..9 { row = concat(row, [0]) }
+        board = concat(board, [row])
+    }
+    return board
+}
+do sudoku_valid_row(board: array, row: int, num: int) -> bool {
+    loop c in 0..9 { if board[row][c] == num { return false } }
+    return true
+}
+do sudoku_valid_col(board: array, col: int, num: int) -> bool {
+    loop r in 0..9 { if board[r][col] == num { return false } }
+    return true
+}
+do sudoku_valid_box(board: array, row: int, col: int, num: int) -> bool {
+    let br = (row / 3) * 3; let bc = (col / 3) * 3
+    loop r in 0..3 {
+        loop c in 0..3 {
+            if board[br+r][bc+c] == num { return false }
+        }
+    }
+    return true
+}
+do sudoku_valid(board: array, row: int, col: int, num: int) -> bool {
+    return sudoku_valid_row(board, row, num) && sudoku_valid_col(board, col, num) && sudoku_valid_box(board, row, col, num)
+}
+do sudoku_render(board: array) -> str {
+    let result = ""
+    loop r in 0..9 {
+        if r > 0 && r % 3 == 0 { result = result + "------+-------+------\n" }
+        loop c in 0..9 {
+            if c > 0 && c % 3 == 0 { result = result + " | " }
+            if board[r][c] == 0 { result = result + ". " }
+            else { result = result + str(board[r][c]) + " " }
+        }
+        result = result + "\n"
+    }
+    return result
+}

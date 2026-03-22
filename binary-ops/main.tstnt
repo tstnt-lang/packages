@@ -1,0 +1,40 @@
+do int_to_bin(n: int) -> str {
+    if n == 0 { return "0" }
+    let result = ""; let num = n
+    while num > 0 { result = str(num & 1) + result; num = num >> 1 }
+    return result
+}
+do bin_to_int(s: str) -> int {
+    let result = 0
+    loop i in 0..len(s) { result = result * 2 + int(s[i]) }
+    return result
+}
+do int_to_hex(n: int) -> str {
+    if n == 0 { return "0" }
+    let chars = "0123456789abcdef"
+    let result = ""; let num = n
+    while num > 0 { result = chars[num & 15] + result; num = num >> 4 }
+    return result
+}
+do hex_to_int(s: str) -> int {
+    let chars = "0123456789abcdef"
+    let result = 0
+    let lower = strings.lower(s)
+    loop i in 0..len(lower) {
+        loop j in 0..16 {
+            if lower[i] == chars[j] { result = result * 16 + j }
+        }
+    }
+    return result
+}
+do int_to_oct(n: int) -> str {
+    if n == 0 { return "0" }
+    let result = ""; let num = n
+    while num > 0 { result = str(num & 7) + result; num = num >> 3 }
+    return result
+}
+do oct_to_int(s: str) -> int {
+    let result = 0
+    loop i in 0..len(s) { result = result * 8 + int(s[i]) }
+    return result
+}

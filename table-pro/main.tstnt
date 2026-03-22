@@ -1,0 +1,53 @@
+do tpro_new(headers: array, alignments: array) -> array { return [headers, alignments, []] }
+do tpro_add(t: array, row: array) -> array { t[2] = concat(t[2], [row]); return t }
+do tpro_col_width(t: array, col: int) -> int {
+    let w = len(str(t[0][col]))
+    loop r in 0..len(t[2]) {
+        if col < len(t[2][r]) {
+            let cw = len(str(t[2][r][col]))
+            if cw > w { w = cw }
+        }
+    }
+    return w
+}
+do tpro_cell(val: str, width: int, align: str) -> str {
+    let pad = width - len(val)
+    if align == "r" {
+        let result = ""
+        loop i in 0..pad { result = result + " " }
+        return result + val
+    }
+    if align == "c" {
+        let lpad = pad / 2; let rpad = pad - lpad
+        let result = ""
+        loop i in 0..lpad { result = result + " " }
+        result = result + val
+        loop i in 0..rpad { result = result + " " }
+        return result
+    }
+    let result = val
+    loop i in 0..pad { result = result + " " }
+    return result
+}
+do tpro_render(t: array) -> str {
+    let widths = []
+    loop c in 0..len(t[0]) { widths = concat(widths, [tpro_col_width(t, c)]) }
+    let sep = "+"
+    loop c in 0..len(widths) { sep = sep + repeat_str("-", widths[c]+2) + "+" }
+    let result = sep + "\n|"
+    loop c in 0..len(t[0]) {
+        let align = "l"; if c < len(t[1]) { align = t[1][c] }
+        result = result + " " + tpro_cell(str(t[0][c]), widths[c], align) + " |"
+    }
+    result = result + "\n" + sep + "\n"
+    loop r in 0..len(t[2]) {
+        result = result + "|"
+        loop c in 0..len(t[0]) {
+            let val = ""; if c < len(t[2][r]) { val = str(t[2][r][c]) }
+            let align = "l"; if c < len(t[1]) { align = t[1][c] }
+            result = result + " " + tpro_cell(val, widths[c], align) + " |"
+        }
+        result = result + "\n"
+    }
+    return result + sep
+}

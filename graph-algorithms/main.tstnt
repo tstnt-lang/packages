@@ -1,0 +1,68 @@
+do graph_new() -> array { return [[], []] }
+do graph_add_vertex(g: array, v: str) -> array {
+    g[0] = concat(g[0], [v])
+    return g
+}
+do graph_add_edge(g: array, from: str, to: str, weight: int) -> array {
+    g[1] = concat(g[1], [[from, to, weight]])
+    return g
+}
+do graph_neighbors(g: array, v: str) -> array {
+    let result = []
+    loop i in 0..len(g[1]) {
+        if g[1][i][0] == v { result = concat(result, [g[1][i][1]]) }
+    }
+    return result
+}
+do graph_bfs(g: array, start: str) -> array {
+    let visited = [start]
+    let queue = [start]
+    let order = []
+    while len(queue) > 0 {
+        let node = queue[0]
+        queue = drop(queue, 1)
+        order = concat(order, [node])
+        let neighbors = graph_neighbors(g, node)
+        loop i in 0..len(neighbors) {
+            let found = false
+            loop j in 0..len(visited) { if visited[j] == neighbors[i] { found = true } }
+            if found == false {
+                visited = concat(visited, [neighbors[i]])
+                queue = concat(queue, [neighbors[i]])
+            }
+        }
+    }
+    return order
+}
+do graph_dfs(g: array, start: str) -> array {
+    let visited = []
+    let stack = [start]
+    let order = []
+    while len(stack) > 0 {
+        let node = stack[len(stack)-1]
+        stack = take(stack, len(stack)-1)
+        let already = false
+        loop i in 0..len(visited) { if visited[i] == node { already = true } }
+        if already == false {
+            visited = concat(visited, [node])
+            order = concat(order, [node])
+            let neighbors = graph_neighbors(g, node)
+            loop i in 0..len(neighbors) { stack = concat(stack, [neighbors[i]]) }
+        }
+    }
+    return order
+}
+do graph_has_path(g: array, from: str, to: str) -> bool {
+    let visited = graph_bfs(g, from)
+    loop i in 0..len(visited) { if visited[i] == to { return true } }
+    return false
+}
+do graph_degree(g: array, v: str) -> int {
+    let count = 0
+    loop i in 0..len(g[1]) {
+        if g[1][i][0] == v || g[1][i][1] == v { count += 1 }
+    }
+    return count
+}
+do graph_edge_count(g: array) -> int { return len(g[1]) }
+do graph_vertex_count(g: array) -> int { return len(g[0]) }

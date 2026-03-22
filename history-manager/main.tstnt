@@ -1,0 +1,23 @@
+do hm_new() -> array { return [[], -1, 100] }
+do hm_push(hm: array, entry: str) -> array {
+    let history = take(hm[0], hm[1] + 1)
+    history = concat(history, [entry])
+    if len(history) > hm[2] { history = drop(history, 1) }
+    return [history, len(history) - 1, hm[2]]
+}
+do hm_back(hm: array) -> array {
+    if hm[1] <= 0 { return hm }
+    return [hm[0], hm[1] - 1, hm[2]]
+}
+do hm_forward(hm: array) -> array {
+    if hm[1] >= len(hm[0]) - 1 { return hm }
+    return [hm[0], hm[1] + 1, hm[2]]
+}
+do hm_current(hm: array) -> str {
+    if hm[1] < 0 || len(hm[0]) == 0 { return "" }
+    return hm[0][hm[1]]
+}
+do hm_can_back(hm: array) -> bool { return hm[1] > 0 }
+do hm_can_forward(hm: array) -> bool { return hm[1] < len(hm[0]) - 1 }
+do hm_all(hm: array) -> array { return hm[0] }
+do hm_clear(hm: array) -> array { return [[], -1, hm[2]] }

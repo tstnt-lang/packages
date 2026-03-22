@@ -1,0 +1,16 @@
+do cqrs_command(name: str, payload: str) -> array { return ["cmd", name, payload] }
+do cqrs_query(name: str, params: str) -> array { return ["qry", name, params] }
+do cqrs_is_command(msg: array) -> bool { return msg[0] == "cmd" }
+do cqrs_is_query(msg: array) -> bool { return msg[0] == "qry" }
+do cqrs_name(msg: array) -> str { return msg[1] }
+do cqrs_payload(msg: array) -> str { return msg[2] }
+do cqrs_bus_new() -> array { return [[], []] }
+do cqrs_register_handler(bus: array, name: str, handler_id: str) -> array {
+    bus[0] = concat(bus[0], [name]); bus[1] = concat(bus[1], [handler_id]); return bus
+}
+do cqrs_dispatch(bus: array, msg: array) -> str {
+    loop i in 0..len(bus[0]) {
+        if bus[0][i] == cqrs_name(msg) { return bus[1][i] }
+    }
+    return ""
+}

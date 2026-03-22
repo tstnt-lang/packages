@@ -1,0 +1,33 @@
+do yaml_parse_simple(text: str) -> array {
+    let lines = strings.split(text, "\n")
+    let result = []
+    loop i in 0..len(lines) {
+        let line = lines[i]
+        if strings.starts_with(strings.trim(line), "#") { continue }
+        if strings.contains(line, ":") {
+            let parts = strings.split(line, ":")
+            let key = strings.trim(parts[0])
+            let val = strings.trim(parts[1])
+            if len(key) > 0 { result = concat(result, [[key, val]]) }
+        }
+    }
+    return result
+}
+do yaml_get(parsed: array, key: str) -> str {
+    loop i in 0..len(parsed) {
+        if parsed[i][0] == key { return parsed[i][1] }
+    }
+    return ""
+}
+do yaml_to_str(data: array) -> str {
+    let result = ""
+    loop i in 0..len(data) {
+        result = result + data[i][0] + ": " + data[i][1] + "\n"
+    }
+    return result
+}
+do yaml_keys(parsed: array) -> array {
+    let keys = []
+    loop i in 0..len(parsed) { keys = concat(keys, [parsed[i][0]]) }
+    return keys
+}

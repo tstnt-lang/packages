@@ -1,0 +1,33 @@
+do multibar_new() -> array { return [] }
+do multibar_add(mb: array, name: str, total: int) -> array {
+    return concat(mb, [[name, 0, total]])
+}
+do multibar_update(mb: array, idx: int, current: int) -> array {
+    mb[idx][1] = current
+    return mb
+}
+do multibar_render(mb: array, width: int) -> str {
+    let result = ""
+    loop i in 0..len(mb) {
+        let bar = mb[i]
+        let name = bar[0]
+        let pct = 0
+        if bar[2] > 0 { pct = bar[1] * 100 / bar[2] }
+        let filled = pct * width / 100
+        let line = name + " ["
+        loop j in 0..filled { line = line + "█" }
+        loop j in 0..width-filled { line = line + "░" }
+        line = line + "] " + str(pct) + "%"
+        result = result + line + "\n"
+    }
+    return result
+}
+do multibar_done(mb: array, idx: int) -> bool {
+    return mb[idx][1] >= mb[idx][2]
+}
+do multibar_all_done(mb: array) -> bool {
+    loop i in 0..len(mb) {
+        if multibar_done(mb, i) == false { return false }
+    }
+    return true
+}

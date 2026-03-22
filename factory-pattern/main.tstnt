@@ -1,0 +1,23 @@
+do factory_new(name: str) -> array { return [name, [], []] }
+do factory_register(f: array, type_name: str, template: str) -> array {
+    f[1] = concat(f[1], [type_name])
+    f[2] = concat(f[2], [template])
+    return f
+}
+do factory_create(f: array, type_name: str, params: array) -> str {
+    loop i in 0..len(f[1]) {
+        if f[1][i] == type_name {
+            let result = f[2][i]
+            loop j in 0..len(params) {
+                result = strings.replace(result, "{" + str(j) + "}", params[j])
+            }
+            return result
+        }
+    }
+    return ""
+}
+do factory_has(f: array, type_name: str) -> bool {
+    loop i in 0..len(f[1]) { if f[1][i] == type_name { return true } }
+    return false
+}
+do factory_types(f: array) -> array { return f[1] }

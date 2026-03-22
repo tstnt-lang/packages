@@ -1,0 +1,23 @@
+do snapshot_new() -> array { return [] }
+do snapshot_take(snaps: array, label: str, state: str) -> array {
+    return concat(snaps, [[label, state, len(snaps)]])
+}
+do snapshot_restore(snaps: array, label: str) -> str {
+    loop i in 0..len(snaps) { if snaps[i][0] == label { return snaps[i][1] } }
+    return ""
+}
+do snapshot_list(snaps: array) -> array {
+    let result = []
+    loop i in 0..len(snaps) { result = concat(result, [snaps[i][0]]) }
+    return result
+}
+do snapshot_latest(snaps: array) -> str {
+    if len(snaps) == 0 { return "" }
+    return snaps[len(snaps)-1][1]
+}
+do snapshot_diff(snaps: array, a: str, b: str) -> str {
+    let sa = snapshot_restore(snaps, a)
+    let sb = snapshot_restore(snaps, b)
+    if sa == sb { return "identical" }
+    return "changed: " + str(len(sa)) + " -> " + str(len(sb)) + " chars"
+}

@@ -1,0 +1,16 @@
+do memento_create(state: str) -> array { return [state] }
+do memento_get(m: array) -> str { return m[0] }
+do caretaker_new() -> array { return [] }
+do caretaker_save(ct: array, state: str) -> array {
+    return concat(ct, [memento_create(state)])
+}
+do caretaker_restore(ct: array, idx: int) -> str {
+    if idx < 0 || idx >= len(ct) { return "" }
+    return memento_get(ct[idx])
+}
+do caretaker_latest(ct: array) -> str {
+    if len(ct) == 0 { return "" }
+    return memento_get(ct[len(ct)-1])
+}
+do caretaker_count(ct: array) -> int { return len(ct) }
+do caretaker_clear(ct: array) -> array { return [] }

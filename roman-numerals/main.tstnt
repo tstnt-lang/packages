@@ -1,0 +1,35 @@
+do to_roman(n: int) -> str {
+    let vals =  [1000,900,500,400,100,90,50,40,10,9,5,4,1]
+    let syms = ["M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"]
+    let result = ""
+    let num = n
+    loop i in 0..13 {
+        while num >= vals[i] { result = result + syms[i]; num -= vals[i] }
+    }
+    return result
+}
+do from_roman(s: str) -> int {
+    let map = [["M",1000],["D",500],["C",100],["L",50],["X",10],["V",5],["I",1]]
+    let val_of(c: str) -> int {
+        loop i in 0..len(map) { if map[i][0] == c { return map[i][1] } }
+        return 0
+    }
+    let result = 0
+    loop i in 0..len(s) {
+        let cur = val_of(s[i])
+        let next = 0
+        if i + 1 < len(s) { next = val_of(s[i+1]) }
+        if cur < next { result -= cur }
+        else { result += cur }
+    }
+    return result
+}
+do is_valid_roman(s: str) -> bool {
+    let valid = "MDCLXVI"
+    loop i in 0..len(s) {
+        let found = false
+        loop j in 0..len(valid) { if s[i] == valid[j] { found = true } }
+        if found == false { return false }
+    }
+    return len(s) > 0
+}

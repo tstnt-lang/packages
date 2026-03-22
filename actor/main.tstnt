@@ -1,0 +1,19 @@
+do actor_new(name: str, state: str) -> array { return [name, state, []] }
+do actor_send(actor: array, msg: str) -> array {
+    actor[2] = concat(actor[2], [msg])
+    return actor
+}
+do actor_process(actor: array) -> array {
+    if len(actor[2]) == 0 { return actor }
+    let msg = actor[2][0]
+    actor[2] = drop(actor[2], 1)
+    actor[1] = actor[1] + "|" + msg
+    return actor
+}
+do actor_process_all(actor: array) -> array {
+    while len(actor[2]) > 0 { actor = actor_process(actor) }
+    return actor
+}
+do actor_state(actor: array) -> str { return actor[1] }
+do actor_mailbox_size(actor: array) -> int { return len(actor[2]) }
+do actor_name(actor: array) -> str { return actor[0] }

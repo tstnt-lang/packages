@@ -1,0 +1,50 @@
+do levenshtein(a: str, b: str) -> int {
+    let la = len(a); let lb = len(b)
+    if la == 0 { return lb }
+    if lb == 0 { return la }
+    let prev = []
+    loop i in 0..lb+1 { prev = concat(prev, [i]) }
+    loop i in 0..la {
+        let curr = [i + 1]
+        loop j in 0..lb {
+            let cost = 1
+            if a[i] == b[j] { cost = 0 }
+            let ins = curr[j] + 1
+            let del = prev[j + 1] + 1
+            let sub = prev[j] + cost
+            let mn = ins
+            if del < mn { mn = del }
+            if sub < mn { mn = sub }
+            curr = concat(curr, [mn])
+        }
+        prev = curr
+    }
+    return prev[lb]
+}
+do similarity(a: str, b: str) -> float {
+    let dist = levenshtein(a, b)
+    let max_len = len(a)
+    if len(b) > max_len { max_len = len(b) }
+    if max_len == 0 { return 1.0 }
+    return 1.0 - float(dist) / float(max_len)
+}
+do fuzzy_match(query: str, candidates: array, threshold: float) -> array {
+    let results = []
+    loop i in 0..len(candidates) {
+        let s = similarity(query, candidates[i])
+        if s >= threshold { results = concat(results, [candidates[i]]) }
+    }
+    return results
+}
+do starts_with_str(s: str, prefix: str) -> bool {
+    if len(prefix) > len(s) { return false }
+    loop i in 0..len(prefix) { if s[i] != prefix[i] { return false } }
+    return true
+}
+do ends_with_str(s: str, suffix: str) -> bool {
+    let sl = len(s); let pl = len(suffix)
+    if pl > sl { return false }
+    let offset = sl - pl
+    loop i in 0..pl { if s[offset + i] != suffix[i] { return false } }
+    return true
+}

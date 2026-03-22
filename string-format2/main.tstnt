@@ -1,0 +1,50 @@
+do fmt_number(n: float, decimals: int) -> str {
+    let factor = math.pow(10.0, float(decimals))
+    let rounded = float(int(n * factor)) / factor
+    let s = str(rounded)
+    if decimals == 0 { return str(int(n)) }
+    if !strings.contains(s, ".") { s = s + "." }
+    let parts = strings.split(s, ".")
+    let dec_part = parts[1]
+    while len(dec_part) < decimals { dec_part = dec_part + "0" }
+    if len(dec_part) > decimals { dec_part = strings.slice(dec_part, 0, decimals) }
+    return parts[0] + "." + dec_part
+}
+do fmt_currency(amount: float, symbol: str) -> str {
+    return symbol + fmt_number(amount, 2)
+}
+do fmt_percent(value: float, decimals: int) -> str {
+    return fmt_number(value * 100.0, decimals) + "%"
+}
+do fmt_bytes(bytes: int) -> str {
+    if bytes < 1024 { return str(bytes) + " B" }
+    if bytes < 1048576 { return fmt_number(float(bytes)/1024.0, 1) + " KB" }
+    if bytes < 1073741824 { return fmt_number(float(bytes)/1048576.0, 1) + " MB" }
+    return fmt_number(float(bytes)/1073741824.0, 2) + " GB"
+}
+do fmt_duration(seconds: int) -> str {
+    if seconds < 60 { return str(seconds) + "s" }
+    if seconds < 3600 { return str(seconds/60) + "m " + str(seconds%60) + "s" }
+    if seconds < 86400 { return str(seconds/3600) + "h " + str((seconds%3600)/60) + "m" }
+    return str(seconds/86400) + "d " + str((seconds%86400)/3600) + "h"
+}
+do fmt_ordinal(n: int) -> str {
+    let s = str(n)
+    if n % 100 >= 11 && n % 100 <= 13 { return s + "th" }
+    if n % 10 == 1 { return s + "st" }
+    if n % 10 == 2 { return s + "nd" }
+    if n % 10 == 3 { return s + "rd" }
+    return s + "th"
+}
+do fmt_thousands(n: int) -> str {
+    let s = str(abs(n)); let result = ""
+    let start = len(s) % 3; if start == 0 { start = 3 }
+    result = strings.slice(s, 0, start)
+    let i = start
+    while i < len(s) {
+        result = result + "," + strings.slice(s, i, i+3)
+        i += 3
+    }
+    if n < 0 { return "-" + result }
+    return result
+}

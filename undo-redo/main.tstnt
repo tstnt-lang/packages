@@ -1,0 +1,22 @@
+do ur_new(initial: str) -> array { return [[initial], 0] }
+do ur_state(ur: array) -> str { return ur[0][ur[1]] }
+do ur_push(ur: array, state: str) -> array {
+    let history = take(ur[0], ur[1] + 1)
+    history = concat(history, [state])
+    return [history, len(history) - 1]
+}
+do ur_undo(ur: array) -> array {
+    if ur[1] <= 0 { return ur }
+    return [ur[0], ur[1] - 1]
+}
+do ur_redo(ur: array) -> array {
+    if ur[1] >= len(ur[0]) - 1 { return ur }
+    return [ur[0], ur[1] + 1]
+}
+do ur_can_undo(ur: array) -> bool { return ur[1] > 0 }
+do ur_can_redo(ur: array) -> bool { return ur[1] < len(ur[0]) - 1 }
+do ur_history(ur: array) -> array { return ur[0] }
+do ur_clear(ur: array) -> array {
+    let cur = ur_state(ur)
+    return ur_new(cur)
+}

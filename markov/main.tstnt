@@ -1,0 +1,49 @@
+do markov_build(text: str, order: int) -> array {
+    let words = strings.split(text, " ")
+    let chains = []
+    loop i in 0..len(words)-order {
+        let key = ""
+        loop j in 0..order {
+            if j > 0 { key = key + " " }
+            key = key + words[i+j]
+        }
+        let next = words[i+order]
+        let found = false
+        loop k in 0..len(chains) {
+            if chains[k][0] == key {
+                chains[k][1] = concat(chains[k][1], [next])
+                found = true
+            }
+        }
+        if found == false { chains = concat(chains, [[key, [next]]]) }
+    }
+    return chains
+}
+do markov_next(chains: array, key: str) -> str {
+    loop i in 0..len(chains) {
+        if chains[i][0] == key {
+            let options = chains[i][1]
+            return options[int(math.random() * float(len(options)))]
+        }
+    }
+    return ""
+}
+do markov_generate(chains: array, start: str, length: int) -> str {
+    let result = start
+    let current = start
+    loop i in 0..length {
+        let next = markov_next(chains, current)
+        if len(next) == 0 {
+            if len(chains) > 0 { current = chains[int(math.random() * float(len(chains)))][0] }
+        } else {
+            result = result + " " + next
+            let words = strings.split(current, " ")
+            if len(words) > 1 {
+                current = strings.slice(current, len(words[0])+1, len(current)) + " " + next
+            } else {
+                current = next
+            }
+        }
+    }
+    return result
+}

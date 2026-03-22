@@ -1,0 +1,27 @@
+do recipe_scale(ingredients: array, from_servings: int, to_servings: int) -> array {
+    let factor = float(to_servings) / float(from_servings)
+    let result = []
+    loop i in 0..len(ingredients) {
+        let ing = ingredients[i]
+        result = concat(result, [[ing[0], ing[1] * factor, ing[2]]])
+    }
+    return result
+}
+do cups_to_tbsp(cups: float) -> float { return cups * 16.0 }
+do tbsp_to_tsp(tbsp: float) -> float { return tbsp * 3.0 }
+do cups_to_ml(cups: float) -> float { return cups * 236.588 }
+do ml_to_cups(ml: float) -> float { return ml / 236.588 }
+do oz_to_grams(oz: float) -> float { return oz * 28.3495 }
+do grams_to_oz(g: float) -> float { return g / 28.3495 }
+do ingredient_new(name: str, amount: float, unit: str) -> array { return [name, amount, unit] }
+do recipe_total_calories(ingredients: array, cal_per_unit: array) -> float {
+    let total = 0.0
+    loop i in 0..len(ingredients) {
+        loop j in 0..len(cal_per_unit) {
+            if cal_per_unit[j][0] == ingredients[i][0] {
+                total += ingredients[i][1] * cal_per_unit[j][1]
+            }
+        }
+    }
+    return total
+}

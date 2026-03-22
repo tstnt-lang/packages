@@ -1,0 +1,33 @@
+do consonants() -> array { return ["b","c","d","f","g","h","j","k","l","m","n","p","r","s","t","v","w","x","y","z"] }
+do vowels() -> array { return ["a","e","i","o","u"] }
+do random_word(min_len: int, max_len: int) -> str {
+    let cons = consonants(); let vows = vowels()
+    let length = min_len + int(math.random() * float(max_len - min_len + 1))
+    let word = ""
+    loop i in 0..length {
+        if i % 2 == 0 { word = word + cons[int(math.random() * float(len(cons)))] }
+        else { word = word + vows[int(math.random() * float(len(vows)))] }
+    }
+    return word
+}
+do random_words(count: int) -> array {
+    let result = []
+    loop i in 0..count { result = concat(result, [random_word(3, 8)]) }
+    return result
+}
+do random_sentence(word_count: int) -> str {
+    let words = random_words(word_count)
+    let result = strings.upper(strings.slice(words[0], 0, 1)) + strings.slice(words[0], 1, len(words[0]))
+    loop i in 1..len(words) { result = result + " " + words[i] }
+    return result + "."
+}
+do pronounceable(length: int) -> str {
+    let cons = ["b","d","f","g","h","k","l","m","n","p","r","s","t","v","w"]
+    let vows = ["a","e","i","o","u"]
+    let word = ""
+    loop i in 0..length {
+        if i % 2 == 0 { word = word + cons[int(math.random() * float(len(cons)))] }
+        else { word = word + vows[int(math.random() * float(len(vows)))] }
+    }
+    return word
+}

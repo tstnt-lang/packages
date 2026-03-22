@@ -1,0 +1,43 @@
+do vec2d_new(x: float, y: float) -> array {
+    return [x, y]
+}
+
+do vec2d_add(a: array, b: array) -> array {
+    return [a[0] + b[0], a[1] + b[1]]
+}
+
+do vec2d_sub(a: array, b: array) -> array {
+    return [a[0] - b[0], a[1] - b[1]]
+}
+
+do vec2d_scale(v: array, s: float) -> array {
+    return [v[0] * s, v[1] * s]
+}
+
+do vec2d_dot(a: array, b: array) -> float {
+    return a[0] * b[0] + a[1] * b[1]
+}
+
+do vec2d_len(v: array) -> float {
+    return math.sqrt(v[0] * v[0] + v[1] * v[1])
+}
+
+do vec2d_norm(v: array) -> array {
+    let l = vec2d_len(v)
+    if l == 0 { return [0, 0] }
+    return [v[0] / l, v[1] / l]
+}
+
+do vec2d_dist(a: array, b: array) -> float {
+    let dx = a[0] - b[0]
+    let dy = a[1] - b[1]
+    return math.sqrt(dx * dx + dy * dy)
+}
+
+do vec2d_lerp(a: array, b: array, t: float) -> array {
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]
+}
+
+do vec2d_str(v: array) -> str {
+    return "(" + str(v[0]) + ", " + str(v[1]) + ")"
+}

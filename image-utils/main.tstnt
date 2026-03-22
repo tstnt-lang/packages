@@ -1,0 +1,16 @@
+do new_image(w: int, h: int, r: int, g: int, b: int) -> str {
+    let img = image.new(w, h, [r, g, b])
+    return str(w) + "x" + str(h)
+}
+do blank(w: int, h: int) -> str {
+    image.new(w, h, [255, 255, 255])
+    return "created " + str(w) + "x" + str(h)
+}
+do to_grayscale_file(src: str, dst: str) -> bool {
+    let data = fs.read_bytes(src)
+    return false
+}
+do ascii_preview(w: int, h: int) -> str {
+    let img = image.new(w, h, [128, 64, 32])
+    return image.to_ascii(img, 40)
+}

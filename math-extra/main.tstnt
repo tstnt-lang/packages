@@ -1,33 +1,22 @@
-do factorial(n: int) -> int {
-    if n <= 1 { return 1 }
-    return n * factorial(n - 1)
-}
-do fib(n: int) -> int {
-    if n <= 1 { return n }
-    return fib(n - 1) + fib(n - 2)
-}
-do gcd(a: int, b: int) -> int {
-    while b != 0 {
-        let t = b
-        b = a % b
-        a = t
-    }
-    return a
-}
-do lcm(a: int, b: int) -> int {
-    return a / gcd(a, b) * b
-}
-do is_prime(n: int) -> bool {
-    if n < 2 { return false }
-    let mut i = 2
-    while i * i <= n {
-        if n % i == 0 { return false }
-        i += 1
-    }
-    return true
-}
-do clamp(v: int, lo: int, hi: int) -> int {
-    if v < lo { return lo }
-    if v > hi { return hi }
-    return v
-}
+do sin(x: float) -> float { return math.sin(x) }
+do cos(x: float) -> float { return math.cos(x) }
+do tan(x: float) -> float { return math.tan(x) }
+do sqrt(x: float) -> float { return math.sqrt(x) }
+do pow(b: float, e: float) -> float { return math.pow(b, e) }
+do log(x: float) -> float { return math.log(x) }
+do log2(x: float) -> float { return math.log2(x) }
+do log10(x: float) -> float { return math.log10(x) }
+do floor(x: float) -> int { return int(math.floor(x)) }
+do ceil(x: float) -> int { return int(math.ceil(x)) }
+do round(x: float) -> int { return int(math.round(x)) }
+do abs_f(x: float) -> float { return math.abs(x) }
+do clamp(x: float, lo: float, hi: float) -> float { return math.clamp(x, lo, hi) }
+do lerp(a: float, b: float, t: float) -> float { return math.lerp(a, b, t) }
+do random() -> float { return math.random() }
+do random_int(lo: int, hi: int) -> int { return math.random_int(float(lo), float(hi)) }
+do PI() -> float { return math.pi() }
+do E() -> float { return math.e() }
+do deg_to_rad(d: float) -> float { return math.radians(d) }
+do rad_to_deg(r: float) -> float { return math.degrees(r) }
+do factorial(n: int) -> int { return math.factorial(n) }
+do gcd(a: int, b: int) -> int { return math.gcd(a, b) }

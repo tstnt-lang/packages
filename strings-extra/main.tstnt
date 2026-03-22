@@ -1,22 +1,35 @@
-do slugify(s: str) -> str {
-    return strings.lower(strings.replace(strings.trim(s), " ", "-"))
+do fmt(template: str, args: array) -> str {
+    let result = template
+    loop i in 0..len(args) { result = strings.replace(result, "{}", str(args[i])) }
+    return result
 }
-do repeat_str(s: str, n: int) -> str {
-    let mut r = ""
-    let mut i = 0
-    while i < n { r = r + s; i += 1 }
-    return r
+do wrap(text: str, width: int) -> str { return strings.wrap(text, width) }
+do truncate(text: str, max: int) -> str { return strings.truncate(text, max, "...") }
+do pad(text: str, width: int) -> str { return strings.pad_right(text, width, " ") }
+do rpad(text: str, width: int) -> str { return strings.pad_left(text, width, " ") }
+do center(text: str, width: int) -> str { return strings.center(text, width, " ") }
+do lines(text: str) -> array { return strings.lines(text) }
+do words(text: str) -> array { return strings.words(text) }
+do title(text: str) -> str { return strings.title_case(text) }
+do camel(text: str) -> str {
+    let words = strings.split(text, "_")
+    let result = strings.lower(words[0])
+    loop i in 1..len(words) {
+        let w = words[i]
+        if len(w) > 0 {
+            result += strings.upper(strings.slice(w, 0, 1)) + strings.slice(w, 1, len(w))
+        }
+    }
+    return result
 }
-do pad_right(s: str, n: int) -> str {
-    let mut r = s
-    while len(r) < n { r = r + " " }
-    return r
-}
-do pad_left(s: str, n: int) -> str {
-    let mut r = s
-    while len(r) < n { r = " " + r }
-    return r
-}
-do count_char(s: str, ch: str) -> int {
-    return len(strings.split(s, ch)) - 1
+do snake(text: str) -> str {
+    let result = ""
+    loop i in 0..len(text) {
+        let c = text[i]
+        if c >= "A" && c <= "Z" {
+            if i > 0 { result += "_" }
+            result += strings.lower(c)
+        } else { result += c }
+    }
+    return result
 }

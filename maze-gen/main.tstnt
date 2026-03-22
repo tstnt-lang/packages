@@ -1,0 +1,51 @@
+do maze_new(width: int, height: int) -> array {
+    let cells = []
+    loop y in 0..height {
+        let row = []
+        loop x in 0..width { row = concat(row, [15]) }
+        cells = concat(cells, [row])
+    }
+    return [width, height, cells]
+}
+do maze_carve(m: array, x: int, y: int) -> array {
+    let dirs = [[0,-1,1],[1,0,2],[0,1,4],[-1,0,8]]
+    let order = [0,1,2,3]
+    loop i in 0..4 {
+        let j = int(math.random() * float(4 - i)) + i
+        let tmp = order[i]; order[i] = order[j]; order[j] = tmp
+    }
+    loop i in 0..4 {
+        let d = dirs[order[i]]
+        let nx = x + d[0]; let ny = y + d[1]
+        if nx >= 0 && ny >= 0 && nx < m[0] && ny < m[1] {
+            if m[2][ny][nx] == 15 {
+                m[2][y][x] = m[2][y][x] & (255 - d[2])
+                let opp = [2,8,1,4]
+                m[2][ny][nx] = m[2][ny][nx] & (255 - opp[order[i]])
+                m = maze_carve(m, nx, ny)
+            }
+        }
+    }
+    return m
+}
+do maze_render(m: array) -> str {
+    let result = ""
+    loop y in 0..m[1] {
+        let line = ""
+        loop x in 0..m[0] {
+            let cell = m[2][y][x]
+            if cell & 1 != 0 { line = line + "+--" }
+            else { line = line + "+  " }
+        }
+        result = result + line + "+\n"
+        let line2 = ""
+        loop x in 0..m[0] {
+            let cell = m[2][y][x]
+            if cell & 8 != 0 { line2 = line2 + "|  " }
+            else { line2 = line2 + "   " }
+        }
+        result = result + line2 + "|\n"
+    }
+    loop x in 0..m[0] { result = result + "+--" }
+    return result + "+"
+}

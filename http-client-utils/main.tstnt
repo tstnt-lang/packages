@@ -1,0 +1,50 @@
+do http_build_query(params: array) -> str {
+    let result = ""
+    loop i in 0..len(params) {
+        if i > 0 { result = result + "&" }
+        result = result + params[i][0] + "=" + params[i][1]
+    }
+    return result
+}
+do http_parse_headers(raw: str) -> array {
+    let lines = strings.split(raw, "\n")
+    let result = []
+    loop i in 1..len(lines) {
+        let line = strings.trim(lines[i])
+        if len(line) > 0 && strings.contains(line, ":") {
+            let parts = strings.split(line, ":")
+            result = concat(result, [[strings.trim(parts[0]), strings.trim(parts[1])]])
+        }
+    }
+    return result
+}
+do http_status_text(code: int) -> str {
+    if code == 200 { return "OK" }
+    if code == 201 { return "Created" }
+    if code == 204 { return "No Content" }
+    if code == 301 { return "Moved Permanently" }
+    if code == 302 { return "Found" }
+    if code == 400 { return "Bad Request" }
+    if code == 401 { return "Unauthorized" }
+    if code == 403 { return "Forbidden" }
+    if code == 404 { return "Not Found" }
+    if code == 429 { return "Too Many Requests" }
+    if code == 500 { return "Internal Server Error" }
+    if code == 502 { return "Bad Gateway" }
+    if code == 503 { return "Service Unavailable" }
+    return "Unknown"
+}
+do http_is_success(code: int) -> bool { return code >= 200 && code < 300 }
+do http_is_redirect(code: int) -> bool { return code >= 300 && code < 400 }
+do http_is_error(code: int) -> bool { return code >= 400 }
+do http_content_type(ext: str) -> str {
+    if ext == "json" { return "application/json" }
+    if ext == "html" { return "text/html" }
+    if ext == "css" { return "text/css" }
+    if ext == "js" { return "application/javascript" }
+    if ext == "png" { return "image/png" }
+    if ext == "jpg" || ext == "jpeg" { return "image/jpeg" }
+    if ext == "svg" { return "image/svg+xml" }
+    if ext == "pdf" { return "application/pdf" }
+    return "text/plain"
+}

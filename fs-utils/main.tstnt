@@ -1,0 +1,22 @@
+do read(p: str) -> str { return fs.read(p) }
+do write(p: str, content: str) { fs.write(p, content) }
+do append(p: str, line: str) { fs.append(p, line + "\n") }
+do exists(p: str) -> bool { return fs.exists(p) }
+do ls(dir: str) -> array { return fs.ls(dir) }
+do ls_files(dir: str) -> array {
+    let all = fs.ls_full(dir)
+    let result = []
+    loop i in 0..len(all) {
+        if all[i].is_file { result = concat(result, [all[i].name]) }
+    }
+    return result
+}
+do mkdir(p: str) { fs.mkdir(p) }
+do rm(p: str) { fs.rm(p) }
+do cp(src: str, dst: str) { fs.cp(src, dst) }
+do mv(src: str, dst: str) { fs.mv(src, dst) }
+do size(p: str) -> int { return fs.size(p) }
+do read_lines(p: str) -> array { return fs.read_lines(p) }
+do write_lines(p: str, lines: array) { fs.write_lines(p, lines) }
+do walk(dir: str) -> array { return fs.walk(dir) }
+do glob(dir: str, pattern: str) -> array { return fs.glob(dir, pattern) }

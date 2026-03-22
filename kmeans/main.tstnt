@@ -1,0 +1,52 @@
+do kmeans_distance(a: array, b: array) -> float {
+    let sum = 0.0
+    loop i in 0..len(a) {
+        let d = float(a[i]) - float(b[i])
+        sum += d * d
+    }
+    return math.sqrt(sum)
+}
+do kmeans_nearest(point: array, centroids: array) -> int {
+    let min_dist = -1.0; let min_idx = 0
+    loop i in 0..len(centroids) {
+        let d = kmeans_distance(point, centroids[i])
+        if min_dist < 0.0 || d < min_dist { min_dist = d; min_idx = i }
+    }
+    return min_idx
+}
+do kmeans_step(points: array, centroids: array) -> array {
+    let k = len(centroids)
+    let dim = len(points[0])
+    let sums = []; let counts = []
+    loop i in 0..k {
+        let zero = []
+        loop j in 0..dim { zero = concat(zero, [0.0]) }
+        sums = concat(sums, [zero])
+        counts = concat(counts, [0])
+    }
+    loop i in 0..len(points) {
+        let c = kmeans_nearest(points[i], centroids)
+        loop j in 0..dim { sums[c][j] += float(points[i][j]) }
+        counts[c] += 1
+    }
+    let new_centroids = []
+    loop i in 0..k {
+        let centroid = []
+        loop j in 0..dim {
+            if counts[i] > 0 { centroid = concat(centroid, [sums[i][j] / float(counts[i])]) }
+            else { centroid = concat(centroid, [centroids[i][j]]) }
+        }
+        new_centroids = concat(new_centroids, [centroid])
+    }
+    return new_centroids
+}
+do kmeans_fit(points: array, k: int, iterations: int) -> array {
+    let centroids = take(points, k)
+    loop iter in 0..iterations { centroids = kmeans_step(points, centroids) }
+    return centroids
+}
+do kmeans_assign(points: array, centroids: array) -> array {
+    let result = []
+    loop i in 0..len(points) { result = concat(result, [kmeans_nearest(points[i], centroids)]) }
+    return result
+}

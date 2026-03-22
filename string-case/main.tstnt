@@ -1,0 +1,62 @@
+do to_camel(s: str) -> str {
+    let words = strings.split(s, "_")
+    if len(words) == 0 { return s }
+    let result = strings.lower(words[0])
+    loop i in 1..len(words) {
+        let w = words[i]
+        if len(w) > 0 {
+            result = result + strings.upper(strings.slice(w, 0, 1)) + strings.lower(strings.slice(w, 1, len(w)))
+        }
+    }
+    return result
+}
+do to_pascal(s: str) -> str {
+    let words = strings.split(s, "_")
+    let result = ""
+    loop i in 0..len(words) {
+        let w = words[i]
+        if len(w) > 0 {
+            result = result + strings.upper(strings.slice(w, 0, 1)) + strings.lower(strings.slice(w, 1, len(w)))
+        }
+    }
+    return result
+}
+do to_snake(s: str) -> str {
+    let result = ""
+    loop i in 0..len(s) {
+        let c = s[i]
+        if c >= "A" && c <= "Z" {
+            if i > 0 { result = result + "_" }
+            result = result + strings.lower(c)
+        } else { result = result + c }
+    }
+    return result
+}
+do to_kebab(s: str) -> str {
+    return strings.replace(to_snake(s), "_", "-")
+}
+do to_screaming_snake(s: str) -> str {
+    return strings.upper(to_snake(s))
+}
+do to_title(s: str) -> str {
+    let words = strings.split(s, " ")
+    let result = ""
+    loop i in 0..len(words) {
+        let w = words[i]
+        if i > 0 { result = result + " " }
+        if len(w) > 0 {
+            result = result + strings.upper(strings.slice(w, 0, 1)) + strings.slice(w, 1, len(w))
+        }
+    }
+    return result
+}
+do swap_case(s: str) -> str {
+    let result = ""
+    loop i in 0..len(s) {
+        let c = s[i]
+        if c >= "a" && c <= "z" { result = result + strings.upper(c) }
+        else if c >= "A" && c <= "Z" { result = result + strings.lower(c) }
+        else { result = result + c }
+    }
+    return result
+}

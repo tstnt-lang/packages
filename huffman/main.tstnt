@@ -1,0 +1,32 @@
+do huff_freq(text: str) -> array {
+    let chars = []; let counts = []
+    loop i in 0..len(text) {
+        let found = false
+        loop j in 0..len(chars) {
+            if chars[j] == text[i] { counts[j] += 1; found = true }
+        }
+        if found == false { chars = concat(chars, [text[i]]); counts = concat(counts, [1]) }
+    }
+    let result = []
+    loop i in 0..len(chars) { result = concat(result, [[chars[i], counts[i]]]) }
+    return result
+}
+do huff_entropy(text: str) -> float {
+    let n = len(text); if n == 0 { return 0.0 }
+    let freq = huff_freq(text)
+    let entropy = 0.0
+    loop i in 0..len(freq) {
+        let p = float(freq[i][1]) / float(n)
+        if p > 0.0 { entropy -= p * math.log(p) / math.log(2.0) }
+    }
+    return entropy
+}
+do huff_theoretical_size(text: str) -> float {
+    return float(len(text)) * huff_entropy(text)
+}
+do huff_compression_ratio(text: str) -> float {
+    let original = float(len(text)) * 8.0
+    let compressed = huff_theoretical_size(text)
+    if original == 0.0 { return 1.0 }
+    return compressed / original
+}

@@ -1,0 +1,49 @@
+do minimax_score(board: array, depth: int, is_max: bool, alpha: int, beta: int) -> int {
+    if depth == 0 { return 0 }
+    if is_max {
+        let best = -99999
+        loop i in 0..len(board) {
+            let score = minimax_score(board, depth-1, false, alpha, beta)
+            if score > best { best = score }
+            if score > alpha { alpha = score }
+            if beta <= alpha { break }
+        }
+        return best
+    } else {
+        let best = 99999
+        loop i in 0..len(board) {
+            let score = minimax_score(board, depth-1, true, alpha, beta)
+            if score < best { best = score }
+            if score < beta { beta = score }
+            if beta <= alpha { break }
+        }
+        return best
+    }
+}
+do tic_tac_toe_new() -> array {
+    let board = []
+    loop i in 0..9 { board = concat(board, [0]) }
+    return board
+}
+do tic_check_winner(board: array) -> int {
+    let lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+    loop i in 0..8 {
+        let l = lines[i]
+        if board[l[0]] != 0 && board[l[0]] == board[l[1]] && board[l[1]] == board[l[2]] {
+            return board[l[0]]
+        }
+    }
+    return 0
+}
+do tic_render(board: array) -> str {
+    let symbols = [" ","X","O"]
+    let result = ""
+    loop r in 0..3 {
+        loop c in 0..3 {
+            if c > 0 { result = result + "|" }
+            result = result + symbols[board[r*3+c]]
+        }
+        if r < 2 { result = result + "\n-+-+-\n" }
+    }
+    return result
+}

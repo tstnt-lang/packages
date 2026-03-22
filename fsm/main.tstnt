@@ -1,0 +1,35 @@
+do fsm_new(initial: str) -> array {
+    return [initial, []]
+}
+
+do fsm_add(machine: array, from: str, event: str, to: str) -> array {
+    let transitions = machine[1]
+    transitions = concat(transitions, [[from, event, to]])
+    return [machine[0], transitions]
+}
+
+do fsm_trigger(machine: array, event: str) -> array {
+    let state = machine[0]
+    let transitions = machine[1]
+    loop i in 0..len(transitions) {
+        let t = transitions[i]
+        if t[0] == state && t[1] == event {
+            return [t[2], transitions]
+        }
+    }
+    return machine
+}
+
+do fsm_state(machine: array) -> str {
+    return machine[0]
+}
+
+do fsm_can(machine: array, event: str) -> bool {
+    let state = machine[0]
+    let transitions = machine[1]
+    loop i in 0..len(transitions) {
+        let t = transitions[i]
+        if t[0] == state && t[1] == event { return true }
+    }
+    return false
+}

@@ -1,0 +1,33 @@
+do chess_new() -> array {
+    let board = []
+    let back_rank = ["R","N","B","Q","K","B","N","R"]
+    loop i in 0..8 { board = concat(board, [["w" + back_rank[i]]]) }
+    let row1 = []
+    loop i in 0..8 { row1 = concat(row1, ["wP"]) }
+    board = concat(board, [row1])
+    loop i in 0..4 {
+        let empty = []
+        loop j in 0..8 { empty = concat(empty, ["  "]) }
+        board = concat(board, [empty])
+    }
+    let row6 = []
+    loop i in 0..8 { row6 = concat(row6, ["bP"]) }
+    board = concat(board, [row6])
+    let back2 = ["R","N","B","Q","K","B","N","R"]
+    let row7 = []
+    loop i in 0..8 { row7 = concat(row7, ["b" + back2[i]]) }
+    board = concat(board, [row7])
+    return board
+}
+do chess_get(board: array, col: int, row: int) -> str { return board[row][col] }
+do chess_render(board: array) -> str {
+    let result = "  a  b  c  d  e  f  g  h\n"
+    loop row in 0..8 {
+        let line = str(8 - row) + " "
+        loop col in 0..8 {
+            line = line + board[7-row][col] + " "
+        }
+        result = result + line + str(8 - row) + "\n"
+    }
+    return result + "  a  b  c  d  e  f  g  h"
+}

@@ -1,0 +1,44 @@
+do promise_resolve(val: str) -> array {
+    return ["resolved", val]
+}
+
+do promise_reject(reason: str) -> array {
+    return ["rejected", reason]
+}
+
+do promise_then(p: array, transform: str) -> array {
+    if p[0] == "resolved" {
+        return ["resolved", p[1] + " |> " + transform]
+    }
+    return p
+}
+
+do promise_catch(p: array, fallback: str) -> array {
+    if p[0] == "rejected" {
+        return ["resolved", fallback]
+    }
+    return p
+}
+
+do promise_all(promises: array) -> array {
+    let results = []
+    loop i in 0..len(promises) {
+        let p = promises[i]
+        if p[0] == "rejected" { return ["rejected", p[1]] }
+        results = concat(results, [p[1]])
+    }
+    return ["resolved", results]
+}
+
+do promise_race(promises: array) -> array {
+    if len(promises) > 0 { return promises[0] }
+    return ["rejected", "empty"]
+}
+
+do promise_status(p: array) -> str {
+    return p[0]
+}
+
+do promise_value(p: array) -> str {
+    return p[1]
+}

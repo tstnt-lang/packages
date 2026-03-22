@@ -1,0 +1,74 @@
+do regex_match_simple(pattern: str, text: str) -> bool {
+    if pattern == text { return true }
+    if pattern == "*" { return true }
+    if strings.ends_with(pattern, "*") {
+        let prefix = strings.slice(pattern, 0, len(pattern) - 1)
+        return strings.starts_with(text, prefix)
+    }
+    if strings.starts_with(pattern, "*") {
+        let suffix = strings.slice(pattern, 1, len(pattern))
+        return strings.ends_with(text, suffix)
+    }
+    return false
+}
+do glob_match(pattern: str, text: str) -> bool {
+    if len(pattern) == 0 { return len(text) == 0 }
+    if pattern[0] == "*" {
+        if glob_match(strings.slice(pattern, 1, len(pattern)), text) { return true }
+        if len(text) > 0 { return glob_match(pattern, strings.slice(text, 1, len(text))) }
+        return false
+    }
+    if len(text) == 0 { return false }
+    if pattern[0] == "?" || pattern[0] == text[0] {
+        return glob_match(strings.slice(pattern, 1, len(pattern)), strings.slice(text, 1, len(text)))
+    }
+    return false
+}
+do is_email(s: str) -> bool {
+    if !strings.contains(s, "@") { return false }
+    let parts = strings.split(s, "@")
+    if len(parts) != 2 { return false }
+    if len(parts[0]) == 0 || len(parts[1]) == 0 { return false }
+    if !strings.contains(parts[1], ".") { return false }
+    return true
+}
+do is_url(s: str) -> bool {
+    return strings.starts_with(s, "http://") || strings.starts_with(s, "https://")
+}
+do is_ipv4(s: str) -> bool {
+    let parts = strings.split(s, ".")
+    if len(parts) != 4 { return false }
+    loop i in 0..4 {
+        let n = int(parts[i])
+        if str(n) != parts[i] { return false }
+        if n < 0 || n > 255 { return false }
+    }
+    return true
+}
+do is_numeric(s: str) -> bool {
+    if len(s) == 0 { return false }
+    let start = 0
+    if s[0] == "-" { start = 1 }
+    if start >= len(s) { return false }
+    let has_dot = false
+    loop i in start..len(s) {
+        if s[i] == "." {
+            if has_dot { return false }
+            has_dot = true
+        } else if s[i] < "0" || s[i] > "9" { return false }
+    }
+    return true
+}
+do is_alpha(s: str) -> bool {
+    loop i in 0..len(s) {
+        if !((s[i] >= "a" && s[i] <= "z") || (s[i] >= "A" && s[i] <= "Z")) { return false }
+    }
+    return len(s) > 0
+}
+do is_alphanumeric(s: str) -> bool {
+    loop i in 0..len(s) {
+        let c = s[i]
+        if !((c >= "a" && c <= "z") || (c >= "A" && c <= "Z") || (c >= "0" && c <= "9")) { return false }
+    }
+    return len(s) > 0
+}

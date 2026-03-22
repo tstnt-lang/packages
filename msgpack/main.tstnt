@@ -1,0 +1,28 @@
+do msgpack_encode(val: str) -> array {
+    let bytes = []
+    if val == "null" { return [0xC0] }
+    if val == "true" { return [0xC3] }
+    if val == "false" { return [0xC2] }
+    let n = int(val)
+    if str(n) == val {
+        if n >= 0 && n <= 127 { return [n] }
+        if n >= -32 && n < 0 { return [256 + n] }
+        if n >= 0 && n <= 255 { return [0xCC, n] }
+        return [0xD0, n & 255]
+    }
+    let s_bytes = []
+    loop i in 0..len(val) { s_bytes = concat(s_bytes, [int(val[i])]) }
+    let sl = len(s_bytes)
+    if sl <= 31 { return concat([0xA0 | sl], s_bytes) }
+    return concat([0xD9, sl], s_bytes)
+}
+do msgpack_type(bytes: array) -> str {
+    if len(bytes) == 0 { return "unknown" }
+    let b = bytes[0]
+    if b == 0xC0 { return "null" }
+    if b == 0xC2 || b == 0xC3 { return "bool" }
+    if b <= 127 { return "int" }
+    if b >= 0xA0 && b <= 0xBF { return "str" }
+    if b == 0xCC || b == 0xD0 { return "int" }
+    return "unknown"
+}

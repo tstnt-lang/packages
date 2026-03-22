@@ -1,0 +1,32 @@
+do lunar_phase_name(phase: float) -> str {
+    if phase < 0.0625 { return "New Moon 🌑" }
+    if phase < 0.1875 { return "Waxing Crescent 🌒" }
+    if phase < 0.3125 { return "First Quarter 🌓" }
+    if phase < 0.4375 { return "Waxing Gibbous 🌔" }
+    if phase < 0.5625 { return "Full Moon 🌕" }
+    if phase < 0.6875 { return "Waning Gibbous 🌖" }
+    if phase < 0.8125 { return "Last Quarter 🌗" }
+    if phase < 0.9375 { return "Waning Crescent 🌘" }
+    return "New Moon 🌑"
+}
+do lunar_phase(year: int, month: int, day: int) -> float {
+    let jd = float(day) + float(month)*30.6 + float(year-2000)*365.25
+    let cycle = jd / 29.53059
+    let phase = cycle - float(int(cycle))
+    if phase < 0.0 { phase += 1.0 }
+    return phase
+}
+do days_until_full(year: int, month: int, day: int) -> int {
+    let phase = lunar_phase(year, month, day)
+    if phase <= 0.5 { return int((0.5 - phase) * 29.53059) }
+    return int((1.5 - phase) * 29.53059)
+}
+do is_full_moon(year: int, month: int, day: int) -> bool {
+    let phase = lunar_phase(year, month, day)
+    return phase > 0.45 && phase < 0.55
+}
+do lunar_month_name(month: int) -> str {
+    let names = ["Wolf Moon","Snow Moon","Worm Moon","Pink Moon","Flower Moon","Strawberry Moon","Buck Moon","Sturgeon Moon","Harvest Moon","Hunter Moon","Beaver Moon","Cold Moon"]
+    if month >= 1 && month <= 12 { return names[month-1] }
+    return "Unknown"
+}

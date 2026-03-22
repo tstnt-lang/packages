@@ -1,0 +1,45 @@
+do is_palindrome(s: str) -> bool {
+    let clean = strings.lower(s)
+    let n = len(clean)
+    loop i in 0..n/2 {
+        if clean[i] != clean[n-1-i] { return false }
+    }
+    return true
+}
+do is_pangram(s: str) -> bool {
+    let lower = strings.lower(s)
+    let alpha = "abcdefghijklmnopqrstuvwxyz"
+    loop i in 0..26 {
+        if !strings.contains(lower, alpha[i]) { return false }
+    }
+    return true
+}
+do is_anagram(a: str, b: str) -> bool {
+    if len(a) != len(b) { return false }
+    let counts = []
+    loop i in 0..26 { counts = concat(counts, [0]) }
+    loop i in 0..len(a) {
+        let ca = int(a[i]) - 97
+        let cb = int(b[i]) - 97
+        if ca >= 0 && ca < 26 { counts[ca] += 1 }
+        if cb >= 0 && cb < 26 { counts[cb] -= 1 }
+    }
+    loop i in 0..26 { if counts[i] != 0 { return false } }
+    return true
+}
+do count_words(s: str) -> int {
+    let words = strings.split(strings.trim(s), " ")
+    let count = 0
+    loop i in 0..len(words) { if len(strings.trim(words[i])) > 0 { count += 1 } }
+    return count
+}
+do count_sentences(s: str) -> int {
+    let count = 0
+    loop i in 0..len(s) {
+        if s[i] == "." || s[i] == "!" || s[i] == "?" { count += 1 }
+    }
+    return count
+}
+do reading_time_mins(text: str, wpm: int) -> float {
+    return float(count_words(text)) / float(wpm)
+}

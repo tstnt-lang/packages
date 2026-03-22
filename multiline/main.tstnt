@@ -1,0 +1,44 @@
+do ml_split(text: str, max_width: int) -> array {
+    let words = strings.split(text, " ")
+    let lines = []; let current = ""
+    loop i in 0..len(words) {
+        let word = words[i]
+        if len(current) == 0 { current = word }
+        else if len(current) + 1 + len(word) <= max_width { current = current + " " + word }
+        else { lines = concat(lines, [current]); current = word }
+    }
+    if len(current) > 0 { lines = concat(lines, [current]) }
+    return lines
+}
+do ml_join(lines: array) -> str { return strings.join(lines, "\n") }
+do ml_wrap(text: str, width: int) -> str { return ml_join(ml_split(text, width)) }
+do ml_count_lines(text: str) -> int { return len(strings.split(text, "\n")) }
+do ml_line(text: str, n: int) -> str {
+    let lines = strings.split(text, "\n")
+    if n < 0 || n >= len(lines) { return "" }
+    return lines[n]
+}
+do ml_indent(text: str, n: int) -> str {
+    let prefix = repeat_str(" ", n)
+    let lines = strings.split(text, "\n")
+    let result = []
+    loop i in 0..len(lines) { result = concat(result, [prefix + lines[i]]) }
+    return strings.join(result, "\n")
+}
+do ml_dedent(text: str) -> str {
+    let lines = strings.split(text, "\n")
+    let min_indent = 999
+    loop i in 0..len(lines) {
+        if len(strings.trim(lines[i])) > 0 {
+            let spaces = 0
+            while spaces < len(lines[i]) && lines[i][spaces] == " " { spaces += 1 }
+            if spaces < min_indent { min_indent = spaces }
+        }
+    }
+    let result = []
+    loop i in 0..len(lines) {
+        if len(lines[i]) >= min_indent { result = concat(result, [strings.slice(lines[i], min_indent, len(lines[i]))]) }
+        else { result = concat(result, [lines[i]]) }
+    }
+    return strings.join(result, "\n")
+}

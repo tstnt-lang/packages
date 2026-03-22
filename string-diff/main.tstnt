@@ -1,0 +1,36 @@
+do diff_chars(a: str, b: str) -> array {
+    let result = []
+    let max_len = len(a); if len(b) > max_len { max_len = len(b) }
+    loop i in 0..max_len {
+        let ac = ""; let bc = ""
+        if i < len(a) { ac = a[i] }
+        if i < len(b) { bc = b[i] }
+        if ac == bc { result = concat(result, ["= " + ac]) }
+        else if ac == "" { result = concat(result, ["+ " + bc]) }
+        else if bc == "" { result = concat(result, ["- " + ac]) }
+        else { result = concat(result, ["- " + ac, "+ " + bc]) }
+    }
+    return result
+}
+do diff_words(a: str, b: str) -> array {
+    let wa = strings.split(a, " ")
+    let wb = strings.split(b, " ")
+    let result = []
+    let max_len = len(wa); if len(wb) > max_len { max_len = len(wb) }
+    loop i in 0..max_len {
+        let aw = ""; let bw = ""
+        if i < len(wa) { aw = wa[i] }
+        if i < len(wb) { bw = wb[i] }
+        if aw == bw { result = concat(result, ["= " + aw]) }
+        else { if len(aw) > 0 { result = concat(result, ["- " + aw]) }; if len(bw) > 0 { result = concat(result, ["+ " + bw]) } }
+    }
+    return result
+}
+do patch_apply(base: str, patches: array) -> str {
+    let result = base
+    loop i in 0..len(patches) {
+        let p = patches[i]
+        result = strings.replace(result, p[0], p[1])
+    }
+    return result
+}

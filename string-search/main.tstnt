@@ -1,0 +1,37 @@
+do kmp_search(text: str, pattern: str) -> array {
+    let n = len(text); let m = len(pattern)
+    let result = []
+    if m == 0 || m > n { return result }
+    loop i in 0..n-m+1 {
+        let match = true
+        loop j in 0..m {
+            if text[i+j] != pattern[j] { match = false }
+        }
+        if match { result = concat(result, [i]) }
+    }
+    return result
+}
+do contains_all(text: str, words: array) -> bool {
+    loop i in 0..len(words) {
+        if !strings.contains(text, words[i]) { return false }
+    }
+    return true
+}
+do contains_any(text: str, words: array) -> bool {
+    loop i in 0..len(words) {
+        if strings.contains(text, words[i]) { return true }
+    }
+    return false
+}
+do find_all(text: str, pattern: str) -> array {
+    return kmp_search(text, pattern)
+}
+do count_occurrences(text: str, pattern: str) -> int {
+    return len(kmp_search(text, pattern))
+}
+do replace_all(text: str, from: str, to: str) -> str {
+    return strings.replace(text, from, to)
+}
+do highlight(text: str, word: str, prefix: str, suffix: str) -> str {
+    return strings.replace(text, word, prefix + word + suffix)
+}

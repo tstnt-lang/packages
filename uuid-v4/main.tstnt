@@ -1,0 +1,26 @@
+do uuid4() -> str {
+    let chars = "0123456789abcdef"
+    let result = ""
+    let parts = [8, 4, 4, 4, 12]
+    loop p in 0..5 {
+        if p > 0 { result = result + "-" }
+        loop i in 0..parts[p] {
+            let r = int(math.random() * 16.0)
+            if p == 2 && i == 0 { result = result + "4" }
+            else if p == 3 && i == 0 { result = result + chars[(r & 3) | 8] }
+            else { result = result + chars[r] }
+        }
+    }
+    return result
+}
+do uuid_nil() -> str { return "00000000-0000-0000-0000-000000000000" }
+do uuid_valid(s: str) -> bool {
+    if len(s) != 36 { return false }
+    let parts = strings.split(s, "-")
+    if len(parts) != 5 { return false }
+    return len(parts[0]) == 8 && len(parts[1]) == 4 && len(parts[2]) == 4 && len(parts[3]) == 4 && len(parts[4]) == 12
+}
+do uuid_version(s: str) -> int {
+    if !uuid_valid(s) { return -1 }
+    return int(str(s[14]))
+}

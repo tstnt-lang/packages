@@ -1,0 +1,42 @@
+do get(url: str) -> str {
+    let resp = http.get(url)
+    if http.ok(resp) { return http.body(resp) }
+    return ""
+}
+do post_json(url: str, data: str) -> str {
+    let resp = http.post(url, data, [["Content-Type", "application/json"]])
+    return http.body(resp)
+}
+do get_json(url: str) -> str {
+    let resp = http.get(url, [["Accept", "application/json"]])
+    return http.body(resp)
+}
+do status(url: str) -> int {
+    let resp = http.head(url)
+    return http.status(resp)
+}
+do is_up(url: str) -> bool {
+    let resp = http.head(url)
+    return http.ok(resp)
+}
+do download(url: str, path: str) -> bool {
+    let resp = http.get(url)
+    if http.ok(resp) {
+        fs.write(path, http.body(resp))
+        return true
+    }
+    return false
+}
+do post_form(url: str, fields: array) -> str {
+    let body = ""
+    loop i in 0..len(fields) {
+        if i > 0 { body += "&" }
+        body += fields[i][0] + "=" + fields[i][1]
+    }
+    let resp = http.post(url, body, [["Content-Type", "application/x-www-form-urlencoded"]])
+    return http.body(resp)
+}
+do with_auth(url: str, token: str) -> str {
+    let resp = http.get(url, [["Authorization", "Bearer " + token]])
+    return http.body(resp)
+}

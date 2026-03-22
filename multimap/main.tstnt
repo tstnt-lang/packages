@@ -1,0 +1,52 @@
+do mm_new() -> array {
+    return []
+}
+
+do mm_set(m: array, key: str, val: str) -> array {
+    return concat(m, [[key, val]])
+}
+
+do mm_get(m: array, key: str) -> array {
+    let result = []
+    loop i in 0..len(m) {
+        let pair = m[i]
+        if pair[0] == key {
+            result = concat(result, [pair[1]])
+        }
+    }
+    return result
+}
+
+do mm_has(m: array, key: str) -> bool {
+    loop i in 0..len(m) {
+        if m[i][0] == key { return true }
+    }
+    return false
+}
+
+do mm_keys(m: array) -> array {
+    let seen = []
+    let result = []
+    loop i in 0..len(m) {
+        let k = m[i][0]
+        let found = false
+        loop j in 0..len(seen) {
+            if seen[j] == k { found = true }
+        }
+        if found == false {
+            seen = concat(seen, [k])
+            result = concat(result, [k])
+        }
+    }
+    return result
+}
+
+do mm_delete(m: array, key: str) -> array {
+    let result = []
+    loop i in 0..len(m) {
+        if m[i][0] != key {
+            result = concat(result, [m[i]])
+        }
+    }
+    return result
+}

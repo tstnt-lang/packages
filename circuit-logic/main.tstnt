@@ -1,0 +1,44 @@
+do gate_and(a: bool, b: bool) -> bool { return a && b }
+do gate_or(a: bool, b: bool) -> bool { return a || b }
+do gate_not(a: bool) -> bool { return !a }
+do gate_nand(a: bool, b: bool) -> bool { return !(a && b) }
+do gate_nor(a: bool, b: bool) -> bool { return !(a || b) }
+do gate_xor(a: bool, b: bool) -> bool { return (a || b) && !(a && b) }
+do gate_xnor(a: bool, b: bool) -> bool { return !gate_xor(a, b) }
+do half_adder(a: bool, b: bool) -> array {
+    return [gate_xor(a, b), gate_and(a, b)]
+}
+do full_adder(a: bool, b: bool, cin: bool) -> array {
+    let ha1 = half_adder(a, b)
+    let ha2 = half_adder(ha1[0], cin)
+    return [ha2[0], gate_or(ha1[1], ha2[1])]
+}
+do add_bits(a: array, b: array) -> array {
+    let result = []; let carry = false
+    let n = len(a); if len(b) > n { n = len(b) }
+    loop i in 0..n {
+        let ai = false; let bi = false
+        if i < len(a) { ai = a[i] == 1 }
+        if i < len(b) { bi = b[i] == 1 }
+        let fa = full_adder(ai, bi, carry)
+        result = concat(result, [if fa[0] { 1 } else { 0 }])
+        carry = fa[1]
+    }
+    if carry { result = concat(result, [1]) }
+    return result
+}
+do int_to_bits(n: int, width: int) -> array {
+    let bits = []
+    loop i in 0..width { bits = concat(bits, [(n >> i) & 1]) }
+    return bits
+}
+do bits_to_int(bits: array) -> int {
+    let result = 0
+    loop i in 0..len(bits) { result = result | (bits[i] << i) }
+    return result
+}
+do mux(sel: bool, a: str, b: str) -> str { if sel { return b }; return a }
+do demux(sel: bool, input: str) -> array {
+    if sel { return ["", input] }
+    return [input, ""]
+}

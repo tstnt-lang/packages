@@ -1,0 +1,20 @@
+do obs_subject_new(name: str) -> array { return [name, [], []] }
+do obs_attach(subject: array, observer_id: str) -> array {
+    subject[1] = concat(subject[1], [observer_id])
+    return subject
+}
+do obs_detach(subject: array, observer_id: str) -> array {
+    let result = []
+    loop i in 0..len(subject[1]) {
+        if subject[1][i] != observer_id { result = concat(result, [subject[1][i]]) }
+    }
+    subject[1] = result
+    return subject
+}
+do obs_notify(subject: array, event: str) -> array {
+    subject[2] = concat(subject[2], [event])
+    return subject
+}
+do obs_observers(subject: array) -> array { return subject[1] }
+do obs_events(subject: array) -> array { return subject[2] }
+do obs_count(subject: array) -> int { return len(subject[1]) }

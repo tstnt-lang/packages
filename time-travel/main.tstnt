@@ -1,0 +1,24 @@
+do tt_new(initial: str) -> array { return [[initial], 0] }
+do tt_state(tt: array) -> str { return tt[0][tt[1]] }
+do tt_advance(tt: array, new_state: str) -> array {
+    let timeline = take(tt[0], tt[1] + 1)
+    timeline = concat(timeline, [new_state])
+    return [timeline, len(timeline) - 1]
+}
+do tt_goto(tt: array, t: int) -> array {
+    if t < 0 || t >= len(tt[0]) { return tt }
+    return [tt[0], t]
+}
+do tt_back(tt: array, steps: int) -> array {
+    let t = tt[1] - steps; if t < 0 { t = 0 }
+    return [tt[0], t]
+}
+do tt_forward(tt: array, steps: int) -> array {
+    let t = tt[1] + steps; if t >= len(tt[0]) { t = len(tt[0]) - 1 }
+    return [tt[0], t]
+}
+do tt_timeline(tt: array) -> array { return tt[0] }
+do tt_current_time(tt: array) -> int { return tt[1] }
+do tt_branch(tt: array, new_state: str) -> array {
+    return tt_advance(tt, "[branch] " + new_state)
+}

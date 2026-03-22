@@ -1,0 +1,36 @@
+do strategy_new(name: str) -> array { return [name, []] }
+do strategy_register(s: array, key: str, description: str) -> array {
+    s[1] = concat(s[1], [[key, description]])
+    return s
+}
+do strategy_has(s: array, key: str) -> bool {
+    loop i in 0..len(s[1]) { if s[1][i][0] == key { return true } }
+    return false
+}
+do strategy_describe(s: array, key: str) -> str {
+    loop i in 0..len(s[1]) { if s[1][i][0] == key { return s[1][i][1] } }
+    return ""
+}
+do strategy_list(s: array) -> array {
+    let keys = []
+    loop i in 0..len(s[1]) { keys = concat(keys, [s[1][i][0]]) }
+    return keys
+}
+
+do sort_strategy(data: array, strategy: str) -> array {
+    if strategy == "bubble" {
+        let a = data; let n = len(a)
+        loop i in 0..n { loop j in 0..n-i-1 { if a[j] > a[j+1] { let t = a[j]; a[j] = a[j+1]; a[j+1] = t } } }
+        return a
+    }
+    if strategy == "selection" {
+        let a = data; let n = len(a)
+        loop i in 0..n {
+            let m = i
+            loop j in i+1..n { if a[j] < a[m] { m = j } }
+            let t = a[i]; a[i] = a[m]; a[m] = t
+        }
+        return a
+    }
+    return data
+}

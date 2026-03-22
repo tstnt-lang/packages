@@ -1,0 +1,26 @@
+do jaccard(a: array, b: array) -> float {
+    let intersection = 0
+    loop i in 0..len(a) {
+        loop j in 0..len(b) { if a[i] == b[j] { intersection += 1 } }
+    }
+    let union_size = len(a) + len(b) - intersection
+    if union_size == 0 { return 1.0 }
+    return float(intersection) / float(union_size)
+}
+do cosine_sim(a: array, b: array) -> float {
+    let dot = 0.0; let na = 0.0; let nb = 0.0
+    loop i in 0..len(a) {
+        dot += float(a[i]) * float(b[i])
+        na += float(a[i]) * float(a[i])
+        nb += float(b[i]) * float(b[i])
+    }
+    if na == 0.0 || nb == 0.0 { return 0.0 }
+    return dot / (math.sqrt(na) * math.sqrt(nb))
+}
+do hamming(a: str, b: str) -> int {
+    let dist = 0
+    let n = len(a)
+    if len(b) < n { n = len(b) }
+    loop i in 0..n { if a[i] != b[i] { dist += 1 } }
+    return dist + abs(len(a) - len(b))
+}

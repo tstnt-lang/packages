@@ -1,0 +1,29 @@
+do jp_add(doc: array, path: str, value: str) -> array {
+    return concat(doc, [[path, "add", value]])
+}
+do jp_remove(doc: array, path: str) -> array {
+    return concat(doc, [[path, "remove", ""]])
+}
+do jp_replace(doc: array, path: str, value: str) -> array {
+    return concat(doc, [[path, "replace", value]])
+}
+do jp_move(doc: array, from: str, to: str) -> array {
+    return concat(doc, [[from, "move", to]])
+}
+do jp_copy(doc: array, from: str, to: str) -> array {
+    return concat(doc, [[from, "copy", to]])
+}
+do jp_test(doc: array, path: str, value: str) -> array {
+    return concat(doc, [[path, "test", value]])
+}
+do jp_apply(ops: array) -> str {
+    let result = "["
+    loop i in 0..len(ops) {
+        if i > 0 { result = result + "," }
+        let op = ops[i]
+        result = result + "{\"op\":\"" + op[1] + "\",\"path\":\"" + op[0] + "\""
+        if op[2] != "" { result = result + ",\"value\":\"" + op[2] + "\"" }
+        result = result + "}"
+    }
+    return result + "]"
+}

@@ -1,0 +1,24 @@
+do replay_store_new() -> array { return [[], 0] }
+do replay_record(store: array, event_type: str, data: str) -> array {
+    let event = [store[1], event_type, data]
+    store[0] = concat(store[0], [event])
+    store[1] += 1
+    return store
+}
+do replay_from(store: array, from_seq: int) -> array {
+    let result = []
+    loop i in 0..len(store[0]) {
+        if store[0][i][0] >= from_seq { result = concat(result, [store[0][i]]) }
+    }
+    return result
+}
+do replay_all(store: array) -> array { return store[0] }
+do replay_count(store: array) -> int { return len(store[0]) }
+do replay_latest_seq(store: array) -> int { return store[1] - 1 }
+do replay_filter(store: array, event_type: str) -> array {
+    let result = []
+    loop i in 0..len(store[0]) {
+        if store[0][i][1] == event_type { result = concat(result, [store[0][i]]) }
+    }
+    return result
+}

@@ -1,0 +1,55 @@
+do snake_new(width: int, height: int) -> array {
+    let body = [[width/2, height/2]]
+    return [body, [1,0], [width/2+3, height/2], width, height, 0]
+}
+do snake_head(s: array) -> array { return s[0][0] }
+do snake_move(s: array) -> array {
+    let new_head = [snake_head(s)[0] + s[1][0], snake_head(s)[1] + s[1][1]]
+    let new_body = concat([new_head], take(s[0], len(s[0])-1))
+    s[0] = new_body
+    return s
+}
+do snake_eat(s: array) -> array {
+    let new_head = [snake_head(s)[0] + s[1][0], snake_head(s)[1] + s[1][1]]
+    s[0] = concat([new_head], s[0])
+    s[5] += 1
+    return s
+}
+do snake_at_food(s: array) -> bool {
+    return snake_head(s)[0] == s[2][0] && snake_head(s)[1] == s[2][1]
+}
+do snake_collides(s: array) -> bool {
+    let hx = snake_head(s)[0]; let hy = snake_head(s)[1]
+    if hx < 0 || hx >= s[3] || hy < 0 || hy >= s[4] { return true }
+    loop i in 1..len(s[0]) {
+        if s[0][i][0] == hx && s[0][i][1] == hy { return true }
+    }
+    return false
+}
+do snake_turn(s: array, dx: int, dy: int) -> array {
+    if s[1][0] != 0-dx || s[1][1] != 0-dy { s[1] = [dx, dy] }
+    return s
+}
+do snake_score(s: array) -> int { return s[5] }
+do snake_render(s: array) -> str {
+    let board = []
+    loop r in 0..s[4] {
+        let row = []
+        loop c in 0..s[3] { row = concat(row, ["."]) }
+        board = concat(board, [row])
+    }
+    board[s[2][1]][s[2][0]] = "F"
+    loop i in 0..len(s[0]) {
+        let bx = s[0][i][0]; let by = s[0][i][1]
+        if bx >= 0 && by >= 0 && bx < s[3] && by < s[4] {
+            if i == 0 { board[by][bx] = "O" }
+            else { board[by][bx] = "#" }
+        }
+    }
+    let result = ""
+    loop r in 0..s[4] {
+        loop c in 0..s[3] { result = result + board[r][c] }
+        result = result + "\n"
+    }
+    return result
+}

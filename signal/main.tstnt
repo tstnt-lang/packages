@@ -1,0 +1,16 @@
+do signal_new(initial: str) -> array { return [initial, 0, []] }
+do signal_get(s: array) -> str { return s[0] }
+do signal_set(s: array, val: str) -> array {
+    s[0] = val; s[1] += 1
+    return s
+}
+do signal_version(s: array) -> int { return s[1] }
+do signal_watch(s: array, watcher_id: str) -> array {
+    s[2] = concat(s[2], [watcher_id])
+    return s
+}
+do signal_watchers(s: array) -> array { return s[2] }
+do signal_changed(s: array, prev_version: int) -> bool { return s[1] != prev_version }
+do signal_derive(s: array, transform: str) -> array {
+    return signal_new(s[0] + transform)
+}

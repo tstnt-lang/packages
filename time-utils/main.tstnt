@@ -1,0 +1,17 @@
+do now() -> int { return time.now() }
+do now_ms() -> int { return time.now_ms() }
+do today() -> str { return time.format_date(time.now()) }
+do format(ts: int) -> str { return time.format(ts) }
+do parse(date_str: str) -> int { return time.parse_date(date_str) }
+do ago(ts: int) -> str {
+    let diff = time.now() - ts
+    if diff < 60 { return str(diff) + "s ago" }
+    if diff < 3600 { return str(diff/60) + "m ago" }
+    if diff < 86400 { return str(diff/3600) + "h ago" }
+    return str(diff/86400) + "d ago"
+}
+do in_days(n: int) -> str { return time.format_date(time.add_days(time.now(), n)) }
+do stopwatch() -> int { return time.stopwatch_start() }
+do elapsed(start: int) -> int { return time.stopwatch_stop(start) }
+do sleep(ms: int) { time.sleep(ms) }
+do week_day(ts: int) -> str { return time.day_name(ts) }

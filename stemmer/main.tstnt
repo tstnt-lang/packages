@@ -1,0 +1,16 @@
+do stem(word: str) -> str {
+    let w = strings.lower(word)
+    let suffixes = ["ings", "ing", "tion", "ness", "ment", "able", "ible", "ful", "less", "ous", "er", "est", "ed", "ly", "es", "s"]
+    loop i in 0..len(suffixes) {
+        let suf = suffixes[i]
+        if len(w) > len(suf) + 2 && strings.ends_with(w, suf) {
+            return strings.slice(w, 0, len(w) - len(suf))
+        }
+    }
+    return w
+}
+do stem_all(words: array) -> array {
+    let result = []
+    loop i in 0..len(words) { result = concat(result, [stem(words[i])]) }
+    return result
+}

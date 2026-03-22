@@ -1,0 +1,34 @@
+do qr_matrix_new(size: int) -> array {
+    let m = []
+    loop r in 0..size {
+        let row = []
+        loop c in 0..size { row = concat(row, [0]) }
+        m = concat(m, [row])
+    }
+    return m
+}
+do qr_set(m: array, r: int, c: int, val: int) -> array { m[r][c] = val; return m }
+do qr_get(m: array, r: int, c: int) -> int { return m[r][c] }
+do qr_finder_pattern(m: array, row: int, col: int) -> array {
+    loop r in 0..7 {
+        loop c in 0..7 {
+            let on = 0
+            if r == 0 || r == 6 || c == 0 || c == 6 { on = 1 }
+            if r >= 2 && r <= 4 && c >= 2 && c <= 4 { on = 1 }
+            m[row+r][col+c] = on
+        }
+    }
+    return m
+}
+do qr_render(m: array) -> str {
+    let result = ""
+    loop r in 0..len(m) {
+        loop c in 0..len(m[r]) {
+            if m[r][c] == 1 { result = result + "██" }
+            else { result = result + "  " }
+        }
+        result = result + "\n"
+    }
+    return result
+}
+do qr_version_size(version: int) -> int { return 17 + version * 4 }

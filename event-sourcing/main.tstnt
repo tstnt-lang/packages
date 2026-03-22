@@ -1,0 +1,29 @@
+do es_store_new() -> array { return [[], []] }
+do es_append(store: array, aggregate_id: str, event_type: str, data: str) -> array {
+    let event = [aggregate_id, event_type, data, len(store[0])]
+    store[0] = concat(store[0], [event])
+    return store
+}
+do es_get_events(store: array, aggregate_id: str) -> array {
+    let result = []
+    loop i in 0..len(store[0]) {
+        if store[0][i][0] == aggregate_id { result = concat(result, [store[0][i]]) }
+    }
+    return result
+}
+do es_snapshot(store: array, aggregate_id: str, state: str) -> array {
+    let snap = [aggregate_id, state, len(store[0])]
+    store[1] = concat(store[1], [snap])
+    return store
+}
+do es_get_snapshot(store: array, aggregate_id: str) -> str {
+    loop i in 0..len(store[1]) {
+        if store[1][i][0] == aggregate_id { return store[1][i][1] }
+    }
+    return ""
+}
+do es_replay(events: array, initial: str) -> str {
+    let state = initial
+    loop i in 0..len(events) { state = state + "|" + events[i][1] + ":" + events[i][2] }
+    return state
+}

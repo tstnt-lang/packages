@@ -1,0 +1,52 @@
+do ms_new(width: int, height: int, mines: int) -> array {
+    let board = []; let revealed = []; let flagged = []
+    loop r in 0..height {
+        let row = []; let rrow = []; let frow = []
+        loop c in 0..width { row = concat(row, [0]); rrow = concat(rrow, [false]); frow = concat(frow, [false]) }
+        board = concat(board, [row]); revealed = concat(revealed, [rrow]); flagged = concat(flagged, [frow])
+    }
+    let placed = 0
+    while placed < mines {
+        let r = int(math.random() * float(height))
+        let c = int(math.random() * float(width))
+        if board[r][c] == 0 { board[r][c] = -1; placed += 1 }
+    }
+    loop r in 0..height {
+        loop c in 0..width {
+            if board[r][c] != -1 {
+                let count = 0
+                loop dr in 0..3 { loop dc in 0..3 {
+                    let nr = r+dr-1; let nc = c+dc-1
+                    if nr >= 0 && nr < height && nc >= 0 && nc < width && board[nr][nc] == -1 { count += 1 }
+                } }
+                board[r][c] = count
+            }
+        }
+    }
+    return [board, revealed, flagged, width, height, false]
+}
+do ms_reveal(ms: array, r: int, c: int) -> array {
+    if ms[1][r][c] || ms[2][r][c] { return ms }
+    ms[1][r][c] = true
+    if ms[0][r][c] == -1 { ms[5] = true }
+    return ms
+}
+do ms_flag(ms: array, r: int, c: int) -> array {
+    if ms[1][r][c] == false { ms[2][r][c] = !ms[2][r][c] }
+    return ms
+}
+do ms_game_over(ms: array) -> bool { return ms[5] }
+do ms_render(ms: array) -> str {
+    let result = ""
+    loop r in 0..ms[4] {
+        loop c in 0..ms[3] {
+            if ms[2][r][c] { result = result + "F" }
+            else if ms[1][r][c] == false { result = result + "." }
+            else if ms[0][r][c] == -1 { result = result + "*" }
+            else if ms[0][r][c] == 0 { result = result + " " }
+            else { result = result + str(ms[0][r][c]) }
+        }
+        result = result + "\n"
+    }
+    return result
+}

@@ -1,0 +1,29 @@
+do dt_node_new(feature: int, threshold: float, left: str, right: str) -> array {
+    return [feature, threshold, left, right, false, ""]
+}
+do dt_leaf_new(label: str) -> array { return [-1, 0.0, "", "", true, label] }
+do dt_is_leaf(node: array) -> bool { return node[4] }
+do dt_label(node: array) -> str { return node[5] }
+do dt_gini(labels: array) -> float {
+    let n = len(labels); if n == 0 { return 0.0 }
+    let counts = []; let vals = []
+    loop i in 0..n {
+        let found = false
+        loop j in 0..len(vals) { if vals[j] == labels[i] { counts[j] += 1; found = true } }
+        if found == false { vals = concat(vals, [labels[i]]); counts = concat(counts, [1]) }
+    }
+    let impurity = 1.0
+    loop i in 0..len(counts) { let p = float(counts[i])/float(n); impurity -= p*p }
+    return impurity
+}
+do dt_majority(labels: array) -> str {
+    let vals = []; let counts = []
+    loop i in 0..len(labels) {
+        let found = false
+        loop j in 0..len(vals) { if vals[j] == labels[i] { counts[j] += 1; found = true } }
+        if found == false { vals = concat(vals, [labels[i]]); counts = concat(counts, [1]) }
+    }
+    let best = 0; let best_val = ""
+    loop i in 0..len(counts) { if counts[i] > best { best = counts[i]; best_val = vals[i] } }
+    return best_val
+}

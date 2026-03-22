@@ -1,0 +1,29 @@
+do create(title: str) -> str {
+    let doc = pdf.new(title)
+    return "pdf:" + title
+}
+do simple_report(title: str, lines: array, path: str) -> bool {
+    let doc = pdf.new(title)
+    doc = pdf.add_text(doc, title, 50, 750, 18)
+    let y = 700
+    loop i in 0..len(lines) {
+        doc = pdf.add_text(doc, lines[i], 50, y - i * 20, 11)
+    }
+    pdf.save(doc, path)
+    return true
+}
+do invoice(company: str, items: array, path: str) -> bool {
+    let doc = pdf.new("Invoice - " + company)
+    doc = pdf.add_text(doc, "INVOICE", 50, 750, 20)
+    doc = pdf.add_text(doc, company, 50, 720, 14)
+    let y = 680
+    let total = 0.0
+    loop i in 0..len(items) {
+        let line = items[i][0] + "  x" + str(items[i][1]) + "  $" + str(items[i][2])
+        doc = pdf.add_text(doc, line, 50, y - i * 20, 11)
+        total += items[i][1] * items[i][2]
+    }
+    doc = pdf.add_text(doc, "Total: $" + str(total), 50, y - len(items) * 20 - 20, 13)
+    pdf.save(doc, path)
+    return true
+}

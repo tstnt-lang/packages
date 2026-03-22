@@ -1,0 +1,43 @@
+do bitset_new(size: int) -> array {
+    let bits = []
+    loop i in 0..size { bits = concat(bits, [0]) }
+    return bits
+}
+do bitset_set(bs: array, i: int) -> array {
+    bs[i] = 1
+    return bs
+}
+do bitset_clear(bs: array, i: int) -> array {
+    bs[i] = 0
+    return bs
+}
+do bitset_get(bs: array, i: int) -> bool {
+    return bs[i] == 1
+}
+do bitset_count(bs: array) -> int {
+    let c = 0
+    loop i in 0..len(bs) { if bs[i] == 1 { c += 1 } }
+    return c
+}
+do bitset_and(a: array, b: array) -> array {
+    let r = []
+    loop i in 0..len(a) { r = concat(r, [a[i] * b[i]]) }
+    return r
+}
+do bitset_or(a: array, b: array) -> array {
+    let r = []
+    loop i in 0..len(a) {
+        let v = 0
+        if a[i] == 1 || b[i] == 1 { v = 1 }
+        r = concat(r, [v])
+    }
+    return r
+}
+do bitset_not(bs: array) -> array {
+    let r = []
+    loop i in 0..len(bs) {
+        if bs[i] == 1 { r = concat(r, [0]) }
+        else { r = concat(r, [1]) }
+    }
+    return r
+}

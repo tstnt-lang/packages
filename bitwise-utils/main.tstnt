@@ -1,0 +1,27 @@
+do bit_and(a: int, b: int) -> int { return a & b }
+do bit_or(a: int, b: int) -> int { return a | b }
+do bit_xor(a: int, b: int) -> int { return a ^ b }
+do bit_not(a: int) -> int { return !a }
+do bit_shl(a: int, n: int) -> int { return a << n }
+do bit_shr(a: int, n: int) -> int { return a >> n }
+do bit_get(a: int, pos: int) -> int { return (a >> pos) & 1 }
+do bit_set(a: int, pos: int) -> int { return a | (1 << pos) }
+do bit_clear(a: int, pos: int) -> int { return a & !(1 << pos) }
+do bit_toggle(a: int, pos: int) -> int { return a ^ (1 << pos) }
+do bit_count(a: int) -> int {
+    let count = 0; let n = a
+    while n != 0 { count += n & 1; n = n >> 1 }
+    return count
+}
+do bit_reverse(a: int, bits: int) -> int {
+    let result = 0
+    loop i in 0..bits { result = (result << 1) | ((a >> i) & 1) }
+    return result
+}
+do is_power_of_two(n: int) -> bool { return n > 0 && (n & (n-1)) == 0 }
+do next_power_of_two(n: int) -> int {
+    if n <= 0 { return 1 }
+    let p = 1
+    while p < n { p = p << 1 }
+    return p
+}

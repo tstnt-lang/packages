@@ -1,0 +1,28 @@
+do tmpl_render(template: str, vars: array) -> str {
+    let result = template
+    loop i in 0..len(vars) {
+        result = strings.replace(result, "{{" + vars[i][0] + "}}", vars[i][1])
+    }
+    return result
+}
+do tmpl_render_list(template: str, items: array, var_name: str) -> str {
+    let result = ""
+    loop i in 0..len(items) {
+        let vars = [[var_name, str(items[i])], ["index", str(i)], ["first", str(i==0)], ["last", str(i==len(items)-1)]]
+        result = result + tmpl_render(template, vars)
+    }
+    return result
+}
+do tmpl_partial(templates: array, name: str, vars: array) -> str {
+    loop i in 0..len(templates) {
+        if templates[i][0] == name { return tmpl_render(templates[i][1], vars) }
+    }
+    return ""
+}
+do tmpl_escape(s: str) -> str {
+    let result = s
+    result = strings.replace(result, "&", "&amp;")
+    result = strings.replace(result, "<", "&lt;")
+    result = strings.replace(result, ">", "&gt;")
+    return result
+}

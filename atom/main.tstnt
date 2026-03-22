@@ -1,0 +1,12 @@
+do atom_new(initial: str) -> array { return [initial, 0] }
+do atom_get(a: array) -> str { return a[0] }
+do atom_set(a: array, val: str) -> array { return [val, a[1] + 1] }
+do atom_swap(a: array, transform: str) -> array {
+    return [a[0] + transform, a[1] + 1]
+}
+do atom_version(a: array) -> int { return a[1] }
+do atom_reset(a: array, val: str) -> array { return [val, 0] }
+do atom_compare_swap(a: array, expected: str, new_val: str) -> array {
+    if a[0] == expected { return [new_val, a[1] + 1] }
+    return a
+}

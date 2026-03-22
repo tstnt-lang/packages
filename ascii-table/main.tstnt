@@ -1,0 +1,62 @@
+do table_new(headers: array) -> array { return [headers, []] }
+do table_add_row(t: array, row: array) -> array {
+    t[1] = concat(t[1], [row])
+    return t
+}
+do table_col_widths(t: array) -> array {
+    let widths = []
+    loop i in 0..len(t[0]) { widths = concat(widths, [len(t[0][i])]) }
+    loop r in 0..len(t[1]) {
+        loop c in 0..len(t[1][r]) {
+            if c < len(widths) && len(str(t[1][r][c])) > widths[c] {
+                widths[c] = len(str(t[1][r][c]))
+            }
+        }
+    }
+    return widths
+}
+do table_render(t: array) -> str {
+    let widths = table_col_widths(t)
+    let sep = "+"
+    loop i in 0..len(widths) {
+        loop j in 0..widths[i]+2 { sep = sep + "-" }
+        sep = sep + "+"
+    }
+    let result = sep + "\n"
+    let header_line = "|"
+    loop i in 0..len(t[0]) {
+        let cell = t[0][i]
+        let pad = widths[i] - len(cell)
+        header_line = header_line + " " + cell
+        loop j in 0..pad { header_line = header_line + " " }
+        header_line = header_line + " |"
+    }
+    result = result + header_line + "\n" + sep + "\n"
+    loop r in 0..len(t[1]) {
+        let row_line = "|"
+        loop c in 0..len(t[1][r]) {
+            let cell = str(t[1][r][c])
+            let pad = widths[c] - len(cell)
+            row_line = row_line + " " + cell
+            loop j in 0..pad { row_line = row_line + " " }
+            row_line = row_line + " |"
+        }
+        result = result + row_line + "\n"
+    }
+    result = result + sep
+    return result
+}
+do table_sort(t: array, col: int) -> array {
+    let rows = t[1]
+    loop i in 0..len(rows) {
+        loop j in i+1..len(rows) {
+            if col < len(rows[i]) && col < len(rows[j]) {
+                if str(rows[j][col]) < str(rows[i][col]) {
+                    let tmp = rows[i]; rows[i] = rows[j]; rows[j] = tmp
+                }
+            }
+        }
+    }
+    t[1] = rows
+    return t
+}

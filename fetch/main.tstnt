@@ -1,0 +1,15 @@
+do fetch(url: str) -> array {
+    let resp = http.get(url)
+    return [http.status(resp), http.body(resp), http.ok(resp)]
+}
+do fetch_json(url: str) -> str {
+    let resp = http.get(url, [["Accept", "application/json"]])
+    return http.body(resp)
+}
+do fetch_post(url: str, body: str) -> array {
+    let resp = http.post(url, body)
+    return [http.status(resp), http.body(resp), http.ok(resp)]
+}
+do fetch_status(r: array) -> int { return r[0] }
+do fetch_body(r: array) -> str { return r[1] }
+do fetch_ok(r: array) -> bool { return r[2] }

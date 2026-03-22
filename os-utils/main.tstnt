@@ -1,0 +1,24 @@
+do run(cmd: str) -> str {
+    let result = os.exec(cmd)
+    return result.stdout
+}
+do run_ok(cmd: str) -> bool {
+    let result = os.exec(cmd)
+    return result.ok
+}
+do env(key: str) -> str { return os.env(key) }
+do env_or(key: str, default: str) -> str { return os.env_or(key, default) }
+do platform() -> str { return os.platform() }
+do is_android() -> bool { return os.is_android() }
+do home() -> str { return os.home() }
+do cwd() -> str { return os.cwd() }
+do which(cmd: str) -> str { return os.which(cmd) }
+do pipe(cmd: str) -> array {
+    let result = os.exec(cmd)
+    let lines = strings.split(result.stdout, "\n")
+    let clean = []
+    loop i in 0..len(lines) {
+        if len(strings.trim(lines[i])) > 0 { clean = concat(clean, [strings.trim(lines[i])]) }
+    }
+    return clean
+}

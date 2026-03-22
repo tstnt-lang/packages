@@ -1,0 +1,14 @@
+do totp_counter(timestamp: int, step: int) -> int {
+    return timestamp / step
+}
+do otp_generate(secret: str, counter: int, digits: int) -> str {
+    let combined = secret + str(counter)
+    let hash_val = 0
+    loop i in 0..len(combined) { hash_val = (hash_val * 31 + int(combined[i])) % 1000000000 }
+    let code = str(hash_val % int(math.pow(10.0, float(digits))))
+    while len(code) < digits { code = "0" + code }
+    return code
+}
+do otp_verify(secret: str, counter: int, digits: int, code: str) -> bool {
+    return otp_generate(secret, counter, digits) == code
+}

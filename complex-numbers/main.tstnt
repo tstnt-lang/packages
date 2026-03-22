@@ -1,0 +1,23 @@
+do complex_new(re: float, im: float) -> array { return [re, im] }
+do complex_add(a: array, b: array) -> array { return [a[0] + b[0], a[1] + b[1]] }
+do complex_sub(a: array, b: array) -> array { return [a[0] - b[0], a[1] - b[1]] }
+do complex_mul(a: array, b: array) -> array {
+    return [a[0]*b[0] - a[1]*b[1], a[0]*b[1] + a[1]*b[0]]
+}
+do complex_div(a: array, b: array) -> array {
+    let d = b[0]*b[0] + b[1]*b[1]
+    if d == 0 { return [0.0, 0.0] }
+    return [(a[0]*b[0] + a[1]*b[1]) / d, (a[1]*b[0] - a[0]*b[1]) / d]
+}
+do complex_abs(a: array) -> float { return math.sqrt(a[0]*a[0] + a[1]*a[1]) }
+do complex_conj(a: array) -> array { return [a[0], 0.0 - a[1]] }
+do complex_arg(a: array) -> float { return math.atan2(a[1], a[0]) }
+do complex_pow(a: array, n: int) -> array {
+    let r = math.pow(complex_abs(a), float(n))
+    let theta = complex_arg(a) * float(n)
+    return [r * math.cos(theta), r * math.sin(theta)]
+}
+do complex_str(a: array) -> str {
+    if a[1] >= 0 { return str(a[0]) + "+" + str(a[1]) + "i" }
+    return str(a[0]) + str(a[1]) + "i"
+}

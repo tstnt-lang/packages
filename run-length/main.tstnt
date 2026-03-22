@@ -1,0 +1,37 @@
+do rle_encode(s: str) -> str {
+    if len(s) == 0 { return "" }
+    let result = ""
+    let count = 1
+    let cur = s[0]
+    loop i in 1..len(s) {
+        if s[i] == cur { count += 1 }
+        else {
+            if count > 1 { result = result + str(count) }
+            result = result + cur
+            cur = s[i]; count = 1
+        }
+    }
+    if count > 1 { result = result + str(count) }
+    result = result + cur
+    return result
+}
+do rle_decode(s: str) -> str {
+    let result = ""
+    let i = 0
+    while i < len(s) {
+        let num_str = ""
+        while i < len(s) && s[i] >= "0" && s[i] <= "9" { num_str = num_str + s[i]; i += 1 }
+        if i < len(s) {
+            let count = 1
+            if len(num_str) > 0 { count = int(num_str) }
+            loop j in 0..count { result = result + s[i] }
+            i += 1
+        }
+    }
+    return result
+}
+do rle_ratio(original: str) -> float {
+    let encoded = rle_encode(original)
+    if len(original) == 0 { return 1.0 }
+    return float(len(encoded)) / float(len(original))
+}

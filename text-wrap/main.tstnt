@@ -1,0 +1,56 @@
+do wrap(text: str, width: int) -> str {
+    let words = strings.split(text, " ")
+    let result = ""
+    let line = ""
+    loop i in 0..len(words) {
+        let word = words[i]
+        if line == "" {
+            line = word
+        } else if len(line) + 1 + len(word) <= width {
+            line = line + " " + word
+        } else {
+            if result != "" { result = result + "\n" }
+            result = result + line
+            line = word
+        }
+    }
+    if line != "" {
+        if result != "" { result = result + "\n" }
+        result = result + line
+    }
+    return result
+}
+
+do truncate(text: str, max: int, suffix: str) -> str {
+    if len(text) <= max { return text }
+    return strings.slice(text, 0, max - len(suffix)) + suffix
+}
+
+do pad_left(text: str, width: int, ch: str) -> str {
+    let result = text
+    while len(result) < width { result = ch + result }
+    return result
+}
+
+do pad_right(text: str, width: int, ch: str) -> str {
+    let result = text
+    while len(result) < width { result = result + ch }
+    return result
+}
+
+do center(text: str, width: int, ch: str) -> str {
+    let total = width - len(text)
+    let left = total / 2
+    let right = total - left
+    return pad_left(text, len(text) + left, ch) + repeat_str(ch, right)
+}
+
+do indent(text: str, spaces: int) -> str {
+    let prefix = repeat_str(" ", spaces)
+    let lines = strings.split(text, "\n")
+    let result = []
+    loop i in 0..len(lines) {
+        result = concat(result, [prefix + lines[i]])
+    }
+    return strings.join(result, "\n")
+}

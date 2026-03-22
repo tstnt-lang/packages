@@ -1,0 +1,21 @@
+do deque_new() -> array { return [] }
+do deque_push_front(d: array, val: str) -> array { return concat([val], d) }
+do deque_push_back(d: array, val: str) -> array { return concat(d, [val]) }
+do deque_pop_front(d: array) -> array {
+    if len(d) == 0 { return ["", []] }
+    return [d[0], drop(d, 1)]
+}
+do deque_pop_back(d: array) -> array {
+    if len(d) == 0 { return ["", []] }
+    return [d[len(d)-1], take(d, len(d)-1)]
+}
+do deque_peek_front(d: array) -> str {
+    if len(d) == 0 { return "" }
+    return d[0]
+}
+do deque_peek_back(d: array) -> str {
+    if len(d) == 0 { return "" }
+    return d[len(d)-1]
+}
+do deque_size(d: array) -> int { return len(d) }
+do deque_empty(d: array) -> bool { return len(d) == 0 }

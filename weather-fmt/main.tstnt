@@ -1,0 +1,36 @@
+do weather_icon(condition: str) -> str {
+    let cond = strings.lower(condition)
+    if strings.contains(cond, "sun") || strings.contains(cond, "clear") { return "☀️" }
+    if strings.contains(cond, "cloud") { return "☁️" }
+    if strings.contains(cond, "rain") { return "🌧️" }
+    if strings.contains(cond, "snow") { return "❄️" }
+    if strings.contains(cond, "storm") || strings.contains(cond, "thunder") { return "⛈️" }
+    if strings.contains(cond, "fog") || strings.contains(cond, "mist") { return "🌫️" }
+    if strings.contains(cond, "wind") { return "💨" }
+    return "🌡️"
+}
+do weather_fmt(temp_c: float, condition: str, humidity: int, wind_kmh: float) -> str {
+    let icon = weather_icon(condition)
+    let temp_f = temp_c * 9.0/5.0 + 32.0
+    return icon + " " + condition + "\n" +
+           "  🌡️  " + str(int(temp_c)) + "°C / " + str(int(temp_f)) + "°F\n" +
+           "  💧 " + str(humidity) + "% humidity\n" +
+           "  💨 " + str(int(wind_kmh)) + " km/h"
+}
+do feels_like(temp_c: float, wind_kmh: float, humidity: int) -> float {
+    if wind_kmh > 5.0 && temp_c < 10.0 {
+        return 13.12 + 0.6215*temp_c - 11.37*math.pow(wind_kmh, 0.16) + 0.3965*temp_c*math.pow(wind_kmh, 0.16)
+    }
+    if temp_c > 27.0 {
+        let h = float(humidity)
+        return -8.78469475556 + 1.61139411*temp_c + 2.33854883889*h - 0.14611605*temp_c*h - 0.012308094*temp_c*temp_c - 0.016424828*h*h + 0.002211732*temp_c*temp_c*h + 0.00072546*temp_c*h*h - 0.000003582*temp_c*temp_c*h*h
+    }
+    return temp_c
+}
+do uv_description(uvi: int) -> str {
+    if uvi <= 2 { return "Low" }
+    if uvi <= 5 { return "Moderate" }
+    if uvi <= 7 { return "High" }
+    if uvi <= 10 { return "Very High" }
+    return "Extreme"
+}

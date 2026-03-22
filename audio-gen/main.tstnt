@@ -1,0 +1,35 @@
+do tone(freq: float, duration: float) -> str {
+    let wave = audio.sine(freq, duration, 44100)
+    return "wave:" + str(int(duration * 44100.0)) + "samples"
+}
+do chord(freqs: array, duration: float) -> str {
+    let waves = []
+    loop i in 0..len(freqs) {
+        waves = concat(waves, [audio.sine(freqs[i], duration, 44100)])
+    }
+    let mixed = audio.mix(waves[0], waves[1])
+    return "chord:" + str(len(freqs)) + "notes"
+}
+do save_tone(freq: float, duration: float, path: str) -> bool {
+    let wave = audio.sine(freq, duration, 44100)
+    let normalized = audio.normalize(wave)
+    audio.save_wav(normalized, 44100, path)
+    return true
+}
+do metronome_pattern(bpm: float, beats: int) -> str {
+    let beat_dur = 60.0 / bpm
+    let result = audio.silence(0.01, 44100)
+    loop i in 0..beats {
+        let tick = audio.sine(880.0, 0.05, 44100)
+        let gap = audio.silence(beat_dur - 0.05, 44100)
+        result = audio.concat(result, tick, gap)
+    }
+    return "metronome:" + str(beats) + "beats@" + str(int(bpm)) + "bpm"
+}
+do note_freq(note: str) -> float {
+    let notes = [["C4",261.63],["D4",293.66],["E4",329.63],["F4",349.23],["G4",392.0],["A4",440.0],["B4",493.88],["C5",523.25]]
+    loop i in 0..len(notes) {
+        if notes[i][0] == note { return notes[i][1] }
+    }
+    return 440.0
+}

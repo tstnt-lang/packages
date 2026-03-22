@@ -1,0 +1,15 @@
+do reactive_new(val: str) -> array { return [val, []] }
+do reactive_get(r: array) -> str { return r[0] }
+do reactive_set(r: array, val: str) -> array { r[0] = val; return r }
+do reactive_subscribe(r: array, handler_name: str) -> array {
+    r[1] = concat(r[1], [handler_name]); return r
+}
+do reactive_subscribers(r: array) -> array { return r[1] }
+do computed_new(deps: array, formula: str) -> array { return [deps, formula, ""] }
+do computed_update(c: array, dep_values: array) -> array {
+    let result = ""
+    loop i in 0..len(dep_values) { result = result + str(dep_values[i]) + " " }
+    c[2] = result
+    return c
+}
+do computed_value(c: array) -> str { return c[2] }

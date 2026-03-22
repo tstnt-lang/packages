@@ -1,0 +1,34 @@
+do bloom_new(size: int) -> array {
+    let bits = []
+    loop i in 0..size { bits = concat(bits, [0]) }
+    return [size, bits]
+}
+do bloom_hash1(s: str, size: int) -> int {
+    let h = 5381
+    loop i in 0..len(s) { h = ((h << 5) + h + int(s[i])) % size }
+    return abs(h)
+}
+do bloom_hash2(s: str, size: int) -> int {
+    let h = 0
+    loop i in 0..len(s) { h = (h * 31 + int(s[i])) % size }
+    return abs(h)
+}
+do bloom_hash3(s: str, size: int) -> int {
+    let h = 2166136261
+    loop i in 0..len(s) { h = (h ^ int(s[i])) * 16777619 % size }
+    return abs(h)
+}
+do bloom_add(bf: array, item: str) -> array {
+    let sz = bf[0]
+    bf[1][bloom_hash1(item, sz)] = 1
+    bf[1][bloom_hash2(item, sz)] = 1
+    bf[1][bloom_hash3(item, sz)] = 1
+    return bf
+}
+do bloom_check(bf: array, item: str) -> bool {
+    let sz = bf[0]
+    if bf[1][bloom_hash1(item, sz)] == 0 { return false }
+    if bf[1][bloom_hash2(item, sz)] == 0 { return false }
+    if bf[1][bloom_hash3(item, sz)] == 0 { return false }
+    return true
+}

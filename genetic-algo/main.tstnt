@@ -1,0 +1,55 @@
+do ga_chromosome_new(length: int) -> array {
+    let genes = []
+    loop i in 0..length { genes = concat(genes, [int(math.random() * 2.0)]) }
+    return genes
+}
+do ga_population_new(size: int, length: int) -> array {
+    let pop = []
+    loop i in 0..size { pop = concat(pop, [ga_chromosome_new(length)]) }
+    return pop
+}
+do ga_mutate(chromosome: array, rate: float) -> array {
+    let result = []
+    loop i in 0..len(chromosome) {
+        if math.random() < rate { result = concat(result, [1 - chromosome[i]]) }
+        else { result = concat(result, [chromosome[i]]) }
+    }
+    return result
+}
+do ga_crossover(a: array, b: array) -> array {
+    let point = int(math.random() * float(len(a)))
+    return concat(take(a, point), drop(b, point))
+}
+do ga_fitness_ones(chromosome: array) -> int {
+    let count = 0
+    loop i in 0..len(chromosome) { if chromosome[i] == 1 { count += 1 } }
+    return count
+}
+do ga_best(population: array) -> array {
+    let best = population[0]
+    let best_fit = ga_fitness_ones(best)
+    loop i in 1..len(population) {
+        let fit = ga_fitness_ones(population[i])
+        if fit > best_fit { best = population[i]; best_fit = fit }
+    }
+    return best
+}
+do ga_evolve(population: array, mutation_rate: float) -> array {
+    let sorted = []
+    let pop = population
+    loop i in 0..len(pop) {
+        loop j in i+1..len(pop) {
+            if ga_fitness_ones(pop[j]) > ga_fitness_ones(pop[i]) {
+                let tmp = pop[i]; pop[i] = pop[j]; pop[j] = tmp
+            }
+        }
+    }
+    let new_pop = take(pop, len(pop)/2)
+    while len(new_pop) < len(pop) {
+        let a = pop[int(math.random() * float(len(pop)/2))]
+        let b = pop[int(math.random() * float(len(pop)/2))]
+        let child = ga_mutate(ga_crossover(a, b), mutation_rate)
+        new_pop = concat(new_pop, [child])
+    }
+    return new_pop
+}

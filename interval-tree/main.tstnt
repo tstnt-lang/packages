@@ -1,0 +1,24 @@
+do interval_new(lo: int, hi: int, data: str) -> array { return [lo, hi, data] }
+do interval_overlaps(a: array, b: array) -> bool {
+    return a[0] <= b[1] && b[0] <= a[1]
+}
+do interval_contains(iv: array, point: int) -> bool {
+    return point >= iv[0] && point <= iv[1]
+}
+do itree_new() -> array { return [] }
+do itree_insert(tree: array, iv: array) -> array { return concat(tree, [iv]) }
+do itree_query(tree: array, lo: int, hi: int) -> array {
+    let query = interval_new(lo, hi, "")
+    let result = []
+    loop i in 0..len(tree) {
+        if interval_overlaps(tree[i], query) { result = concat(result, [tree[i]]) }
+    }
+    return result
+}
+do itree_point_query(tree: array, point: int) -> array {
+    let result = []
+    loop i in 0..len(tree) {
+        if interval_contains(tree[i], point) { result = concat(result, [tree[i]]) }
+    }
+    return result
+}

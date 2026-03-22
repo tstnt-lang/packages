@@ -1,0 +1,45 @@
+do crc8(data: array) -> int {
+    let crc = 0
+    loop i in 0..len(data) {
+        crc = crc ^ data[i]
+        loop j in 0..8 {
+            if crc & 128 != 0 { crc = (crc << 1) ^ 0x07 }
+            else { crc = crc << 1 }
+            crc = crc & 255
+        }
+    }
+    return crc
+}
+do crc16(data: array) -> int {
+    let crc = 0xFFFF
+    loop i in 0..len(data) {
+        crc = crc ^ (data[i] << 8)
+        loop j in 0..8 {
+            if crc & 0x8000 != 0 { crc = (crc << 1) ^ 0x1021 }
+            else { crc = crc << 1 }
+            crc = crc & 0xFFFF
+        }
+    }
+    return crc
+}
+do crc32(data: array) -> int {
+    let crc = 0xFFFFFFFF
+    loop i in 0..len(data) {
+        crc = crc ^ data[i]
+        loop j in 0..8 {
+            if crc & 1 != 0 { crc = (crc >> 1) ^ 0xEDB88320 }
+            else { crc = crc >> 1 }
+        }
+    }
+    return (crc ^ 0xFFFFFFFF) & 0xFFFFFFFF
+}
+do crc_hex(data: array) -> str {
+    let v = crc32(data)
+    let hex = "0123456789abcdef"
+    let result = ""
+    loop i in 0..8 {
+        let nibble = (v >> (28 - i * 4)) & 15
+        result = result + hex[nibble]
+    }
+    return result
+}

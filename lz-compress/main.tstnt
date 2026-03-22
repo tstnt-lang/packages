@@ -1,0 +1,28 @@
+do lz_compress(input: str) -> array {
+    let dict = []; let output = []
+    let i = 0
+    while i < len(input) {
+        let best_len = 0; let best_pos = 0
+        loop j in 0..len(dict) {
+            let match_len = 0
+            while match_len < len(dict[j]) && i + match_len < len(input) && dict[j][match_len] == input[i+match_len] {
+                match_len += 1
+            }
+            if match_len > best_len { best_len = match_len; best_pos = j }
+        }
+        if best_len > 2 {
+            output = concat(output, [[best_pos, best_len]])
+            i += best_len
+        } else {
+            output = concat(output, [[-1, int(input[i])]])
+            dict = concat(dict, [strings.slice(input, i, i+1)])
+            i += 1
+        }
+    }
+    return output
+}
+do lz_ratio(input: str) -> float {
+    let compressed = lz_compress(input)
+    if len(input) == 0 { return 1.0 }
+    return float(len(compressed)) / float(len(input))
+}

@@ -1,0 +1,41 @@
+do jaro(s1: str, s2: str) -> float {
+    let l1 = len(s1); let l2 = len(s2)
+    if l1 == 0 && l2 == 0 { return 1.0 }
+    if l1 == 0 || l2 == 0 { return 0.0 }
+    let match_dist = (l1 + l2) / 2 / 2 - 1
+    if match_dist < 0 { match_dist = 0 }
+    let s1_matches = []; let s2_matches = []
+    loop i in 0..l1 { s1_matches = concat(s1_matches, [false]) }
+    loop i in 0..l2 { s2_matches = concat(s2_matches, [false]) }
+    let matches = 0; let transpositions = 0
+    loop i in 0..l1 {
+        let start = i - match_dist; if start < 0 { start = 0 }
+        let end = i + match_dist + 1; if end > l2 { end = l2 }
+        loop j in start..end {
+            if s2_matches[j] == false && s1[i] == s2[j] {
+                s1_matches[i] = true; s2_matches[j] = true
+                matches += 1; break
+            }
+        }
+    }
+    if matches == 0 { return 0.0 }
+    let k = 0
+    loop i in 0..l1 {
+        if s1_matches[i] {
+            while s2_matches[k] == false { k += 1 }
+            if s1[i] != s2[k] { transpositions += 1 }
+            k += 1
+        }
+    }
+    let m = float(matches)
+    return (m/float(l1) + m/float(l2) + (m - float(transpositions)/2.0)/m) / 3.0
+}
+do jaro_winkler(s1: str, s2: str) -> float {
+    let jaro_sim = jaro(s1, s2)
+    let prefix = 0
+    loop i in 0..4 {
+        if i < len(s1) && i < len(s2) && s1[i] == s2[i] { prefix += 1 }
+        else { break }
+    }
+    return jaro_sim + float(prefix) * 0.1 * (1.0 - jaro_sim)
+}

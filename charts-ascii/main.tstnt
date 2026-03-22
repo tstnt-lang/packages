@@ -1,0 +1,60 @@
+do bar_chart(data: array, labels: array, max_width: int) -> str {
+    let mx = 0
+    loop i in 0..len(data) { if data[i] > mx { mx = data[i] } }
+    let result = ""
+    loop i in 0..len(data) {
+        let label = ""
+        if i < len(labels) { label = labels[i] }
+        while len(label) < 8 { label = label + " " }
+        let bar_width = 0
+        if mx > 0 { bar_width = data[i] * max_width / mx }
+        let bar = ""
+        loop j in 0..bar_width { bar = bar + "█" }
+        result = result + label + " " + bar + " " + str(data[i]) + "\n"
+    }
+    return result
+}
+do sparkline(data: array) -> str {
+    let blocks = " ▁▂▃▄▅▆▇█"
+    let mn = data[0]; let mx = data[0]
+    loop i in 0..len(data) {
+        if data[i] < mn { mn = data[i] }
+        if data[i] > mx { mx = data[i] }
+    }
+    let result = ""
+    loop i in 0..len(data) {
+        let range = mx - mn
+        let idx = 0
+        if range > 0 { idx = int(float(data[i] - mn) / float(range) * 8.0) }
+        result = result + blocks[idx]
+    }
+    return result
+}
+do line_chart(data: array, height: int, width: int) -> str {
+    let mn = data[0]; let mx = data[0]
+    loop i in 0..len(data) {
+        if data[i] < mn { mn = data[i] }
+        if data[i] > mx { mx = data[i] }
+    }
+    let grid = []
+    loop r in 0..height {
+        let row = []
+        loop c in 0..width { row = concat(row, [" "]) }
+        grid = concat(grid, [row])
+    }
+    loop i in 0..len(data) {
+        let x = i * (width - 1) / (len(data) - 1)
+        let y = 0
+        if mx > mn { y = height - 1 - int(float(data[i] - mn) / float(mx - mn) * float(height - 1)) }
+        if x < width && y >= 0 && y < height { grid[y][x] = "•" }
+    }
+    let result = ""
+    loop r in 0..height {
+        let line = "│"
+        loop c in 0..width { line = line + grid[r][c] }
+        result = result + line + "\n"
+    }
+    result = result + "└"
+    loop i in 0..width { result = result + "─" }
+    return result
+}

@@ -1,0 +1,30 @@
+do rest_new(base_url: str) -> array {
+    return [base_url, []]
+}
+do rest_header(client: array, key: str, val: str) -> array {
+    client[1] = concat(client[1], [[key, val]])
+    return client
+}
+do rest_get(client: array, path: str) -> str {
+    let resp = http.get(client[0] + path, client[1])
+    return http.body(resp)
+}
+do rest_post(client: array, path: str, body: str) -> str {
+    let resp = http.post(client[0] + path, body, client[1])
+    return http.body(resp)
+}
+do rest_put(client: array, path: str, body: str) -> str {
+    let resp = http.put(client[0] + path, body, client[1])
+    return http.body(resp)
+}
+do rest_delete(client: array, path: str) -> str {
+    let resp = http.delete(client[0] + path, client[1])
+    return http.body(resp)
+}
+do rest_auth(client: array, token: str) -> array {
+    return rest_header(client, "Authorization", "Bearer " + token)
+}
+do rest_json(client: array) -> array {
+    client = rest_header(client, "Content-Type", "application/json")
+    return rest_header(client, "Accept", "application/json")
+}

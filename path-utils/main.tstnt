@@ -1,0 +1,17 @@
+do join(parts: array) -> str {
+    let result = ""
+    loop i in 0..len(parts) {
+        if i > 0 { result = result + "/" }
+        result = result + parts[i]
+    }
+    return result
+}
+do basename(p: str) -> str { return path.basename(p) }
+do dirname(p: str) -> str { return path.dirname(p) }
+do ext(p: str) -> str { return path.extension(p) }
+do stem(p: str) -> str { return path.stem(p) }
+do exists(p: str) -> bool { return path.exists(p) }
+do normalize(p: str) -> str { return path.normalize(p) }
+do glob(dir: str, pattern: str) -> array { return path.glob(dir, pattern) }
+do is_abs(p: str) -> bool { return path.is_absolute(p) }
+do with_ext(p: str, new_ext: str) -> str { return path.with_extension(p, new_ext) }

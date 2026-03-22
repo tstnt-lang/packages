@@ -1,0 +1,32 @@
+do base32_encode(data: array) -> str {
+    let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+    let result = ""
+    let i = 0
+    while i < len(data) {
+        let b0 = data[i]
+        let b1 = 0; let b2 = 0; let b3 = 0; let b4 = 0
+        if i+1 < len(data) { b1 = data[i+1] }
+        if i+2 < len(data) { b2 = data[i+2] }
+        if i+3 < len(data) { b3 = data[i+3] }
+        if i+4 < len(data) { b4 = data[i+4] }
+        result = result + alpha[(b0 >> 3) % 32]
+        result = result + alpha[((b0 & 7) << 2 | b1 >> 6) % 32]
+        result = result + alpha[(b1 >> 1) % 32]
+        result = result + alpha[((b1 & 1) << 4 | b2 >> 4) % 32]
+        result = result + alpha[((b2 & 15) << 1 | b3 >> 7) % 32]
+        result = result + alpha[(b3 >> 2) % 32]
+        result = result + alpha[((b3 & 3) << 3 | b4 >> 5) % 32]
+        result = result + alpha[b4 % 32]
+        i += 5
+    }
+    return result
+}
+do base32_valid(s: str) -> bool {
+    let valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
+    loop i in 0..len(s) {
+        let found = false
+        loop j in 0..len(valid) { if s[i] == valid[j] { found = true } }
+        if found == false { return false }
+    }
+    return true
+}

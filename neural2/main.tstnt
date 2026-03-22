@@ -1,0 +1,38 @@
+do softmax(arr: array) -> array {
+    let mx = arr[0]
+    loop i in 0..len(arr) { if arr[i] > mx { mx = arr[i] } }
+    let exps = []; let sum = 0.0
+    loop i in 0..len(arr) { let e = math.exp(arr[i] - mx); exps = concat(exps, [e]); sum += e }
+    let result = []
+    loop i in 0..len(exps) { result = concat(result, [exps[i] / sum]) }
+    return result
+}
+do leaky_relu(x: float, alpha: float) -> float { if x >= 0.0 { return x }; return alpha * x }
+do elu(x: float, alpha: float) -> float { if x >= 0.0 { return x }; return alpha * (math.exp(x) - 1.0) }
+do dropout(arr: array, rate: float) -> array {
+    let result = []
+    loop i in 0..len(arr) {
+        if math.random() < rate { result = concat(result, [0.0]) }
+        else { result = concat(result, [arr[i] / (1.0 - rate)]) }
+    }
+    return result
+}
+do batch_norm(arr: array) -> array {
+    let mean = 0.0; loop i in 0..len(arr) { mean += arr[i] }; mean /= float(len(arr))
+    let var = 0.0; loop i in 0..len(arr) { let d = arr[i]-mean; var += d*d }; var /= float(len(arr))
+    let std = math.sqrt(var + 0.000001)
+    let result = []
+    loop i in 0..len(arr) { result = concat(result, [(arr[i] - mean) / std]) }
+    return result
+}
+do weight_init_xavier(fan_in: int, fan_out: int) -> float {
+    let limit = math.sqrt(6.0 / float(fan_in + fan_out))
+    return (math.random() * 2.0 - 1.0) * limit
+}
+do gradient_clip(grad: array, max_norm: float) -> array {
+    let norm = 0.0; loop i in 0..len(grad) { norm += grad[i]*grad[i] }; norm = math.sqrt(norm)
+    if norm <= max_norm { return grad }
+    let result = []
+    loop i in 0..len(grad) { result = concat(result, [grad[i] * max_norm / norm]) }
+    return result
+}

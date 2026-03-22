@@ -1,0 +1,90 @@
+do vec_add(a: array, b: array) -> array {
+    let r = []
+    loop i in 0..len(a) { r = concat(r, [a[i] + b[i]]) }
+    return r
+}
+do vec_sub(a: array, b: array) -> array {
+    let r = []
+    loop i in 0..len(a) { r = concat(r, [a[i] - b[i]]) }
+    return r
+}
+do vec_scale(v: array, s: float) -> array {
+    let r = []
+    loop i in 0..len(v) { r = concat(r, [v[i] * s]) }
+    return r
+}
+do vec_dot(a: array, b: array) -> float {
+    let s = 0.0
+    loop i in 0..len(a) { s += a[i] * b[i] }
+    return s
+}
+do vec_norm(v: array) -> float {
+    let s = 0.0
+    loop i in 0..len(v) { s += v[i] * v[i] }
+    return math.sqrt(s)
+}
+do vec_normalize(v: array) -> array {
+    let n = vec_norm(v)
+    if n == 0 { return v }
+    return vec_scale(v, 1.0 / n)
+}
+do vec_cross3(a: array, b: array) -> array {
+    return [a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]]
+}
+do mat_identity(n: int) -> array {
+    let m = []
+    loop i in 0..n {
+        let row = []
+        loop j in 0..n {
+            if i == j { row = concat(row, [1.0]) }
+            else { row = concat(row, [0.0]) }
+        }
+        m = concat(m, [row])
+    }
+    return m
+}
+do mat_add(a: array, b: array) -> array {
+    let r = []
+    loop i in 0..len(a) {
+        let row = []
+        loop j in 0..len(a[i]) { row = concat(row, [a[i][j] + b[i][j]]) }
+        r = concat(r, [row])
+    }
+    return r
+}
+do mat_mul(a: array, b: array) -> array {
+    let n = len(a)
+    let m = len(b[0])
+    let k = len(b)
+    let r = []
+    loop i in 0..n {
+        let row = []
+        loop j in 0..m {
+            let s = 0.0
+            loop l in 0..k { s += a[i][l] * b[l][j] }
+            row = concat(row, [s])
+        }
+        r = concat(r, [row])
+    }
+    return r
+}
+do mat_transpose(a: array) -> array {
+    let rows = len(a)
+    let cols = len(a[0])
+    let r = []
+    loop j in 0..cols {
+        let row = []
+        loop i in 0..rows { row = concat(row, [a[i][j]]) }
+        r = concat(r, [row])
+    }
+    return r
+}
+do mat_scale(a: array, s: float) -> array {
+    let r = []
+    loop i in 0..len(a) {
+        let row = []
+        loop j in 0..len(a[i]) { row = concat(row, [a[i][j] * s]) }
+        r = concat(r, [row])
+    }
+    return r
+}

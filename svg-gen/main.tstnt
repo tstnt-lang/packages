@@ -1,0 +1,29 @@
+do svg_new(w: int, h: int) -> str {
+    return "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + str(w) + "\" height=\"" + str(h) + "\">"
+}
+do svg_close() -> str { return "</svg>" }
+do svg_rect(x: int, y: int, w: int, h: int, fill: str) -> str {
+    return "<rect x=\"" + str(x) + "\" y=\"" + str(y) + "\" width=\"" + str(w) + "\" height=\"" + str(h) + "\" fill=\"" + fill + "\"/>"
+}
+do svg_circle(cx: int, cy: int, r: int, fill: str) -> str {
+    return "<circle cx=\"" + str(cx) + "\" cy=\"" + str(cy) + "\" r=\"" + str(r) + "\" fill=\"" + fill + "\"/>"
+}
+do svg_line(x1: int, y1: int, x2: int, y2: int, stroke: str, width: int) -> str {
+    return "<line x1=\"" + str(x1) + "\" y1=\"" + str(y1) + "\" x2=\"" + str(x2) + "\" y2=\"" + str(y2) + "\" stroke=\"" + stroke + "\" stroke-width=\"" + str(width) + "\"/>"
+}
+do svg_text(x: int, y: int, text: str, size: int, fill: str) -> str {
+    return "<text x=\"" + str(x) + "\" y=\"" + str(y) + "\" font-size=\"" + str(size) + "\" fill=\"" + fill + "\">" + text + "</text>"
+}
+do svg_polygon(points: array, fill: str, stroke: str) -> str {
+    let pts = ""
+    loop i in 0..len(points) {
+        if i > 0 { pts = pts + " " }
+        pts = pts + str(points[i][0]) + "," + str(points[i][1])
+    }
+    return "<polygon points=\"" + pts + "\" fill=\"" + fill + "\" stroke=\"" + stroke + "\"/>"
+}
+do svg_group(elements: array, transform: str) -> str {
+    let result = "<g transform=\"" + transform + "\">"
+    loop i in 0..len(elements) { result = result + elements[i] }
+    return result + "</g>"
+}

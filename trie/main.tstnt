@@ -1,0 +1,29 @@
+do trie_new() -> array {
+    return []
+}
+
+do trie_insert(trie: array, word: str) -> array {
+    return concat(trie, [word])
+}
+
+do trie_search(trie: array, prefix: str) -> array {
+    let result = []
+    loop i in 0..len(trie) {
+        let word = trie[i]
+        if strings.starts_with(word, prefix) {
+            result = concat(result, [word])
+        }
+    }
+    return result
+}
+
+do trie_has(trie: array, word: str) -> bool {
+    loop i in 0..len(trie) {
+        if trie[i] == word { return true }
+    }
+    return false
+}
+
+do trie_size(trie: array) -> int {
+    return len(trie)
+}

@@ -1,0 +1,52 @@
+do canvas_new(w: int, h: int) -> array {
+    let pixels = []
+    loop r in 0..h {
+        let row = []
+        loop c in 0..w { row = concat(row, [0]) }
+        pixels = concat(pixels, [row])
+    }
+    return [w, h, pixels]
+}
+do canvas_set(cv: array, x: int, y: int, color: int) -> array {
+    if x >= 0 && y >= 0 && x < cv[0] && y < cv[1] { cv[2][y][x] = color }
+    return cv
+}
+do canvas_get(cv: array, x: int, y: int) -> int {
+    if x < 0 || y < 0 || x >= cv[0] || y >= cv[1] { return 0 }
+    return cv[2][y][x]
+}
+do canvas_fill(cv: array, color: int) -> array {
+    loop r in 0..cv[1] { loop c in 0..cv[0] { cv[2][r][c] = color } }
+    return cv
+}
+do canvas_rect(cv: array, x: int, y: int, w: int, h: int, color: int) -> array {
+    loop r in y..y+h { loop c in x..x+w { cv = canvas_set(cv, c, r, color) } }
+    return cv
+}
+do canvas_render(cv: array, palette: array) -> str {
+    let result = ""
+    loop r in 0..cv[1] {
+        loop c in 0..cv[0] {
+            let idx = cv[2][r][c]
+            if idx < len(palette) { result = result + palette[idx] }
+            else { result = result + "?" }
+        }
+        result = result + "\n"
+    }
+    return result
+}
+do canvas_scale(cv: array, factor: int) -> array {
+    let new_w = cv[0] * factor; let new_h = cv[1] * factor
+    let new_cv = canvas_new(new_w, new_h)
+    loop r in 0..cv[1] {
+        loop c in 0..cv[0] {
+            let color = canvas_get(cv, c, r)
+            loop dr in 0..factor {
+                loop dc in 0..factor {
+                    new_cv = canvas_set(new_cv, c*factor+dc, r*factor+dr, color)
+                }
+            }
+        }
+    }
+    return new_cv
+}

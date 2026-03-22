@@ -1,0 +1,28 @@
+do tax_add(amount: float, rate: float) -> float {
+    return amount * (1.0 + rate / 100.0)
+}
+do tax_remove(amount_with_tax: float, rate: float) -> float {
+    return amount_with_tax / (1.0 + rate / 100.0)
+}
+do tax_amount(price: float, rate: float) -> float {
+    return price * rate / 100.0
+}
+do compound_interest(principal: float, rate: float, years: int) -> float {
+    return principal * math.pow(1.0 + rate / 100.0, float(years))
+}
+do simple_interest(principal: float, rate: float, years: int) -> float {
+    return principal * (1.0 + rate / 100.0 * float(years))
+}
+do monthly_payment(principal: float, annual_rate: float, months: int) -> float {
+    let r = annual_rate / 100.0 / 12.0
+    if r == 0.0 { return principal / float(months) }
+    let factor = math.pow(1.0 + r, float(months))
+    return principal * r * factor / (factor - 1.0)
+}
+do roi(gain: float, cost: float) -> float {
+    if cost == 0.0 { return 0.0 }
+    return (gain - cost) / cost * 100.0
+}
+do discount(price: float, pct: float) -> float {
+    return price * (1.0 - pct / 100.0)
+}

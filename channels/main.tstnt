@@ -1,0 +1,23 @@
+do chan_new(capacity: int) -> array { return [[], capacity, false] }
+do chan_send(ch: array, val: str) -> array {
+    if ch[2] { return ch }
+    if len(ch[0]) < ch[1] || ch[1] == 0 {
+        ch[0] = concat(ch[0], [val])
+    }
+    return ch
+}
+do chan_recv(ch: array) -> array {
+    if len(ch[0]) == 0 { return ["", ch] }
+    let val = ch[0][0]
+    ch[0] = drop(ch[0], 1)
+    return [val, ch]
+}
+do chan_close(ch: array) -> array { ch[2] = true; return ch }
+do chan_closed(ch: array) -> bool { return ch[2] }
+do chan_len(ch: array) -> int { return len(ch[0]) }
+do chan_cap(ch: array) -> int { return ch[1] }
+do chan_empty(ch: array) -> bool { return len(ch[0]) == 0 }
+do chan_full(ch: array) -> bool {
+    if ch[1] == 0 { return false }
+    return len(ch[0]) >= ch[1]
+}

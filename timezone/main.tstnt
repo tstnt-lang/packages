@@ -1,0 +1,39 @@
+do tz_offsets() -> array {
+    return [
+        ["UTC", 0], ["GMT", 0],
+        ["EST", -5], ["EDT", -4],
+        ["CST", -6], ["CDT", -5],
+        ["MST", -7], ["MDT", -6],
+        ["PST", -8], ["PDT", -7],
+        ["IST", 5], ["CET", 1], ["CEST", 2],
+        ["JST", 9], ["CST_CN", 8], ["AEST", 10],
+        ["MSK", 3], ["BRT", -3]
+    ]
+}
+do tz_offset(name: str) -> int {
+    let offsets = tz_offsets()
+    loop i in 0..len(offsets) {
+        if offsets[i][0] == name { return offsets[i][1] }
+    }
+    return 0
+}
+do tz_convert(hour: int, from: str, to: str) -> int {
+    let diff = tz_offset(to) - tz_offset(from)
+    let result = (hour + diff) % 24
+    if result < 0 { result += 24 }
+    return result
+}
+do tz_fmt(hour: int, minute: int, tz: str) -> str {
+    let h = str(hour); let m = str(minute)
+    if hour < 10 { h = "0" + h }
+    if minute < 10 { m = "0" + m }
+    return h + ":" + m + " " + tz
+}
+do tz_now_in(unix_seconds: int, tz: str) -> array {
+    let offset = tz_offset(tz) * 3600
+    let local = unix_seconds + offset
+    let seconds = local % 60
+    let minutes = (local / 60) % 60
+    let hours = (local / 3600) % 24
+    return [hours, minutes, seconds]
+}

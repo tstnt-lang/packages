@@ -1,0 +1,40 @@
+do store_new() -> array { return [[], []] }
+do store_set(s: array, key: str, val: str) -> array {
+    loop i in 0..len(s[0]) {
+        if s[0][i] == key { s[1][i] = val; return s }
+    }
+    s[0] = concat(s[0], [key])
+    s[1] = concat(s[1], [val])
+    return s
+}
+do store_get(s: array, key: str) -> str {
+    loop i in 0..len(s[0]) { if s[0][i] == key { return s[1][i] } }
+    return ""
+}
+do store_has(s: array, key: str) -> bool {
+    loop i in 0..len(s[0]) { if s[0][i] == key { return true } }
+    return false
+}
+do store_delete(s: array, key: str) -> array {
+    let new_keys = []; let new_vals = []
+    loop i in 0..len(s[0]) {
+        if s[0][i] != key { new_keys = concat(new_keys, [s[0][i]]); new_vals = concat(new_vals, [s[1][i]]) }
+    }
+    return [new_keys, new_vals]
+}
+do store_keys(s: array) -> array { return s[0] }
+do store_vals(s: array) -> array { return s[1] }
+do store_size(s: array) -> int { return len(s[0]) }
+do store_merge(a: array, b: array) -> array {
+    let result = a
+    loop i in 0..len(b[0]) { result = store_set(result, b[0][i], b[1][i]) }
+    return result
+}
+do store_to_str(s: array) -> str {
+    let result = "{"
+    loop i in 0..len(s[0]) {
+        if i > 0 { result = result + ", " }
+        result = result + s[0][i] + ": " + s[1][i]
+    }
+    return result + "}"
+}

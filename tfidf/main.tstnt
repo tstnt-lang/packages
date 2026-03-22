@@ -1,0 +1,18 @@
+do tf(term: str, doc_tokens: array) -> float {
+    let count = 0
+    loop i in 0..len(doc_tokens) { if doc_tokens[i] == term { count += 1 } }
+    return float(count) / float(len(doc_tokens))
+}
+do idf(term: str, all_docs: array) -> float {
+    let count = 0
+    loop i in 0..len(all_docs) {
+        loop j in 0..len(all_docs[i]) {
+            if all_docs[i][j] == term { count += 1 }
+        }
+    }
+    if count == 0 { return 0.0 }
+    return math.log(float(len(all_docs)) / float(count))
+}
+do tfidf(term: str, doc: array, all_docs: array) -> float {
+    return tf(term, doc) * idf(term, all_docs)
+}

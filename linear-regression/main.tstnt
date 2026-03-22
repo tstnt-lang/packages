@@ -1,0 +1,40 @@
+do linreg_fit(x: array, y: array) -> array {
+    let n = len(x)
+    let sum_x = 0.0; let sum_y = 0.0; let sum_xy = 0.0; let sum_x2 = 0.0
+    loop i in 0..n {
+        sum_x += float(x[i]); sum_y += float(y[i])
+        sum_xy += float(x[i]) * float(y[i])
+        sum_x2 += float(x[i]) * float(x[i])
+    }
+    let denom = float(n) * sum_x2 - sum_x * sum_x
+    if denom == 0.0 { return [0.0, 0.0] }
+    let slope = (float(n) * sum_xy - sum_x * sum_y) / denom
+    let intercept = (sum_y - slope * sum_x) / float(n)
+    return [slope, intercept]
+}
+do linreg_predict(model: array, x: float) -> float {
+    return model[0] * x + model[1]
+}
+do linreg_r2(model: array, x: array, y: array) -> float {
+    let y_mean = 0.0
+    loop i in 0..len(y) { y_mean += float(y[i]) }
+    y_mean /= float(len(y))
+    let ss_tot = 0.0; let ss_res = 0.0
+    loop i in 0..len(x) {
+        let pred = linreg_predict(model, float(x[i]))
+        let diff_tot = float(y[i]) - y_mean
+        let diff_res = float(y[i]) - pred
+        ss_tot += diff_tot * diff_tot
+        ss_res += diff_res * diff_res
+    }
+    if ss_tot == 0.0 { return 1.0 }
+    return 1.0 - ss_res / ss_tot
+}
+do linreg_mse(model: array, x: array, y: array) -> float {
+    let total = 0.0
+    loop i in 0..len(x) {
+        let diff = float(y[i]) - linreg_predict(model, float(x[i]))
+        total += diff * diff
+    }
+    return total / float(len(x))
+}

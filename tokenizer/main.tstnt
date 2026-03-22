@@ -1,0 +1,57 @@
+do tokenize(text: str) -> array {
+    let words = strings.split(strings.lower(text), " ")
+    let result = []
+    loop i in 0..len(words) {
+        let w = strings.trim(words[i])
+        w = strings.replace(w, ".", "")
+        w = strings.replace(w, ",", "")
+        w = strings.replace(w, "!", "")
+        w = strings.replace(w, "?", "")
+        w = strings.replace(w, ";", "")
+        w = strings.replace(w, ":", "")
+        if len(w) > 0 { result = concat(result, [w]) }
+    }
+    return result
+}
+do word_freq(tokens: array) -> array {
+    let words = []; let counts = []
+    loop i in 0..len(tokens) {
+        let found = false
+        loop j in 0..len(words) {
+            if words[j] == tokens[i] { counts[j] += 1; found = true }
+        }
+        if found == false { words = concat(words, [tokens[i]]); counts = concat(counts, [1]) }
+    }
+    let result = []
+    loop i in 0..len(words) { result = concat(result, [[words[i], counts[i]]]) }
+    return result
+}
+do top_words(tokens: array, n: int) -> array {
+    let freq = word_freq(tokens)
+    loop i in 0..len(freq) {
+        loop j in i+1..len(freq) {
+            if freq[j][1] > freq[i][1] {
+                let tmp = freq[i]; freq[i] = freq[j]; freq[j] = tmp
+            }
+        }
+    }
+    return take(freq, n)
+}
+do ngrams(tokens: array, n: int) -> array {
+    let result = []
+    loop i in 0..len(tokens)-n+1 {
+        let gram = []
+        loop j in 0..n { gram = concat(gram, [tokens[i+j]]) }
+        result = concat(result, [gram])
+    }
+    return result
+}
+do stopwords_remove(tokens: array, stops: array) -> array {
+    let result = []
+    loop i in 0..len(tokens) {
+        let is_stop = false
+        loop j in 0..len(stops) { if tokens[i] == stops[j] { is_stop = true } }
+        if is_stop == false { result = concat(result, [tokens[i]]) }
+    }
+    return result
+}

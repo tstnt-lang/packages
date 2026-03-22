@@ -1,0 +1,20 @@
+do bitmask_new() -> int { return 0 }
+do bitmask_set(mask: int, bit: int) -> int { return mask | (1 << bit) }
+do bitmask_clear(mask: int, bit: int) -> int { return mask & !(1 << bit) }
+do bitmask_toggle(mask: int, bit: int) -> int { return mask ^ (1 << bit) }
+do bitmask_has(mask: int, bit: int) -> bool { return (mask & (1 << bit)) != 0 }
+do bitmask_count(mask: int) -> int {
+    let count = 0; let m = mask
+    while m != 0 { count += m & 1; m = m >> 1 }
+    return count
+}
+do bitmask_to_array(mask: int, max_bits: int) -> array {
+    let result = []
+    loop i in 0..max_bits { result = concat(result, [(mask >> i) & 1]) }
+    return result
+}
+do bitmask_from_array(bits: array) -> int {
+    let result = 0
+    loop i in 0..len(bits) { if bits[i] != 0 { result = result | (1 << i) } }
+    return result
+}

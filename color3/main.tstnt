@@ -1,0 +1,46 @@
+do rgb(r: int, g: int, b: int) -> str {
+    return "\x1b[38;2;" + str(r) + ";" + str(g) + ";" + str(b) + "m"
+}
+
+do bg_rgb(r: int, g: int, b: int) -> str {
+    return "\x1b[48;2;" + str(r) + ";" + str(g) + ";" + str(b) + "m"
+}
+
+do reset() -> str { return "\x1b[0m" }
+do bold() -> str { return "\x1b[1m" }
+do italic() -> str { return "\x1b[3m" }
+do underline() -> str { return "\x1b[4m" }
+do dim() -> str { return "\x1b[2m" }
+do blink() -> str { return "\x1b[5m" }
+do strikethrough() -> str { return "\x1b[9m" }
+
+do paint(text: str, r: int, g: int, b: int) -> str {
+    return rgb(r, g, b) + text + reset()
+}
+
+do bg_paint(text: str, r: int, g: int, b: int) -> str {
+    return bg_rgb(r, g, b) + text + reset()
+}
+
+do gradient_line(text: str, r1: int, g1: int, b1: int, r2: int, g2: int, b2: int) -> str {
+    let result = ""
+    let chars = strings.split(text, "")
+    let n = len(chars)
+    loop i in 0..n {
+        let t = 0.0
+        if n > 1 { t = float(i) / float(n - 1) }
+        let r = int(float(r1) + (float(r2) - float(r1)) * t)
+        let g = int(float(g1) + (float(g2) - float(g1)) * t)
+        let b = int(float(b1) + (float(b2) - float(b1)) * t)
+        result = result + rgb(r, g, b) + chars[i]
+    }
+    return result + reset()
+}
+
+do hex_to_rgb(hex: str) -> array {
+    let h = strings.replace(hex, "#", "")
+    let r = int(strings.slice(h, 0, 2))
+    let g = int(strings.slice(h, 2, 4))
+    let b = int(strings.slice(h, 4, 6))
+    return [r, g, b]
+}

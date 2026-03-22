@@ -1,0 +1,37 @@
+do nb_new() -> array { return [[], [], []] }
+do nb_train(model: array, features: array, label: str) -> array {
+    let found = false
+    loop i in 0..len(model[0]) {
+        if model[0][i] == label {
+            model[1][i] += 1
+            model[2][i] = concat(model[2][i], features)
+            found = true
+        }
+    }
+    if found == false {
+        model[0] = concat(model[0], [label])
+        model[1] = concat(model[1], [1])
+        model[2] = concat(model[2], [features])
+    }
+    return model
+}
+do nb_count_feature(feature_list: array, feature: str) -> int {
+    let count = 0
+    loop i in 0..len(feature_list) { if feature_list[i] == feature { count += 1 } }
+    return count
+}
+do nb_predict(model: array, features: array) -> str {
+    let total = 0
+    loop i in 0..len(model[1]) { total += model[1][i] }
+    let best_label = ""; let best_score = -999999.0
+    loop i in 0..len(model[0]) {
+        let score = math.log(float(model[1][i]) / float(total))
+        loop j in 0..len(features) {
+            let count = nb_count_feature(model[2][i], features[j])
+            let p = float(count + 1) / float(len(model[2][i]) + 1)
+            score += math.log(p)
+        }
+        if score > best_score { best_score = score; best_label = model[0][i] }
+    }
+    return best_label
+}

@@ -1,0 +1,28 @@
+do knn_distance(a: array, b: array) -> float {
+    let sum = 0.0
+    loop i in 0..len(a) { let d = float(a[i]) - float(b[i]); sum += d*d }
+    return math.sqrt(sum)
+}
+do knn_predict(train_x: array, train_y: array, point: array, k: int) -> str {
+    let dists = []
+    loop i in 0..len(train_x) {
+        dists = concat(dists, [[knn_distance(train_x[i], point), train_y[i]]])
+    }
+    loop i in 0..len(dists) {
+        loop j in i+1..len(dists) {
+            if dists[j][0] < dists[i][0] { let tmp = dists[i]; dists[i] = dists[j]; dists[j] = tmp }
+        }
+    }
+    let neighbors = take(dists, k)
+    let labels = []; let counts = []
+    loop i in 0..len(neighbors) {
+        let found = false
+        loop j in 0..len(labels) {
+            if labels[j] == neighbors[i][1] { counts[j] += 1; found = true }
+        }
+        if found == false { labels = concat(labels, [neighbors[i][1]]); counts = concat(counts, [1]) }
+    }
+    let max_count = 0; let best = ""
+    loop i in 0..len(labels) { if counts[i] > max_count { max_count = counts[i]; best = labels[i] } }
+    return best
+}

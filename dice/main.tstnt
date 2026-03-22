@@ -1,0 +1,36 @@
+do roll(sides: int) -> int { return int(math.random() * float(sides)) + 1 }
+do roll_d4() -> int { return roll(4) }
+do roll_d6() -> int { return roll(6) }
+do roll_d8() -> int { return roll(8) }
+do roll_d10() -> int { return roll(10) }
+do roll_d12() -> int { return roll(12) }
+do roll_d20() -> int { return roll(20) }
+do roll_d100() -> int { return roll(100) }
+do roll_nd(n: int, sides: int) -> int {
+    let total = 0
+    loop i in 0..n { total += roll(sides) }
+    return total
+}
+do roll_nd_drop_lowest(n: int, sides: int) -> int {
+    let rolls = []
+    loop i in 0..n { rolls = concat(rolls, [roll(sides)]) }
+    let mn = rolls[0]
+    loop i in 0..len(rolls) { if rolls[i] < mn { mn = rolls[i] } }
+    let total = 0
+    let dropped = false
+    loop i in 0..len(rolls) {
+        if rolls[i] == mn && dropped == false { dropped = true }
+        else { total += rolls[i] }
+    }
+    return total
+}
+do roll_advantage() -> int {
+    let a = roll_d20(); let b = roll_d20()
+    if a > b { return a }
+    return b
+}
+do roll_disadvantage() -> int {
+    let a = roll_d20(); let b = roll_d20()
+    if a < b { return a }
+    return b
+}

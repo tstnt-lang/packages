@@ -1,0 +1,54 @@
+do notes() -> array { return ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"] }
+do note_to_midi(note: str, octave: int) -> int {
+    let ns = notes()
+    loop i in 0..12 { if ns[i] == note { return i + (octave + 1) * 12 } }
+    return -1
+}
+do midi_to_note(midi: int) -> str {
+    let ns = notes()
+    let octave = midi / 12 - 1
+    let note = ns[midi % 12]
+    return note + str(octave)
+}
+do midi_to_freq(midi: int) -> float {
+    return 440.0 * math.pow(2.0, float(midi - 69) / 12.0)
+}
+do major_scale(root: str) -> array {
+    let ns = notes()
+    let root_idx = -1
+    loop i in 0..12 { if ns[i] == root { root_idx = i } }
+    if root_idx < 0 { return [] }
+    let steps = [0,2,4,5,7,9,11]
+    let result = []
+    loop i in 0..7 { result = concat(result, [ns[(root_idx + steps[i]) % 12]]) }
+    return result
+}
+do minor_scale(root: str) -> array {
+    let ns = notes()
+    let root_idx = -1
+    loop i in 0..12 { if ns[i] == root { root_idx = i } }
+    if root_idx < 0 { return [] }
+    let steps = [0,2,3,5,7,8,10]
+    let result = []
+    loop i in 0..7 { result = concat(result, [ns[(root_idx + steps[i]) % 12]]) }
+    return result
+}
+do chord_major(root: str) -> array {
+    let ns = notes()
+    let root_idx = -1
+    loop i in 0..12 { if ns[i] == root { root_idx = i } }
+    return [ns[root_idx % 12], ns[(root_idx+4) % 12], ns[(root_idx+7) % 12]]
+}
+do chord_minor(root: str) -> array {
+    let ns = notes()
+    let root_idx = -1
+    loop i in 0..12 { if ns[i] == root { root_idx = i } }
+    return [ns[root_idx % 12], ns[(root_idx+3) % 12], ns[(root_idx+7) % 12]]
+}
+do bpm_to_ms(bpm: float) -> float { return 60000.0 / bpm }
+do interval_name(semitones: int) -> str {
+    let names = ["Unison","Minor 2nd","Major 2nd","Minor 3rd","Major 3rd","Perfect 4th","Tritone","Perfect 5th","Minor 6th","Major 6th","Minor 7th","Major 7th","Octave"]
+    let s = semitones % 12
+    if s < 0 { s += 12 }
+    return names[s]
+}

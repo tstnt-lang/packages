@@ -1,0 +1,39 @@
+do lru_new(capacity: int) -> array {
+    return [capacity, [], []]
+}
+do lru_get(cache: array, key: str) -> str {
+    let keys = cache[1]
+    let vals = cache[2]
+    loop i in 0..len(keys) {
+        if keys[i] == key {
+            return vals[i]
+        }
+    }
+    return "null"
+}
+do lru_set(cache: array, key: str, val: str) -> array {
+    let cap = cache[0]
+    let keys = cache[1]
+    let vals = cache[2]
+    let new_keys = []
+    let new_vals = []
+    loop i in 0..len(keys) {
+        if keys[i] != key {
+            new_keys = concat(new_keys, [keys[i]])
+            new_vals = concat(new_vals, [vals[i]])
+        }
+    }
+    new_keys = concat(new_keys, [key])
+    new_vals = concat(new_vals, [val])
+    if len(new_keys) > cap {
+        new_keys = drop(new_keys, 1)
+        new_vals = drop(new_vals, 1)
+    }
+    return [cap, new_keys, new_vals]
+}
+do lru_has(cache: array, key: str) -> bool {
+    return lru_get(cache, key) != "null"
+}
+do lru_size(cache: array) -> int {
+    return len(cache[1])
+}

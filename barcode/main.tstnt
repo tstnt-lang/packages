@@ -1,0 +1,48 @@
+do ean13_check_digit(digits: array) -> int {
+    let sum = 0
+    loop i in 0..12 {
+        if i % 2 == 0 { sum += digits[i] }
+        else { sum += digits[i] * 3 }
+    }
+    let check = (10 - (sum % 10)) % 10
+    return check
+}
+do ean13_valid(barcode: str) -> bool {
+    if len(barcode) != 13 { return false }
+    let digits = []
+    loop i in 0..13 {
+        if barcode[i] < "0" || barcode[i] > "9" { return false }
+        digits = concat(digits, [int(barcode[i])])
+    }
+    return ean13_check_digit(digits) == digits[12]
+}
+do code39_encode(text: str) -> str {
+    let upper = strings.upper(text)
+    let valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-. $/+%"
+    let result = "*"
+    loop i in 0..len(upper) {
+        if strings.contains(valid, upper[i]) { result = result + upper[i] }
+    }
+    return result + "*"
+}
+do luhn_check(number: str) -> bool {
+    let sum = 0; let alt = false
+    loop i in 0..len(number) {
+        let idx = len(number) - 1 - i
+        let n = int(number[idx])
+        if alt { n *= 2; if n > 9 { n -= 9 } }
+        sum += n; alt = !alt
+    }
+    return sum % 10 == 0
+}
+do isbn13_valid(isbn: str) -> bool {
+    let clean = strings.replace(strings.replace(isbn, "-", ""), " ", "")
+    if len(clean) != 13 { return false }
+    let sum = 0
+    loop i in 0..13 {
+        if clean[i] < "0" || clean[i] > "9" { return false }
+        if i % 2 == 0 { sum += int(clean[i]) }
+        else { sum += int(clean[i]) * 3 }
+    }
+    return sum % 10 == 0
+}

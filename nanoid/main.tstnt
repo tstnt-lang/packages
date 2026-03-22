@@ -1,0 +1,19 @@
+do nanoid(size: int) -> str {
+    let alpha = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict"
+    let result = ""
+    loop i in 0..size {
+        let idx = int(math.random() * float(len(alpha)))
+        result = result + alpha[idx]
+    }
+    return result
+}
+do nanoid_default() -> str { return nanoid(21) }
+do nanoid_custom(size: int, alphabet: str) -> str {
+    let result = ""
+    loop i in 0..size {
+        let idx = int(math.random() * float(len(alphabet)))
+        result = result + alphabet[idx]
+    }
+    return result
+}
+do shortid() -> str { return nanoid(9) }

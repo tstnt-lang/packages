@@ -1,0 +1,19 @@
+do pack_u8(values: array) -> array {
+    let result = []
+    loop i in 0..len(values) { result = concat(result, [values[i] & 255]) }
+    return result
+}
+do pack_u16_le(n: int) -> array { return [n & 255, (n >> 8) & 255] }
+do pack_u16_be(n: int) -> array { return [(n >> 8) & 255, n & 255] }
+do pack_u32_le(n: int) -> array { return [n&255, (n>>8)&255, (n>>16)&255, (n>>24)&255] }
+do pack_u32_be(n: int) -> array { return [(n>>24)&255, (n>>16)&255, (n>>8)&255, n&255] }
+do unpack_u16_le(bytes: array, offset: int) -> int { return bytes[offset] | (bytes[offset+1] << 8) }
+do unpack_u16_be(bytes: array, offset: int) -> int { return (bytes[offset] << 8) | bytes[offset+1] }
+do unpack_u32_le(bytes: array, offset: int) -> int {
+    return bytes[offset] | (bytes[offset+1]<<8) | (bytes[offset+2]<<16) | (bytes[offset+3]<<24)
+}
+do pack_str(s: str) -> array {
+    let result = pack_u16_le(len(s))
+    loop i in 0..len(s) { result = concat(result, [int(s[i])]) }
+    return result
+}

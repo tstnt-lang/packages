@@ -1,0 +1,33 @@
+do ps2_new() -> array { return [[], []] }
+do ps2_subscribe(ps: array, topic: str, handler: str) -> array {
+    ps[0] = concat(ps[0], [topic])
+    ps[1] = concat(ps[1], [handler])
+    return ps
+}
+do ps2_unsubscribe(ps: array, topic: str, handler: str) -> array {
+    let new_topics = []; let new_handlers = []
+    loop i in 0..len(ps[0]) {
+        if ps[0][i] != topic || ps[1][i] != handler {
+            new_topics = concat(new_topics, [ps[0][i]])
+            new_handlers = concat(new_handlers, [ps[1][i]])
+        }
+    }
+    return [new_topics, new_handlers]
+}
+do ps2_subscribers(ps: array, topic: str) -> array {
+    let result = []
+    loop i in 0..len(ps[0]) {
+        if ps[0][i] == topic { result = concat(result, [ps[1][i]]) }
+    }
+    return result
+}
+do ps2_topics(ps: array) -> array {
+    let seen = []; let result = []
+    loop i in 0..len(ps[0]) {
+        let found = false
+        loop j in 0..len(seen) { if seen[j] == ps[0][i] { found = true } }
+        if found == false { seen = concat(seen, [ps[0][i]]); result = concat(result, [ps[0][i]]) }
+    }
+    return result
+}
+do ps2_count(ps: array, topic: str) -> int { return len(ps2_subscribers(ps, topic)) }

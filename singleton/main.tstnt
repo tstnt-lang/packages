@@ -1,0 +1,26 @@
+do singleton_new(name: str, value: str) -> array { return [name, value, true] }
+do singleton_get(s: array) -> str { return s[1] }
+do singleton_set(s: array, value: str) -> array {
+    if s[2] { s[1] = value; s[2] = false }
+    return s
+}
+do singleton_initialized(s: array) -> bool { return s[2] == false }
+do singleton_reset(s: array) -> array { return [s[0], "", true] }
+do singleton_name(s: array) -> str { return s[0] }
+
+do registry_new() -> array { return [[], []] }
+do registry_register(r: array, name: str, value: str) -> array {
+    loop i in 0..len(r[0]) {
+        if r[0][i] == name { return r }
+    }
+    r[0] = concat(r[0], [name]); r[1] = concat(r[1], [value])
+    return r
+}
+do registry_get(r: array, name: str) -> str {
+    loop i in 0..len(r[0]) { if r[0][i] == name { return r[1][i] } }
+    return ""
+}
+do registry_has(r: array, name: str) -> bool {
+    loop i in 0..len(r[0]) { if r[0][i] == name { return true } }
+    return false
+}

@@ -1,0 +1,64 @@
+do tetris_pieces() -> array {
+    return [
+        [[1,1,1,1]],
+        [[1,1],[1,1]],
+        [[0,1,0],[1,1,1]],
+        [[1,0,0],[1,1,1]],
+        [[0,0,1],[1,1,1]],
+        [[0,1,1],[1,1,0]],
+        [[1,1,0],[0,1,1]]
+    ]
+}
+do tetris_rotate(piece: array) -> array {
+    let rows = len(piece); let cols = len(piece[0])
+    let result = []
+    loop c in 0..cols {
+        let row = []
+        loop r in 0..rows { row = concat(row, [piece[rows-1-r][c]]) }
+        result = concat(result, [row])
+    }
+    return result
+}
+do tetris_board_new(width: int, height: int) -> array {
+    let board = []
+    loop r in 0..height {
+        let row = []
+        loop c in 0..width { row = concat(row, [0]) }
+        board = concat(board, [row])
+    }
+    return board
+}
+do tetris_can_place(board: array, piece: array, x: int, y: int) -> bool {
+    loop r in 0..len(piece) {
+        loop c in 0..len(piece[r]) {
+            if piece[r][c] != 0 {
+                let br = y + r; let bc = x + c
+                if br < 0 || br >= len(board) || bc < 0 || bc >= len(board[0]) { return false }
+                if board[br][bc] != 0 { return false }
+            }
+        }
+    }
+    return true
+}
+do tetris_place(board: array, piece: array, x: int, y: int) -> array {
+    loop r in 0..len(piece) {
+        loop c in 0..len(piece[r]) {
+            if piece[r][c] != 0 { board[y+r][x+c] = piece[r][c] }
+        }
+    }
+    return board
+}
+do tetris_clear_lines(board: array) -> array {
+    let new_board = []
+    loop r in 0..len(board) {
+        let full = true
+        loop c in 0..len(board[r]) { if board[r][c] == 0 { full = false } }
+        if full == false { new_board = concat(new_board, [board[r]]) }
+    }
+    while len(new_board) < len(board) {
+        let empty = []
+        loop c in 0..len(board[0]) { empty = concat(empty, [0]) }
+        new_board = concat([empty], new_board)
+    }
+    return new_board
+}

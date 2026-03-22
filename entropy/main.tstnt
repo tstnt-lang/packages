@@ -1,0 +1,47 @@
+do shannon_entropy(data: array) -> float {
+    let n = len(data); if n == 0 { return 0.0 }
+    let vals = []; let counts = []
+    loop i in 0..n {
+        let found = false
+        loop j in 0..len(vals) {
+            if vals[j] == data[i] { counts[j] += 1; found = true }
+        }
+        if found == false { vals = concat(vals, [data[i]]); counts = concat(counts, [1]) }
+    }
+    let entropy = 0.0
+    loop i in 0..len(counts) {
+        let p = float(counts[i]) / float(n)
+        entropy -= p * math.log(p) / math.log(2.0)
+    }
+    return entropy
+}
+do cross_entropy(p: array, q: array) -> float {
+    let result = 0.0
+    loop i in 0..len(p) {
+        if p[i] > 0.0 && q[i] > 0.0 {
+            result -= float(p[i]) * math.log(float(q[i])) / math.log(2.0)
+        }
+    }
+    return result
+}
+do kl_divergence(p: array, q: array) -> float {
+    let result = 0.0
+    loop i in 0..len(p) {
+        if p[i] > 0.0 && q[i] > 0.0 {
+            result += float(p[i]) * math.log(float(p[i]) / float(q[i])) / math.log(2.0)
+        }
+    }
+    return result
+}
+do mutual_information(joint: array, px: array, py: array) -> float {
+    let result = 0.0
+    loop i in 0..len(joint) {
+        loop j in 0..len(joint[i]) {
+            let pxy = joint[i][j]
+            if pxy > 0.0 && i < len(px) && j < len(py) && px[i] > 0.0 && py[j] > 0.0 {
+                result += pxy * math.log(pxy / (px[i] * py[j])) / math.log(2.0)
+            }
+        }
+    }
+    return result
+}

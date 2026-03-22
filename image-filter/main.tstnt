@@ -1,0 +1,49 @@
+do img_grayscale(pixels: array) -> array {
+    let result = []
+    loop i in 0..len(pixels) {
+        let p = pixels[i]
+        let gray = int(float(p[0]) * 0.299 + float(p[1]) * 0.587 + float(p[2]) * 0.114)
+        result = concat(result, [[gray, gray, gray]])
+    }
+    return result
+}
+do img_invert(pixels: array) -> array {
+    let result = []
+    loop i in 0..len(pixels) {
+        let p = pixels[i]
+        result = concat(result, [[255-p[0], 255-p[1], 255-p[2]]])
+    }
+    return result
+}
+do img_brightness(pixels: array, delta: int) -> array {
+    let result = []
+    loop i in 0..len(pixels) {
+        let p = pixels[i]
+        let r = p[0] + delta; if r > 255 { r = 255 }; if r < 0 { r = 0 }
+        let g = p[1] + delta; if g > 255 { g = 255 }; if g < 0 { g = 0 }
+        let b = p[2] + delta; if b > 255 { b = 255 }; if b < 0 { b = 0 }
+        result = concat(result, [[r, g, b]])
+    }
+    return result
+}
+do img_threshold(pixels: array, thresh: int) -> array {
+    let result = []
+    loop i in 0..len(pixels) {
+        let p = pixels[i]
+        let gray = int(float(p[0])*0.299 + float(p[1])*0.587 + float(p[2])*0.114)
+        let v = 0; if gray >= thresh { v = 255 }
+        result = concat(result, [[v, v, v]])
+    }
+    return result
+}
+do img_contrast(pixels: array, factor: float) -> array {
+    let result = []
+    loop i in 0..len(pixels) {
+        let p = pixels[i]
+        let r = int(128.0 + factor * float(p[0] - 128)); if r > 255 { r = 255 }; if r < 0 { r = 0 }
+        let g = int(128.0 + factor * float(p[1] - 128)); if g > 255 { g = 255 }; if g < 0 { g = 0 }
+        let b = int(128.0 + factor * float(p[2] - 128)); if b > 255 { b = 255 }; if b < 0 { b = 0 }
+        result = concat(result, [[r, g, b]])
+    }
+    return result
+}

@@ -1,0 +1,36 @@
+do heap_new() -> array { return [] }
+do heap_push(h: array, val: int) -> array {
+    h = concat(h, [val])
+    let i = len(h) - 1
+    while i > 0 {
+        let parent = (i - 1) / 2
+        if h[parent] > h[i] {
+            let tmp = h[parent]; h[parent] = h[i]; h[i] = tmp
+            i = parent
+        } else { return h }
+    }
+    return h
+}
+do heap_pop(h: array) -> array {
+    if len(h) == 0 { return [0, []] }
+    let top = h[0]
+    let last = h[len(h) - 1]
+    h = take(h, len(h) - 1)
+    if len(h) == 0 { return [top, h] }
+    h[0] = last
+    let i = 0
+    while true {
+        let left = i*2+1; let right = i*2+2; let smallest = i
+        if left < len(h) && h[left] < h[smallest] { smallest = left }
+        if right < len(h) && h[right] < h[smallest] { smallest = right }
+        if smallest == i { return [top, h] }
+        let tmp = h[i]; h[i] = h[smallest]; h[smallest] = tmp
+        i = smallest
+    }
+    return [top, h]
+}
+do heap_peek(h: array) -> int {
+    if len(h) == 0 { return -1 }
+    return h[0]
+}
+do heap_size(h: array) -> int { return len(h) }

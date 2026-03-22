@@ -1,0 +1,37 @@
+do haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float {
+    let r = 6371.0
+    let dlat = (lat2 - lat1) * 3.14159 / 180.0
+    let dlon = (lon2 - lon1) * 3.14159 / 180.0
+    let a = math.sin(dlat/2.0)*math.sin(dlat/2.0) + math.cos(lat1*3.14159/180.0)*math.cos(lat2*3.14159/180.0)*math.sin(dlon/2.0)*math.sin(dlon/2.0)
+    return r * 2.0 * math.asin(math.sqrt(a))
+}
+do bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> float {
+    let dlon = (lon2 - lon1) * 3.14159 / 180.0
+    let lat1r = lat1 * 3.14159 / 180.0; let lat2r = lat2 * 3.14159 / 180.0
+    let x = math.sin(dlon) * math.cos(lat2r)
+    let y = math.cos(lat1r)*math.sin(lat2r) - math.sin(lat1r)*math.cos(lat2r)*math.cos(dlon)
+    return math.atan2(x, y) * 180.0 / 3.14159
+}
+do midpoint(lat1: float, lon1: float, lat2: float, lon2: float) -> array {
+    return [(lat1+lat2)/2.0, (lon1+lon2)/2.0]
+}
+do destination(lat: float, lon: float, bearing_deg: float, dist_km: float) -> array {
+    let r = 6371.0
+    let d = dist_km / r
+    let b = bearing_deg * 3.14159 / 180.0
+    let latr = lat * 3.14159 / 180.0; let lonr = lon * 3.14159 / 180.0
+    let lat2 = math.asin(math.sin(latr)*math.cos(d) + math.cos(latr)*math.sin(d)*math.cos(b))
+    let lon2 = lonr + math.atan2(math.sin(b)*math.sin(d)*math.cos(latr), math.cos(d)-math.sin(latr)*math.sin(lat2))
+    return [lat2*180.0/3.14159, lon2*180.0/3.14159]
+}
+do in_bounding_box(lat: float, lon: float, min_lat: float, min_lon: float, max_lat: float, max_lon: float) -> bool {
+    return lat >= min_lat && lat <= max_lat && lon >= min_lon && lon <= max_lon
+}
+do geohash_precision(dist_km: float) -> int {
+    if dist_km < 0.001 { return 9 }
+    if dist_km < 0.01 { return 8 }
+    if dist_km < 0.1 { return 7 }
+    if dist_km < 1.0 { return 6 }
+    if dist_km < 10.0 { return 5 }
+    return 4
+}

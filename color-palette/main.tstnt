@@ -1,0 +1,34 @@
+do palette_complementary(h: float) -> array {
+    return [h, (h + 180.0) % 360.0]
+}
+do palette_triadic(h: float) -> array {
+    return [h, (h + 120.0) % 360.0, (h + 240.0) % 360.0]
+}
+do palette_analogous(h: float) -> array {
+    return [(h - 30.0 + 360.0) % 360.0, h, (h + 30.0) % 360.0]
+}
+do palette_split_complementary(h: float) -> array {
+    return [h, (h + 150.0) % 360.0, (h + 210.0) % 360.0]
+}
+do palette_tetradic(h: float) -> array {
+    return [h, (h+90.0)%360.0, (h+180.0)%360.0, (h+270.0)%360.0]
+}
+do hsl_to_css(h: float, s: float, l: float) -> str {
+    return "hsl(" + str(int(h)) + "," + str(int(s)) + "%," + str(int(l)) + "%)"
+}
+do shade(h: float, s: float, l: float, steps: int) -> array {
+    let result = []
+    loop i in 0..steps {
+        let new_l = l - float(i) * l / float(steps)
+        result = concat(result, [hsl_to_css(h, s, new_l)])
+    }
+    return result
+}
+do tint(h: float, s: float, l: float, steps: int) -> array {
+    let result = []
+    loop i in 0..steps {
+        let new_l = l + float(i) * (100.0 - l) / float(steps)
+        result = concat(result, [hsl_to_css(h, s, new_l)])
+    }
+    return result
+}

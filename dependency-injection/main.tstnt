@@ -1,0 +1,25 @@
+do container_new() -> array { return [] }
+do container_bind(c: array, name: str, value: str) -> array {
+    loop i in 0..len(c) {
+        if c[i][0] == name { c[i][1] = value; return c }
+    }
+    return concat(c, [[name, value]])
+}
+do container_resolve(c: array, name: str) -> str {
+    loop i in 0..len(c) { if c[i][0] == name { return c[i][1] } }
+    return ""
+}
+do container_has(c: array, name: str) -> bool {
+    loop i in 0..len(c) { if c[i][0] == name { return true } }
+    return false
+}
+do container_remove(c: array, name: str) -> array {
+    let result = []
+    loop i in 0..len(c) { if c[i][0] != name { result = concat(result, [c[i]]) } }
+    return result
+}
+do container_all(c: array) -> array {
+    let keys = []
+    loop i in 0..len(c) { keys = concat(keys, [c[i][0]]) }
+    return keys
+}

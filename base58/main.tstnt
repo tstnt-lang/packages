@@ -1,0 +1,28 @@
+do base58_alphabet() -> str {
+    return "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+}
+do base58_encode(bytes: array) -> str {
+    let alpha = base58_alphabet()
+    let num = 0
+    loop i in 0..len(bytes) { num = num * 256 + bytes[i] }
+    let result = ""
+    while num > 0 {
+        let rem = num % 58
+        result = alpha[rem] + result
+        num = num / 58
+    }
+    loop i in 0..len(bytes) {
+        if bytes[i] == 0 { result = "1" + result }
+        else { return result }
+    }
+    return result
+}
+do base58_check(s: str) -> bool {
+    let alpha = base58_alphabet()
+    loop i in 0..len(s) {
+        let found = false
+        loop j in 0..len(alpha) { if s[i] == alpha[j] { found = true } }
+        if found == false { return false }
+    }
+    return true
+}

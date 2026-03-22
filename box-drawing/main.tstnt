@@ -1,0 +1,62 @@
+do box_single(width: int, height: int, title: str) -> str {
+    let result = "┌"
+    let inner = width - 2
+    loop i in 0..inner { result = result + "─" }
+    result = result + "┐\n"
+    if len(title) > 0 {
+        let pad = (inner - len(title)) / 2
+        let line = "│"
+        loop i in 0..pad { line = line + " " }
+        line = line + title
+        loop i in 0..inner-pad-len(title) { line = line + " " }
+        result = result + line + "│\n"
+        result = result + "├"
+        loop i in 0..inner { result = result + "─" }
+        result = result + "┤\n"
+    }
+    loop r in 0..height-2 {
+        result = result + "│"
+        loop i in 0..inner { result = result + " " }
+        result = result + "│\n"
+    }
+    result = result + "└"
+    loop i in 0..inner { result = result + "─" }
+    result = result + "┘"
+    return result
+}
+do box_double(width: int, height: int, title: str) -> str {
+    let result = "╔"
+    let inner = width - 2
+    loop i in 0..inner { result = result + "═" }
+    result = result + "╗\n"
+    if len(title) > 0 {
+        let pad = (inner - len(title)) / 2
+        let line = "║"
+        loop i in 0..pad { line = line + " " }
+        line = line + title
+        loop i in 0..inner-pad-len(title) { line = line + " " }
+        result = result + line + "║\n"
+        result = result + "╠"
+        loop i in 0..inner { result = result + "═" }
+        result = result + "╣\n"
+    }
+    loop r in 0..height-2 {
+        result = result + "║"
+        loop i in 0..inner { result = result + " " }
+        result = result + "║\n"
+    }
+    result = result + "╚"
+    loop i in 0..inner { result = result + "═" }
+    result = result + "╝"
+    return result
+}
+do hline(width: int) -> str {
+    let r = ""
+    loop i in 0..width { r = r + "─" }
+    return r
+}
+do vline(height: int) -> str {
+    let r = ""
+    loop i in 0..height { r = r + "│\n" }
+    return r
+}

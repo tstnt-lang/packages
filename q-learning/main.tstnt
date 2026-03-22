@@ -1,0 +1,38 @@
+do ql_new(states: int, actions: int, lr: float, gamma: float, epsilon: float) -> array {
+    let q = []
+    loop s in 0..states {
+        let row = []
+        loop a in 0..actions { row = concat(row, [0.0]) }
+        q = concat(q, [row])
+    }
+    return [q, lr, gamma, epsilon, states, actions]
+}
+do ql_choose_action(ql: array, state: int) -> int {
+    if math.random() < ql[3] {
+        return int(math.random() * float(ql[5]))
+    }
+    let best = 0; let best_val = ql[0][state][0]
+    loop a in 1..ql[5] {
+        if ql[0][state][a] > best_val { best_val = ql[0][state][a]; best = a }
+    }
+    return best
+}
+do ql_update(ql: array, state: int, action: int, reward: float, next_state: int) -> array {
+    let max_next = ql[0][next_state][0]
+    loop a in 1..ql[5] { if ql[0][next_state][a] > max_next { max_next = ql[0][next_state][a] } }
+    let td_target = reward + ql[2] * max_next
+    let td_error = td_target - ql[0][state][action]
+    ql[0][state][action] += ql[1] * td_error
+    return ql
+}
+do ql_best_action(ql: array, state: int) -> int {
+    let best = 0; let best_val = ql[0][state][0]
+    loop a in 1..ql[5] { if ql[0][state][a] > best_val { best_val = ql[0][state][a]; best = a } }
+    return best
+}
+do ql_decay_epsilon(ql: array, decay: float, min_eps: float) -> array {
+    let new_eps = ql[3] * decay
+    if new_eps < min_eps { new_eps = min_eps }
+    ql[3] = new_eps
+    return ql
+}

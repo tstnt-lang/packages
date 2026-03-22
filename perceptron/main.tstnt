@@ -1,0 +1,31 @@
+do perceptron_new(n_inputs: int, lr: float) -> array {
+    let weights = []
+    loop i in 0..n_inputs { weights = concat(weights, [0.0]) }
+    return [weights, 0.0, lr]
+}
+do perceptron_predict(p: array, inputs: array) -> int {
+    let sum = p[1]
+    loop i in 0..len(inputs) { sum += float(inputs[i]) * p[0][i] }
+    if sum >= 0.0 { return 1 }
+    return 0
+}
+do perceptron_train_once(p: array, inputs: array, target: int) -> array {
+    let pred = perceptron_predict(p, inputs)
+    let error = target - pred
+    loop i in 0..len(inputs) { p[0][i] += p[2] * float(error) * float(inputs[i]) }
+    p[1] += p[2] * float(error)
+    return p
+}
+do perceptron_train(p: array, X: array, Y: array, epochs: int) -> array {
+    loop e in 0..epochs {
+        loop i in 0..len(X) { p = perceptron_train_once(p, X[i], Y[i]) }
+    }
+    return p
+}
+do perceptron_accuracy(p: array, X: array, Y: array) -> float {
+    let correct = 0
+    loop i in 0..len(X) {
+        if perceptron_predict(p, X[i]) == Y[i] { correct += 1 }
+    }
+    return float(correct) / float(len(X))
+}

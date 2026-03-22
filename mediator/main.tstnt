@@ -1,0 +1,26 @@
+do mediator_new() -> array { return [[], []] }
+do mediator_register(m: array, name: str) -> array {
+    m[0] = concat(m[0], [name])
+    m[1] = concat(m[1], [[]])
+    return m
+}
+do mediator_send(m: array, from: str, to: str, msg: str) -> array {
+    loop i in 0..len(m[0]) {
+        if m[0][i] == to {
+            m[1][i] = concat(m[1][i], [[from, msg]])
+        }
+    }
+    return m
+}
+do mediator_receive(m: array, name: str) -> array {
+    loop i in 0..len(m[0]) {
+        if m[0][i] == name { return m[1][i] }
+    }
+    return []
+}
+do mediator_broadcast(m: array, from: str, msg: str) -> array {
+    loop i in 0..len(m[0]) {
+        if m[0][i] != from { m[1][i] = concat(m[1][i], [[from, msg]]) }
+    }
+    return m
+}

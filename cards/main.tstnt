@@ -1,0 +1,50 @@
+do deck_new() -> array {
+    let suits = ["♠","♥","♦","♣"]
+    let ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
+    let deck = []
+    loop s in 0..4 {
+        loop r in 0..13 {
+            deck = concat(deck, [ranks[r] + suits[s]])
+        }
+    }
+    return deck
+}
+do deck_shuffle(deck: array) -> array {
+    let d = deck
+    let n = len(d)
+    loop i in 0..n {
+        let j = int(math.random() * float(n))
+        let tmp = d[i]; d[i] = d[j]; d[j] = tmp
+    }
+    return d
+}
+do deck_deal(deck: array, n: int) -> array {
+    return [take(deck, n), drop(deck, n)]
+}
+do card_value(card: str) -> int {
+    let rank = strings.slice(card, 0, len(card) - 1)
+    if rank == "A" { return 11 }
+    if rank == "K" || rank == "Q" || rank == "J" { return 10 }
+    return int(rank)
+}
+do hand_value(hand: array) -> int {
+    let total = 0
+    let aces = 0
+    loop i in 0..len(hand) {
+        let v = card_value(hand[i])
+        if v == 11 { aces += 1 }
+        total += v
+    }
+    while total > 21 && aces > 0 {
+        total -= 10; aces -= 1
+    }
+    return total
+}
+do hand_str(hand: array) -> str {
+    let result = ""
+    loop i in 0..len(hand) {
+        if i > 0 { result = result + " " }
+        result = result + hand[i]
+    }
+    return result
+}

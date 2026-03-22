@@ -1,0 +1,45 @@
+do tilemap_new(width: int, height: int, default_tile: int) -> array {
+    let tiles = []
+    loop i in 0..height {
+        let row = []
+        loop j in 0..width { row = concat(row, [default_tile]) }
+        tiles = concat(tiles, [row])
+    }
+    return [width, height, tiles]
+}
+do tilemap_get(m: array, x: int, y: int) -> int {
+    if x < 0 || y < 0 || x >= m[0] || y >= m[1] { return -1 }
+    return m[2][y][x]
+}
+do tilemap_set(m: array, x: int, y: int, tile: int) -> array {
+    if x >= 0 && y >= 0 && x < m[0] && y < m[1] { m[2][y][x] = tile }
+    return m
+}
+do tilemap_fill(m: array, tile: int) -> array {
+    loop y in 0..m[1] { loop x in 0..m[0] { m[2][y][x] = tile } }
+    return m
+}
+do tilemap_render(m: array, tiles_str: array) -> str {
+    let result = ""
+    loop y in 0..m[1] {
+        let line = ""
+        loop x in 0..m[0] {
+            let t = tilemap_get(m, x, y)
+            if t >= 0 && t < len(tiles_str) { line = line + tiles_str[t] }
+            else { line = line + "?" }
+        }
+        result = result + line + "\n"
+    }
+    return result
+}
+do tilemap_neighbors(m: array, x: int, y: int) -> array {
+    let dirs = [[0,-1],[1,0],[0,1],[-1,0]]
+    let result = []
+    loop i in 0..4 {
+        let nx = x + dirs[i][0]; let ny = y + dirs[i][1]
+        if nx >= 0 && ny >= 0 && nx < m[0] && ny < m[1] {
+            result = concat(result, [[nx, ny]])
+        }
+    }
+    return result
+}

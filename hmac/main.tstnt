@@ -1,0 +1,20 @@
+do hmac_key_pad(key: str, block_size: int, pad_byte: int) -> array {
+    let bytes = []
+    loop i in 0..len(key) { bytes = concat(bytes, [int(key[i])]) }
+    while len(bytes) < block_size { bytes = concat(bytes, [pad_byte]) }
+    let result = []
+    loop i in 0..block_size { result = concat(result, [bytes[i] % 256]) }
+    let padded = []
+    loop i in 0..block_size { padded = concat(padded, [result[i] ^ pad_byte]) }
+    return padded
+}
+do hmac_sign(message: str, key: str) -> str {
+    let inner_pad = hmac_key_pad(key, 64, 0x36)
+    let outer_pad = hmac_key_pad(key, 64, 0x5C)
+    let inner_str = ""
+    loop i in 0..len(inner_pad) { inner_str = inner_str + str(inner_pad[i]) + "," }
+    return crypto.sha256(inner_str + message)
+}
+do hmac_verify(message: str, key: str, expected: str) -> bool {
+    return hmac_sign(message, key) == expected
+}

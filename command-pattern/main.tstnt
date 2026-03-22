@@ -1,0 +1,22 @@
+do cmd_new(name: str, action: str, undo_action: str) -> array { return [name, action, undo_action] }
+do cmd_history_new() -> array { return [[], -1] }
+do cmd_execute(history: array, cmd: array) -> array {
+    let pos = history[1] + 1
+    let cmds = take(history[0], pos)
+    cmds = concat(cmds, [cmd])
+    return [cmds, pos]
+}
+do cmd_undo(history: array) -> array {
+    if history[1] < 0 { return history }
+    return [history[0], history[1] - 1]
+}
+do cmd_redo(history: array) -> array {
+    if history[1] >= len(history[0]) - 1 { return history }
+    return [history[0], history[1] + 1]
+}
+do cmd_current(history: array) -> str {
+    if history[1] < 0 { return "" }
+    return history[0][history[1]][1]
+}
+do cmd_can_undo(history: array) -> bool { return history[1] >= 0 }
+do cmd_can_redo(history: array) -> bool { return history[1] < len(history[0]) - 1 }

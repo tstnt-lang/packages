@@ -1,0 +1,47 @@
+do url_encode(s: str) -> str {
+    let safe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~"
+    let result = ""
+    loop i in 0..len(s) {
+        let found = false
+        loop j in 0..len(safe) { if s[i] == safe[j] { found = true } }
+        if found { result = result + s[i] }
+        else { result = result + "%" + str(int(s[i])) }
+    }
+    return result
+}
+do html_encode(s: str) -> str {
+    let result = s
+    result = strings.replace(result, "&", "&amp;")
+    result = strings.replace(result, "<", "&lt;")
+    result = strings.replace(result, ">", "&gt;")
+    result = strings.replace(result, "\"", "&quot;")
+    result = strings.replace(result, "'", "&#39;")
+    return result
+}
+do html_decode(s: str) -> str {
+    let result = s
+    result = strings.replace(result, "&amp;", "&")
+    result = strings.replace(result, "&lt;", "<")
+    result = strings.replace(result, "&gt;", ">")
+    result = strings.replace(result, "&quot;", "\"")
+    result = strings.replace(result, "&#39;", "'")
+    return result
+}
+do escape_json(s: str) -> str {
+    let result = s
+    result = strings.replace(result, "\\", "\\\\")
+    result = strings.replace(result, "\"", "\\\"")
+    result = strings.replace(result, "\n", "\\n")
+    result = strings.replace(result, "\t", "\\t")
+    return result
+}
+do rot13(s: str) -> str {
+    let result = ""
+    loop i in 0..len(s) {
+        let c = s[i]
+        if c >= "a" && c <= "z" { result = result + str((int(c) - 97 + 13) % 26 + 97) }
+        else if c >= "A" && c <= "Z" { result = result + str((int(c) - 65 + 13) % 26 + 65) }
+        else { result = result + c }
+    }
+    return result
+}

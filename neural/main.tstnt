@@ -1,0 +1,55 @@
+do sigmoid(x: float) -> float {
+    return 1.0 / (1.0 + math.exp(0.0 - x))
+}
+
+do relu(x: float) -> float {
+    if x > 0 { return x }
+    return 0
+}
+
+do tanh_act(x: float) -> float {
+    let e2x = math.exp(2.0 * x)
+    return (e2x - 1.0) / (e2x + 1.0)
+}
+
+do dot_product(a: array, b: array) -> float {
+    let s = 0.0
+    loop i in 0..len(a) { s += a[i] * b[i] }
+    return s
+}
+
+do layer_forward(inputs: array, weights: array, bias: float) -> float {
+    return sigmoid(dot_product(inputs, weights) + bias)
+}
+
+do mat_mul(a: array, b: array) -> array {
+    let result = []
+    loop i in 0..len(a) {
+        let row = a[i]
+        let sum = 0.0
+        loop j in 0..len(row) { sum += row[j] * b[j] }
+        result = concat(result, [sum])
+    }
+    return result
+}
+
+do mse_loss(preds: array, targets: array) -> float {
+    let total = 0.0
+    loop i in 0..len(preds) {
+        let diff = preds[i] - targets[i]
+        total += diff * diff
+    }
+    return total / len(preds)
+}
+
+do normalize(data: array) -> array {
+    let mn = min(data)
+    let mx = max(data)
+    let range = mx - mn
+    if range == 0 { return data }
+    let result = []
+    loop i in 0..len(data) {
+        result = concat(result, [(data[i] - mn) / range])
+    }
+    return result
+}

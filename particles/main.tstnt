@@ -1,0 +1,35 @@
+do particle_new(x: float, y: float, vx: float, vy: float, life: float) -> array {
+    return [x, y, vx, vy, life, life]
+}
+do particle_update(p: array, dt: float, gravity: float) -> array {
+    p[0] += p[2] * dt
+    p[1] += p[3] * dt
+    p[3] += gravity * dt
+    p[4] -= dt
+    return p
+}
+do particle_alive(p: array) -> bool { return p[4] > 0.0 }
+do particle_alpha(p: array) -> float {
+    if p[5] <= 0.0 { return 0.0 }
+    return p[4] / p[5]
+}
+do emitter_new(x: float, y: float) -> array { return [x, y, []] }
+do emitter_emit(e: array, count: int, speed: float, spread: float, life: float) -> array {
+    loop i in 0..count {
+        let angle = float(i) / float(count) * 6.28318 + spread
+        let vx = math.cos(angle) * speed
+        let vy = math.sin(angle) * speed
+        e[2] = concat(e[2], [particle_new(e[0], e[1], vx, vy, life)])
+    }
+    return e
+}
+do emitter_update(e: array, dt: float, gravity: float) -> array {
+    let alive = []
+    loop i in 0..len(e[2]) {
+        let p = particle_update(e[2][i], dt, gravity)
+        if particle_alive(p) { alive = concat(alive, [p]) }
+    }
+    e[2] = alive
+    return e
+}
+do emitter_count(e: array) -> int { return len(e[2]) }

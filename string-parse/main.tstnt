@@ -1,0 +1,36 @@
+do parse_int(s: str) -> int { return int(strings.trim(s)) }
+do parse_float(s: str) -> float { return float(strings.trim(s)) }
+do parse_bool(s: str) -> bool {
+    let lower = strings.lower(strings.trim(s))
+    return lower == "true" || lower == "1" || lower == "yes" || lower == "on"
+}
+do parse_list(s: str, sep: str) -> array {
+    let parts = strings.split(s, sep)
+    let result = []
+    loop i in 0..len(parts) { result = concat(result, [strings.trim(parts[i])]) }
+    return result
+}
+do parse_kv(s: str, sep: str) -> array {
+    let parts = strings.split(s, sep)
+    if len(parts) < 2 { return [s, ""] }
+    return [strings.trim(parts[0]), strings.trim(parts[1])]
+}
+do parse_range(s: str) -> array {
+    let parts = strings.split(s, "..")
+    if len(parts) < 2 { return [0, 0] }
+    return [int(strings.trim(parts[0])), int(strings.trim(parts[1]))]
+}
+do parse_version(s: str) -> array {
+    let v = strings.replace(s, "v", "")
+    let parts = strings.split(v, ".")
+    let result = []
+    loop i in 0..len(parts) { result = concat(result, [int(parts[i])]) }
+    return result
+}
+do parse_size(s: str) -> int {
+    let lower = strings.lower(strings.trim(s))
+    if strings.ends_with(lower, "kb") { return int(strings.slice(lower, 0, len(lower)-2)) * 1024 }
+    if strings.ends_with(lower, "mb") { return int(strings.slice(lower, 0, len(lower)-2)) * 1048576 }
+    if strings.ends_with(lower, "gb") { return int(strings.slice(lower, 0, len(lower)-2)) * 1073741824 }
+    return int(lower)
+}

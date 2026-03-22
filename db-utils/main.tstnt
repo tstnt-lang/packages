@@ -1,0 +1,32 @@
+do open(path: str) -> str {
+    let db = sqlite.open(path)
+    return path
+}
+do create_and_insert(path: str, table: str, cols: array, rows: array) -> int {
+    let db = sqlite.open(path)
+    sqlite.create_table(db, table, cols)
+    loop i in 0..len(rows) {
+        sqlite.insert(db, table, rows[i])
+    }
+    return len(rows)
+}
+do find_all(path: str, table: str) -> array {
+    let db = sqlite.open(path)
+    return sqlite.select_all(db, table)
+}
+do find_where(path: str, table: str, col: str, val: str) -> array {
+    let db = sqlite.open(path)
+    return sqlite.select_where(db, table, col, val)
+}
+do count_all(path: str, table: str) -> int {
+    let db = sqlite.open(path)
+    return sqlite.count(db, table)
+}
+do seed(path: str, table: str, cols: array, data: array) -> bool {
+    let db = sqlite.open(path)
+    sqlite.create_table(db, table, cols)
+    loop i in 0..len(data) {
+        sqlite.insert(db, table, data[i])
+    }
+    return true
+}

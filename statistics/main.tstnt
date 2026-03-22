@@ -1,0 +1,96 @@
+do mean(data: array) -> float {
+    let s = 0.0
+    loop i in 0..len(data) { s += float(data[i]) }
+    return s / float(len(data))
+}
+do median(data: array) -> float {
+    let sorted = []
+    let d = data
+    loop i in 0..len(d) {
+        let min_val = d[i]
+        let min_idx = i
+        loop j in i..len(d) {
+            if d[j] < min_val { min_val = d[j]; min_idx = j }
+        }
+        let tmp = d[i]; d[i] = d[min_idx]; d[min_idx] = tmp
+    }
+    let n = len(d)
+    if n % 2 == 0 { return (float(d[n/2 - 1]) + float(d[n/2])) / 2.0 }
+    return float(d[n/2])
+}
+do variance(data: array) -> float {
+    let m = mean(data)
+    let s = 0.0
+    loop i in 0..len(data) { let d = float(data[i]) - m; s += d * d }
+    return s / float(len(data))
+}
+do std_dev(data: array) -> float { return math.sqrt(variance(data)) }
+do mode(data: array) -> str {
+    let counts = []
+    let vals = []
+    loop i in 0..len(data) {
+        let found = false
+        loop j in 0..len(vals) {
+            if vals[j] == data[i] { counts[j] += 1; found = true }
+        }
+        if found == false { vals = concat(vals, [data[i]]); counts = concat(counts, [1]) }
+    }
+    let max_count = 0
+    let max_val = null
+    loop i in 0..len(counts) {
+        if counts[i] > max_count { max_count = counts[i]; max_val = vals[i] }
+    }
+    return str(max_val)
+}
+do range_stat(data: array) -> float {
+    let mn = data[0]; let mx = data[0]
+    loop i in 0..len(data) {
+        if data[i] < mn { mn = data[i] }
+        if data[i] > mx { mx = data[i] }
+    }
+    return float(mx) - float(mn)
+}
+do percentile(data: array, p: float) -> float {
+    let d = data
+    loop i in 0..len(d) {
+        let min_val = d[i]; let min_idx = i
+        loop j in i..len(d) { if d[j] < min_val { min_val = d[j]; min_idx = j } }
+        let tmp = d[i]; d[i] = d[min_idx]; d[min_idx] = tmp
+    }
+    let idx = int(p / 100.0 * float(len(d) - 1))
+    return float(d[idx])
+}
+do iqr(data: array) -> float { return percentile(data, 75.0) - percentile(data, 25.0) }
+do covariance(x: array, y: array) -> float {
+    let mx = mean(x); let my = mean(y); let s = 0.0
+    loop i in 0..len(x) { s += (float(x[i]) - mx) * (float(y[i]) - my) }
+    return s / float(len(x))
+}
+do correlation(x: array, y: array) -> float {
+    let cov = covariance(x, y)
+    let sx = std_dev(x); let sy = std_dev(y)
+    if sx == 0.0 || sy == 0.0 { return 0.0 }
+    return cov / (sx * sy)
+}
+do zscore(data: array) -> array {
+    let m = mean(data); let s = std_dev(data)
+    let r = []
+    loop i in 0..len(data) { r = concat(r, [(float(data[i]) - m) / s]) }
+    return r
+}
+do histogram(data: array, bins: int) -> array {
+    let mn = data[0]; let mx = data[0]
+    loop i in 0..len(data) {
+        if float(data[i]) < float(mn) { mn = data[i] }
+        if float(data[i]) > float(mx) { mx = data[i] }
+    }
+    let width = (float(mx) - float(mn)) / float(bins)
+    let counts = []
+    loop i in 0..bins { counts = concat(counts, [0]) }
+    loop i in 0..len(data) {
+        let bin = int((float(data[i]) - float(mn)) / width)
+        if bin >= bins { bin = bins - 1 }
+        counts[bin] += 1
+    }
+    return counts
+}

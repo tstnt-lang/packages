@@ -1,0 +1,21 @@
+do km_to_miles(km: float) -> float { return km * 0.621371 }
+do miles_to_km(mi: float) -> float { return mi * 1.60934 }
+do m_to_ft(m: float) -> float { return m * 3.28084 }
+do ft_to_m(ft: float) -> float { return ft * 0.3048 }
+do kg_to_lbs(kg: float) -> float { return kg * 2.20462 }
+do lbs_to_kg(lbs: float) -> float { return lbs * 0.453592 }
+do celsius_to_f(c: float) -> float { return c * 9.0/5.0 + 32.0 }
+do f_to_celsius(f: float) -> float { return (f - 32.0) * 5.0/9.0 }
+do celsius_to_kelvin(c: float) -> float { return c + 273.15 }
+do kelvin_to_celsius(k: float) -> float { return k - 273.15 }
+do liters_to_gallons(l: float) -> float { return l * 0.264172 }
+do gallons_to_liters(g: float) -> float { return g * 3.78541 }
+do bytes_to_mb(b: int) -> float { return float(b) / 1048576.0 }
+do mb_to_bytes(mb: float) -> int { return int(mb * 1048576.0) }
+do bytes_to_gb(b: int) -> float { return float(b) / 1073741824.0 }
+do mph_to_kmh(mph: float) -> float { return mph * 1.60934 }
+do kmh_to_mph(kmh: float) -> float { return kmh * 0.621371 }
+do deg_to_rad(d: float) -> float { return d * 3.14159265 / 180.0 }
+do rad_to_deg(r: float) -> float { return r * 180.0 / 3.14159265 }
+do hectares_to_acres(h: float) -> float { return h * 2.47105 }
+do acres_to_hectares(a: float) -> float { return a * 0.404686 }

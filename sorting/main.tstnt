@@ -1,0 +1,53 @@
+do bubble_sort(arr: array) -> array {
+    let a = arr; let n = len(a)
+    loop i in 0..n {
+        loop j in 0..n-i-1 {
+            if a[j] > a[j+1] { let tmp = a[j]; a[j] = a[j+1]; a[j+1] = tmp }
+        }
+    }
+    return a
+}
+do selection_sort(arr: array) -> array {
+    let a = arr; let n = len(a)
+    loop i in 0..n {
+        let min_idx = i
+        loop j in i+1..n { if a[j] < a[min_idx] { min_idx = j } }
+        let tmp = a[i]; a[i] = a[min_idx]; a[min_idx] = tmp
+    }
+    return a
+}
+do insertion_sort(arr: array) -> array {
+    let a = arr; let n = len(a)
+    loop i in 1..n {
+        let key = a[i]; let j = i - 1
+        while j >= 0 && a[j] > key {
+            a[j+1] = a[j]; j -= 1
+        }
+        a[j+1] = key
+    }
+    return a
+}
+do counting_sort(arr: array, max_val: int) -> array {
+    let counts = []
+    loop i in 0..max_val+1 { counts = concat(counts, [0]) }
+    loop i in 0..len(arr) { counts[arr[i]] += 1 }
+    let result = []
+    loop i in 0..len(counts) {
+        loop j in 0..counts[i] { result = concat(result, [i]) }
+    }
+    return result
+}
+do is_sorted(arr: array) -> bool {
+    loop i in 0..len(arr)-1 { if arr[i] > arr[i+1] { return false } }
+    return true
+}
+do binary_search(arr: array, target: int) -> int {
+    let lo = 0; let hi = len(arr) - 1
+    while lo <= hi {
+        let mid = (lo + hi) / 2
+        if arr[mid] == target { return mid }
+        if arr[mid] < target { lo = mid + 1 }
+        else { hi = mid - 1 }
+    }
+    return -1
+}

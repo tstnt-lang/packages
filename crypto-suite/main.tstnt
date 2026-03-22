@@ -1,0 +1,12 @@
+do hash(text: str) -> str { return crypto.sha256(text) }
+do hash_md5(text: str) -> str { return crypto.md5(text) }
+do b64_enc(text: str) -> str { return crypto.base64_encode(text) }
+do b64_dec(text: str) -> str { return crypto.base64_decode(text) }
+do hex(text: str) -> str { return crypto.hex_encode(text) }
+do sign(msg: str, key: str) -> str { return crypto.hmac_sha256(msg, key) }
+do verify(msg: str, key: str, sig: str) -> bool { return crypto.hmac_sha256(msg, key) == sig }
+do random_token(n: int) -> str { return crypto.random_hex(n) }
+do hash_password(pw: str, salt: str) -> str { return crypto.hash_password(pw, salt) }
+do check_password(pw: str, hash: str, salt: str) -> bool { return crypto.verify_password(pw, hash, salt) }
+do encrypt(text: str, key: str) -> str { return crypto.xor_encrypt(text, key) }
+do decrypt(text: str, key: str) -> str { return crypto.xor_decrypt(text, key) }

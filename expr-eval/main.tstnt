@@ -1,0 +1,41 @@
+do eval_simple(expr: str) -> float {
+    let s = strings.trim(expr)
+    if strings.contains(s, "+") {
+        let parts = strings.split(s, "+")
+        let result = 0.0
+        loop i in 0..len(parts) { result += float(strings.trim(parts[i])) }
+        return result
+    }
+    if strings.contains(s, "-") {
+        let parts = strings.split(s, "-")
+        let result = float(strings.trim(parts[0]))
+        loop i in 1..len(parts) { result -= float(strings.trim(parts[i])) }
+        return result
+    }
+    if strings.contains(s, "*") {
+        let parts = strings.split(s, "*")
+        let result = 1.0
+        loop i in 0..len(parts) { result *= float(strings.trim(parts[i])) }
+        return result
+    }
+    if strings.contains(s, "/") {
+        let parts = strings.split(s, "/")
+        let result = float(strings.trim(parts[0]))
+        loop i in 1..len(parts) {
+            let d = float(strings.trim(parts[i]))
+            if d != 0 { result /= d }
+        }
+        return result
+    }
+    return float(s)
+}
+
+do is_number(s: str) -> bool {
+    let trimmed = strings.trim(s)
+    if trimmed == "" { return false }
+    let digits = "0123456789."
+    loop i in 0..len(trimmed) {
+        if !strings.contains(digits, trimmed[i]) { return false }
+    }
+    return true
+}

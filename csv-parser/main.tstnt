@@ -1,0 +1,51 @@
+do csv_parse(text: str) -> array {
+    let lines = strings.split(text, "\n")
+    let result = []
+    loop i in 0..len(lines) {
+        let line = strings.trim(lines[i])
+        if len(line) > 0 {
+            let row = strings.split(line, ",")
+            let clean = []
+            loop j in 0..len(row) { clean = concat(clean, [strings.trim(row[j])]) }
+            result = concat(result, [clean])
+        }
+    }
+    return result
+}
+do csv_headers(data: array) -> array {
+    if len(data) == 0 { return [] }
+    return data[0]
+}
+do csv_rows(data: array) -> array {
+    if len(data) <= 1 { return [] }
+    return drop(data, 1)
+}
+do csv_column(data: array, col: int) -> array {
+    let result = []
+    loop i in 0..len(data) {
+        if col < len(data[i]) { result = concat(result, [data[i][col]]) }
+    }
+    return result
+}
+do csv_to_str(data: array) -> str {
+    let result = ""
+    loop i in 0..len(data) {
+        let row = data[i]
+        let line = ""
+        loop j in 0..len(row) {
+            if j > 0 { line = line + "," }
+            line = line + row[j]
+        }
+        result = result + line + "\n"
+    }
+    return result
+}
+do csv_filter(data: array, col: int, val: str) -> array {
+    let result = [data[0]]
+    loop i in 1..len(data) {
+        if col < len(data[i]) && data[i][col] == val {
+            result = concat(result, [data[i]])
+        }
+    }
+    return result
+}
